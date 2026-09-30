@@ -16,7 +16,27 @@
 | Feat | フィート | SRA 固有。長さの単位と混同しない |
 | SIN | SIN | 原文のまま |
 
+## NPC ジェネレーターのラベル（`SRA2.NPC_GEN.*`）
+
+技能・専門化・メタタイプ・アーキタイプ名は Compendium 側のアイテム名と
+重複する語であり、Compendium 日本語化（`localization/ja-compendium`）を
+進める際は**こちらの訳語と揃える**必要がある。
+
+| English | 日本語 | 備考 |
+| --- | --- | --- |
+| Close Combat | 近接戦闘 | |
+| Ranged Weapons | 遠隔武器 | |
+| Cracking | クラッキング | 「ハッキング」と訳し分けない |
+| Sorcery | 呪術 | |
+| Conjuration | 召喚 | |
+| Influence | 影響力 | |
+| Spec: … | 専門化：… | 全角コロン。`Spécialisation` の略に対応 |
+| Physical Adept | フィジカル・アデプト | |
+| Elite Runner | エリート・ランナー | |
+
 ## 未決定
 
 - `Complication` … 「コンプリケーション」で仮固定。訳語化する場合は要再検討。
 - `Server` / `Host` … SRA2 の用法が SR5 と一致するか確認が必要。
+- NPC ジェネレーターの技能・専門化名 … 上記で仮固定。Compendium の
+  アイテム名を日本語化する場合、そちらと不一致にならないよう再確認する。
