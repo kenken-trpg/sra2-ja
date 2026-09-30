@@ -4,6 +4,14 @@
  */
 
 import {
+  skillName,
+  specName,
+  metatypeName,
+  metatypeNameOf,
+  archetypeLabelOf,
+  powerLevelLabelOf,
+} from "../config/npc-generator-i18n.js";
+import {
   WEAPON_TYPES,
   computeFeatLevel,
   computeFeatCost,
@@ -704,7 +712,7 @@ function generatePersonality(
   }
 
   // Replace keywords to match the actual metatype + gender
-  const metatypeName = isEn ? metatype.nameEn : metatype.nameFr;
+  const metatypeName = metatypeNameOf(metatype);
   const genderLabel = isEn
     ? (gender === 'female' ? 'Woman' : 'Man')
     : (gender === 'female' ? 'Femme' : 'Homme');
@@ -712,7 +720,7 @@ function generatePersonality(
     keywords[0] = `${metatypeName} — ${genderLabel}`;
   }
   // Force the "role" keyword (index 2) to match the archetype
-  const archetypeLabel = isEn ? archetype.labelEn : archetype.labelFr;
+  const archetypeLabel = archetypeLabelOf(archetype);
   keywords[2] = archetypeLabel;
 
   const behaviors = pickRandom(isEn ? BEHAVIORS_EN : BEHAVIORS, 4);
@@ -783,8 +791,7 @@ function generateImagePrompt(
   const topSkills = [...skills].sort((a, b) => b.rating - a.rating).slice(0, 5);
   if (topSkills.length > 0) {
     const skillDescs = topSkills.map(s => {
-      const def = SKILL_DEFINITIONS[s.slug];
-      return def ? (getLang() === 'en' ? s.slug.replace(/-/g, ' ') : def.nameFr) : s.slug;
+      return skillName(s.slug);
     });
     parts.push(`Expert in: ${skillDescs.join(', ')} — this expertise should be visually apparent in their posture, gear, and attitude`);
   }
@@ -904,13 +911,11 @@ function resolveRRLabel(compendiumItems: any[], rrTarget: string, rrType: string
   if (rrType === 'specialization' || rrTarget.startsWith('spec_')) {
     const comp = compendiumItems.find((it: any) => it.type === 'specialization' && it.system?.slug === rrTarget);
     if (comp) return comp.name;
-    const def = SPEC_DEFINITIONS[rrTarget];
-    if (def) return def.nameFr;
+    if (SPEC_DEFINITIONS[rrTarget]) return specName(rrTarget);
   } else if (rrType === 'skill') {
     const comp = compendiumItems.find((it: any) => it.type === 'skill' && it.system?.slug === rrTarget);
     if (comp) return comp.name;
-    const def = SKILL_DEFINITIONS[rrTarget];
-    if (def) return def.nameFr;
+    if (SKILL_DEFINITIONS[rrTarget]) return skillName(rrTarget);
   } else if (rrType === 'attribute') {
     return rrTarget;
   }
@@ -955,8 +960,7 @@ function buildMetatypeItem(
       return item;
     }
   }
-  const isEn = getLang() === 'en';
-  const mtName = isEn ? metatype.nameEn : metatype.nameFr;
+  const mtName = metatypeName(metatypeKey);
   return {
     name: mtName,
     type: "metatype",
@@ -1003,7 +1007,7 @@ function buildSkillItem(
   const def = SKILL_DEFINITIONS[slug];
   if (!def) return null;
   return {
-    name: def.nameFr,
+    name: skillName(slug),
     type: "skill",
     _id: generateItemId(),
     img: "icons/svg/item-bag.svg",
@@ -1045,7 +1049,7 @@ function buildSpecItem(
   const def = SPEC_DEFINITIONS[specSlug];
   if (!def) return null;
   return {
-    name: def.nameFr,
+    name: specName(specSlug),
     type: "specialization",
     _id: generateItemId(),
     img: "icons/svg/item-bag.svg",
@@ -1262,9 +1266,9 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
   // 2. Load compendium items + resolve language
   const compendiumItems = await getCompendiumItems();
   const isEn = getLang() === 'en';
-  const mtName = isEn ? metatype.nameEn : metatype.nameFr;
-  const archLabel = isEn ? archetype.labelEn : archetype.labelFr;
-  const plLabel = isEn ? powerLevel.labelEn : powerLevel.labelFr;
+  const mtName = metatypeNameOf(metatype);
+  const archLabel = archetypeLabelOf(archetype);
+  const plLabel = powerLevelLabelOf(powerLevel);
 
   // Resolve random gender
   const resolvedGender = options.gender === 'random' || !options.gender
@@ -1913,8 +1917,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 5)
     .map((s) => {
-      const def = SKILL_DEFINITIONS[s.slug];
-      return `<span style="color:var(--sr-ui-color-active,#0ff);">${def?.nameFr ?? s.slug}</span> <strong>${s.rating}</strong>`;
+      return `<span style="color:var(--sr-ui-color-active,#0ff);">${skillName(s.slug)}</span> <strong>${s.rating}</strong>`;
     })
     .join(" · ");
 

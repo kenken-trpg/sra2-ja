@@ -4,6 +4,7 @@
  */
 
 import { ARCHETYPES, METATYPES, POWER_LEVELS } from '../config/npc-generator-data.js';
+import { archetypeLabel, metatypeName, powerLevelLabel } from '../config/npc-generator-i18n.js';
 import { generateNPCs, type NPCGeneratorOptions } from '../helpers/npc-generator.js';
 
 export class NPCGeneratorDialog extends Dialog {
@@ -39,21 +40,24 @@ export class NPCGeneratorDialog extends Dialog {
 
     // Power levels
     let powerOptions = '';
+    const numberLocale = i18n.lang || 'en';
+    const currency = i18n.localize('SRA2.RESOURCES.YENS');
     for (const [key, pl] of Object.entries(POWER_LEVELS)) {
       const selected = key === 'runner' ? 'selected' : '';
-      powerOptions += `<option value="${key}" ${selected}>${pl.labelFr} (${pl.budget.toLocaleString('fr-FR')} ¥)</option>`;
+      const budget = pl.budget.toLocaleString(numberLocale);
+      powerOptions += `<option value="${key}" ${selected}>${powerLevelLabel(key)} (${budget} ${currency})</option>`;
     }
 
     // Archetypes
     let archetypeOptions = `<option value="random">${i18n.localize('SRA2.NPC_GENERATOR.RANDOM')}</option>`;
-    for (const [key, arch] of Object.entries(ARCHETYPES)) {
-      archetypeOptions += `<option value="${key}">${arch.labelFr}</option>`;
+    for (const key of Object.keys(ARCHETYPES)) {
+      archetypeOptions += `<option value="${key}">${archetypeLabel(key)}</option>`;
     }
 
     // Metatypes
     let metatypeOptions = `<option value="random">${i18n.localize('SRA2.NPC_GENERATOR.RANDOM')}</option>`;
-    for (const [key, mt] of Object.entries(METATYPES)) {
-      metatypeOptions += `<option value="${key}">${mt.nameFr}</option>`;
+    for (const key of Object.keys(METATYPES)) {
+      metatypeOptions += `<option value="${key}">${metatypeName(key)}</option>`;
     }
 
     return `
