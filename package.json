@@ -11,7 +11,11 @@
     "test:coverage": "vitest run --coverage",
     "build:check": "npm run typecheck && npm run build",
     "pack:compendiums": "node ./tools/compendium/packCompendiumsToPublic.mjs",
-    "unpack:compendiums": "node ./tools/compendium/extractCompendiumsFromPublic.mjs"
+    "unpack:compendiums": "node ./tools/compendium/extractCompendiumsFromPublic.mjs",
+    "i18n:scan": "node ./tools/i18n/scan.mjs",
+    "i18n:sync": "node ./tools/i18n/sync-ja.mjs",
+    "i18n:hardcoded": "node ./tools/i18n/find-hardcoded.mjs",
+    "check:i18n": "node ./tools/i18n/compare-locales.mjs --target ja"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^2.0.0",

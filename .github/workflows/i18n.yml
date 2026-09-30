@@ -1,0 +1,29 @@
+name: i18n
+
+on:
+  push:
+    paths: ['public/lang/**', 'public/system.json', 'tools/i18n/**', '.github/workflows/i18n.yml']
+  pull_request:
+    paths: ['public/lang/**', 'public/system.json', 'tools/i18n/**', '.github/workflows/i18n.yml']
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # The checks are dependency-free, so no install step is needed.
+      - name: Progress report
+        run: npm run i18n:scan
+      - name: Key, placeholder and markup integrity
+        run: npm run check:i18n
+      - name: Fail if the locale drifted from en.json
+        run: |
+          npm run i18n:sync
+          git diff --exit-code -- public/lang/ja.json || {
+            echo "::error::public/lang/ja.json is out of sync with en.json. Run 'npm run i18n:sync' and commit."
+            exit 1
+          }
