@@ -298,7 +298,7 @@ This command will fetch and install all necessary packages required for the proj
 node main.js --dataPath=<path_to_foundry_data>/foundrydata --port=30000
 ```
 
-When Foundry starts in the backend (Node.js), it will detect the necessary files in the public directory of the repository (these files are `systems/sra2/index.mjs` and `systems/sra2/sra2.css`).
+When Foundry starts in the backend (Node.js), it will detect the necessary files in the public directory of the repository (these files are `systems/sra2-ja/index.mjs` and `systems/sra2-ja/sra2.css`).
 
 When you connect to Foundry from a browser (frontend), Vite will intercept all requests and redirect them to Foundry, except for requests to `systems/sra2`. These files will be served by the Vite project.
 

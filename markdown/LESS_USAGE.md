@@ -105,7 +105,7 @@ Dans `src/less/index.less`, modifiez les imports :
 ## Notes importantes
 
 - Le thème SRA2 est maintenant le thème par défaut (SR6 est désactivé)
-- Les chemins des polices et images utilisent des chemins absolus (`/systems/sra2/...`)
+- Les chemins des polices et images utilisent des chemins absolus (`/systems/sra2-ja/...`)
 - Les variables CSS sont générées automatiquement via les mixins Less
 - Le CSS final combine Less + SCSS dans un seul fichier
 
