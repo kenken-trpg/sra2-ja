@@ -16,7 +16,8 @@
     "i18n:sync": "node ./tools/i18n/sync-ja.mjs",
     "i18n:hardcoded": "node ./tools/i18n/find-hardcoded.mjs",
     "check:i18n": "node ./tools/i18n/compare-locales.mjs --target ja",
-    "check:layout": "node ./tools/i18n/layout-risk.mjs --target ja"
+    "check:layout": "node ./tools/i18n/layout-risk.mjs --target ja",
+    "check:glossary": "node ./tools/i18n/glossary-crossref.mjs"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^2.0.0",
