@@ -11,3 +11,7 @@ pregens
 # Local-only localization reference output. See tools/i18n/glossary-crossref.mjs:
 # it cross-checks against a GPL-3.0 dataset, so its report is not distributed.
 /docs/localization/local/
+
+# Locally generated Japanese compendium. Not committed and not bundled in the
+# release archive; see tools/compendium/generate-ja.mjs.
+/local/

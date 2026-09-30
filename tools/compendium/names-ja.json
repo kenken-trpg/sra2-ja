@@ -1,0 +1,44 @@
+{
+  "$comment": "Japanese names for compendium entries the UI locale does not cover. Everything else is resolved from public/lang/{en,ja}.json so the compendium cannot drift from the interface. Each rendering here follows a pattern already established in ja.json; see the trailing note per group.",
+  "names": {
+    "Meta-type": "メタタイプ",
+    "Specialisation": "専門化",
+
+    "Spec: Academic": "専門化：学術",
+    "Spec: Medical": "専門化：医療",
+    "Spec: Magic": "専門化：魔法",
+    "Spec: Matrix": "専門化：マトリックス",
+    "Spec: Physical": "専門化：物理",
+    "Spec: Engineering": "専門化：工学",
+    "Spec: Stealth": "専門化：隠密",
+
+    "Spec: Animal Training": "専門化：動物調教",
+    "Spec: Parkour": "専門化：パルクール",
+    "Spec: Swimming": "専門化：水泳",
+    "Spec: Astral Stealth": "専門化：アストラル隠密",
+
+    "Spec: Fangs": "専門化：牙",
+    "Spec: Grenade Launchers": "専門化：グレネードランチャー",
+    "Spec: Mounted Weapons": "専門化：搭載武器",
+    "Spec: Remote ConTrolled Weapons": "専門化：遠隔操作武器",
+
+    "Spec: Aquatic Drones": "専門化：水中ドローン",
+    "Spec: Aquatic Vehicles": "専門化：水上艇",
+    "Spec: Flying Vehicles": "専門化：飛行車両",
+    "Spec: Trucks": "専門化：トラック",
+    "Spec: C&R Mechanical Devices": "専門化：機械装置整備",
+
+    "Spec: Personal Electronics": "専門化：個人用電子機器",
+
+    "Spec: Kin Spirits": "専門化：同族の精霊",
+    "Spec: Plant Spirits": "専門化：植物の精霊"
+  },
+  "$notes": {
+    "skills": "A bare skill name reuses the skill's own rendering: Engineering 工学, Stealth 隠密, Magic 魔法.",
+    "stealth": "Follows 物理隠密 / マトリックス隠密 already in ja.json.",
+    "maintenance": "Follows ドローン整備 / 車両整備 (C&R = maintenance) already in ja.json.",
+    "spirits": "Follows 大気の精霊 / 大地の精霊 / 火の精霊 / 水の精霊 / 獣の精霊 already in ja.json.",
+    "devices": "Distinguished from Personal Devices 個人用デバイス, which ja.json already defines.",
+    "vehicles": "Follows 地上ドローン / 飛行ドローン and 自動車 / バイク already in ja.json."
+  }
+}
