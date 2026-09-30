@@ -46,7 +46,7 @@ export function registerGeminiSetting(): void {
 export async function generateActorImage(actor: any, onStatus?: (status: string) => void): Promise<void> {
   const apiKey = getApiKey();
   if (!apiKey) {
-    ui.notifications?.error('Gemini API key not configured. Set it in System Settings.');
+    ui.notifications?.error(game.i18n!.localize('SRA2.NPC_GENERATOR.GEMINI_NO_KEY'));
     return;
   }
 
@@ -62,7 +62,7 @@ export async function generateActorImage(actor: any, onStatus?: (status: string)
   console.log('%c=== GEMINI IMAGE PROMPT ===', 'color: magenta; font-weight: bold;');
   console.log(prompt);
 
-  onStatus?.('Generating portrait...');
+  onStatus?.(game.i18n!.localize('SRA2.NPC_GENERATOR.GENERATING_IMAGE'));
   ui.notifications?.info(game.i18n?.localize('SRA2.NPC_GENERATOR.GENERATING_IMAGE') || 'Generating image...');
 
   try {
@@ -87,8 +87,8 @@ export async function generateActorImage(actor: any, onStatus?: (status: string)
     await saveAndApplyImage(actor, imageBase64, 'portrait');
 
     // Generate a second image for the token using the portrait as seed
-    onStatus?.('Generating token...');
-    ui.notifications?.info('Generating token headshot...');
+    onStatus?.(game.i18n!.localize('SRA2.NPC_GENERATOR.GENERATING_TOKEN'));
+    ui.notifications?.info(game.i18n!.localize('SRA2.NPC_GENERATOR.GENERATING_TOKEN'));
     const genderRaw = actor.system?.gender || 'random';
     const genderToken = genderRaw === 'female' ? 'female' : genderRaw === 'male' ? 'male' : (Math.random() < 0.5 ? 'female' : 'male');
     let tokenBase64: string | null = null;
@@ -103,7 +103,9 @@ export async function generateActorImage(actor: any, onStatus?: (status: string)
 
   } catch (err: any) {
     console.error('Gemini image generation error:', err);
-    ui.notifications?.error(`Image generation failed: ${err.message}`);
+    ui.notifications?.error(
+      game.i18n!.format('SRA2.NPC_GENERATOR.IMAGE_FAILED', { error: String(err?.message ?? err) })
+    );
     throw err;
   }
 }
@@ -529,6 +531,6 @@ async function saveAndApplyImage(actor: any, base64Data: string, type: 'portrait
     ui.notifications?.info(game.i18n?.localize('SRA2.NPC_GENERATOR.IMAGE_GENERATED') || 'Portrait generated!');
   } else {
     await actor.update({ 'prototypeToken.texture.src': filePath });
-    ui.notifications?.info('Token headshot generated!');
+    ui.notifications?.info(game.i18n!.localize('SRA2.NPC_GENERATOR.TOKEN_GENERATED'));
   }
 }

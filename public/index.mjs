@@ -9635,7 +9635,7 @@ class CharacterSheetV2 extends CharacterSheet {
         ev.preventDefault();
         const originalHtml = btn.innerHTML;
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating portrait...';
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${game.i18n.localize("SRA2.NPC_GENERATOR.GENERATING_IMAGE")}`;
         this._blockRender = true;
         try {
           const { generateActorImage: generateActorImage2 } = await Promise.resolve().then(() => geminiImage);
@@ -19496,7 +19496,7 @@ async function generateSingleNPC(options) {
   const metatype = METATYPES[metatypeKey];
   const powerLevel = POWER_LEVELS[options.powerLevel] ?? POWER_LEVELS.runner;
   if (!archetype || !metatype) {
-    ui.notifications?.error("Archétype ou métatype invalide");
+    ui.notifications?.error(game.i18n.localize("SRA2.NPC_GENERATOR.INVALID_SELECTION"));
     return;
   }
   const compendiumItems = await getCompendiumItems();
@@ -20327,7 +20327,7 @@ class NPCGeneratorDialog extends Dialog {
           );
         } catch (err) {
           console.error("NPC Generator error:", err);
-          ui.notifications?.error("Erreur lors de la génération du PNJ");
+          ui.notifications?.error(game.i18n.localize("SRA2.NPC_GENERATOR.ERROR"));
         }
         resolve();
       });
@@ -22985,7 +22985,7 @@ function registerGeminiSetting() {
 async function generateActorImage(actor, onStatus) {
   const apiKey = getApiKey();
   if (!apiKey) {
-    ui.notifications?.error("Gemini API key not configured. Set it in System Settings.");
+    ui.notifications?.error(game.i18n.localize("SRA2.NPC_GENERATOR.GEMINI_NO_KEY"));
     return;
   }
   let prompt;
@@ -22998,7 +22998,7 @@ async function generateActorImage(actor, onStatus) {
   }
   console.log("%c=== GEMINI IMAGE PROMPT ===", "color: magenta; font-weight: bold;");
   console.log(prompt);
-  onStatus?.("Generating portrait...");
+  onStatus?.(game.i18n.localize("SRA2.NPC_GENERATOR.GENERATING_IMAGE"));
   ui.notifications?.info(game.i18n?.localize("SRA2.NPC_GENERATOR.GENERATING_IMAGE") || "Generating image...");
   try {
     const models2 = ["gemini-3.1-flash-image-preview"];
@@ -23016,8 +23016,8 @@ async function generateActorImage(actor, onStatus) {
       throw new Error("All Gemini/Imagen models failed to generate an image. Check your API key and that image generation is enabled on your Google AI project.");
     }
     await saveAndApplyImage(actor, imageBase64, "portrait");
-    onStatus?.("Generating token...");
-    ui.notifications?.info("Generating token headshot...");
+    onStatus?.(game.i18n.localize("SRA2.NPC_GENERATOR.GENERATING_TOKEN"));
+    ui.notifications?.info(game.i18n.localize("SRA2.NPC_GENERATOR.GENERATING_TOKEN"));
     const genderRaw = actor.system?.gender || "random";
     const genderToken = genderRaw === "female" ? "female" : genderRaw === "male" ? "male" : Math.random() < 0.5 ? "female" : "male";
     let tokenBase64 = null;
@@ -23035,7 +23035,9 @@ async function generateActorImage(actor, onStatus) {
     }
   } catch (err) {
     console.error("Gemini image generation error:", err);
-    ui.notifications?.error(`Image generation failed: ${err.message}`);
+    ui.notifications?.error(
+      game.i18n.format("SRA2.NPC_GENERATOR.IMAGE_FAILED", { error: String(err?.message ?? err) })
+    );
     throw err;
   }
 }
@@ -23361,7 +23363,7 @@ async function saveAndApplyImage(actor, base64Data, type = "portrait") {
     ui.notifications?.info(game.i18n?.localize("SRA2.NPC_GENERATOR.IMAGE_GENERATED") || "Portrait generated!");
   } else {
     await actor.update({ "prototypeToken.texture.src": filePath });
-    ui.notifications?.info("Token headshot generated!");
+    ui.notifications?.info(game.i18n.localize("SRA2.NPC_GENERATOR.TOKEN_GENERATED"));
   }
 }
 const geminiImage = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({

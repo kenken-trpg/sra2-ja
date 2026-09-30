@@ -81,7 +81,7 @@ export class CharacterSheetV2 extends CharacterSheet {
         ev.preventDefault();
         const originalHtml = btn.innerHTML;
         (btn as HTMLButtonElement).disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating portrait...';
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${game.i18n!.localize('SRA2.NPC_GENERATOR.GENERATING_IMAGE')}`;
         (this as any)._blockRender = true;
         try {
           const { generateActorImage } = await import('../helpers/gemini-image.js');

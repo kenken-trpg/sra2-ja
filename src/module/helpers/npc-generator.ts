@@ -1259,7 +1259,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
   const powerLevel = POWER_LEVELS[options.powerLevel] ?? POWER_LEVELS.runner;
 
   if (!archetype || !metatype) {
-    ui.notifications?.error("Archétype ou métatype invalide");
+    ui.notifications?.error(game.i18n!.localize('SRA2.NPC_GENERATOR.INVALID_SELECTION'));
     return;
   }
 

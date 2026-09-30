@@ -112,7 +112,7 @@ export class NPCGeneratorDialog extends Dialog {
           );
         } catch (err) {
           console.error('NPC Generator error:', err);
-          ui.notifications?.error('Erreur lors de la génération du PNJ');
+          ui.notifications?.error(game.i18n!.localize('SRA2.NPC_GENERATOR.ERROR'));
         }
         resolve();
       });

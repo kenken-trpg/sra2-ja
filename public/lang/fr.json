@@ -1378,7 +1378,13 @@
             "FEMALE": "Féminin",
             "GENERATE_PORTRAIT": "Générer Portrait IA",
             "GENERATING_IMAGE": "Génération du portrait en cours...",
-            "IMAGE_GENERATED": "Portrait généré avec succès !"
+            "IMAGE_GENERATED": "Portrait généré avec succès !",
+            "ERROR": "Erreur lors de la génération du PNJ",
+            "INVALID_SELECTION": "Archétype ou métatype invalide",
+            "GENERATING_TOKEN": "Génération du portrait du pion en cours...",
+            "TOKEN_GENERATED": "Portrait du pion généré !",
+            "GEMINI_NO_KEY": "Clé API Gemini non configurée. Renseignez-la dans les réglages du système.",
+            "IMAGE_FAILED": "Échec de la génération de l'image : {error}"
         }
     }
 }
