@@ -1,8 +1,8 @@
 {
   "id": "sra2-ja",
-  "version": "14.3.3-ja.1",
+  "version": "14.3.3-ja.2",
   "manifest": "https://raw.githubusercontent.com/kenken-trpg/sra2-ja/master/public/system.json",
-  "download": "https://github.com/kenken-trpg/sra2-ja/releases/download/v14.3.3-ja.1/foundry-sra2-ja-v14.3.3-ja.1.zip",
+  "download": "https://github.com/kenken-trpg/sra2-ja/releases/download/v14.3.3-ja.2/foundry-sra2-ja-v14.3.3-ja.2.zip",
   "url": "https://github.com/kenken-trpg/sra2-ja",
   "bugs": "https://github.com/kenken-trpg/sra2-ja/issues",
   "title": "Shadowrun Anarchy 2 (日本語)",
