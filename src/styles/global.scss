@@ -26,7 +26,11 @@ select {
 }
 
 .chat-log {
-    background-image: url("../../public/images/backgrounds/character-sheet-background.png");
+    // Upstream pointed at images/backgrounds/character-sheet-background.png,
+    // which it never shipped, so the chat log had no background at all.
+    // Reuse the window background that is shipped and already used by the
+    // roll dialog, so the tone matches.
+    background-image: url("../../public/img/interface/sra2/sra2_background_window_dark.webp");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

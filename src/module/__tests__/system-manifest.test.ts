@@ -12,9 +12,6 @@ const ROOT = path.resolve(__dirname, '../../..');
 const PUBLIC = path.join(ROOT, 'public');
 const manifest = JSON.parse(fs.readFileSync(path.join(PUBLIC, 'system.json'), 'utf-8'));
 
-/** Assets referenced by upstream that were never shipped. See README.ja.md. */
-const KNOWN_MISSING_ASSETS = new Set(['systems/sra2-ja/style/sra2-logo.webp']);
-
 const publicPath = (url: string): string =>
   path.join(PUBLIC, url.replace(/^\/?systems\/sra2-ja\//, ''));
 
@@ -83,17 +80,10 @@ describe('system.json', () => {
   it('references media that is actually shipped', () => {
     const missing = (manifest.media ?? [])
       .map((m: { url: string }) => m.url)
-      .filter((url: string) => !KNOWN_MISSING_ASSETS.has(url) && !fs.existsSync(publicPath(url)));
+      .filter((url: string) => !fs.existsSync(publicPath(url)));
     expect(missing).toEqual([]);
   });
 
-  it('keeps the known-missing asset list accurate', () => {
-    const declared = new Set((manifest.media ?? []).map((m: { url: string }) => m.url));
-    const stale = [...KNOWN_MISSING_ASSETS].filter(
-      (url) => !declared.has(url) || fs.existsSync(publicPath(url)),
-    );
-    expect(stale).toEqual([]);
-  });
 
   it('declares the primary token attribute used by the actor data model', () => {
     expect(manifest.primaryTokenAttribute).toBe('state.health');
@@ -106,20 +96,13 @@ describe('shipped stylesheet assets', () => {
     .map((m) => m[1])
     .filter((r) => !/^(data:|https?:)/.test(r));
 
-  /** Upstream leaves one build-relative path in the CSS; it resolves nowhere. */
-  const KNOWN_DEAD = new Set(['../../public/images/backgrounds/character-sheet-background.png']);
-
   it('finds asset references to check', () => {
     expect(refs.length).toBeGreaterThan(0);
   });
 
   it('resolves every font and image reference inside the shipped package', () => {
-    const missing = refs.filter((r) => !KNOWN_DEAD.has(r) && !fs.existsSync(publicPath(r)));
+    const missing = refs.filter((r) => !fs.existsSync(publicPath(r)));
     expect(missing).toEqual([]);
   });
 
-  it('keeps the known-dead reference list accurate', () => {
-    const stale = [...KNOWN_DEAD].filter((r) => !refs.includes(r) || fs.existsSync(publicPath(r)));
-    expect(stale).toEqual([]);
-  });
 });
