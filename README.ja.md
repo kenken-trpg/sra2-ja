@@ -134,6 +134,7 @@ Compendium の日本語化は権利関係の確認が必要な別課題として
 
 ```sh
 npm install
+npm run setup:hooks    # push ガードレールを有効化（clone ごとに1回）
 npm run build          # dist/ にビルド
 npm run build:public   # public/ の同梱ビルド成果物を更新
 npm run i18n:scan      # 翻訳の進捗を表示
@@ -143,6 +144,31 @@ npm run check:glossary # SR5 用語との突き合わせ（要 chummer-web の c
 npm run i18n:sync      # en.json の変更を ja.json に取り込む
 npm run test
 ```
+
+### push ガードレール
+
+`git` はフックもローカル設定も clone に含めないため、clone ごとに一度だけ
+`npm run setup:hooks`（= `sh tools/git-hooks/install.sh`）を実行します。
+設定はすべて `--local` で、グローバル設定や他のリポジトリには触りません。
+
+| 設定 | 効果 |
+| --- | --- |
+| `core.hooksPath=tools/git-hooks` | `tools/git-hooks/pre-push` を有効化 |
+| `push.default=nothing` | 引数なし `git push` を拒否 |
+| `push.followTags=false` | タグが push に相乗りしない |
+| `remote.upstream.pushurl=no_push` | 上流（作者のリポジトリ）へ push できない |
+
+`pre-push` は**既定で拒否**し、remote ごとの許可リストに載った宛先だけを通します
+（`origin` は `master` のみ、`prfork` は `fix/*` と `feat/*`）。さらに
+`localization/ja-compendium` は**宛先を問わず送信元として禁止**します。宛先だけを
+見ると `localization/ja-compendium:master` と書けば通ってしまうため、送信元ブランチ
+名でも独立に判定しています（`--force` でも貫通しません）。
+
+意図的に破るときは `SRA2_PUSH_OVERRIDE=1 git push …` とします。環境変数はシェル
+履歴に残るので、事故と意図の区別が後から付きます。
+
+> フックは GitHub 側の操作（Web UI・`gh`）には効きません。origin 側でのブランチ
+> 作成やマージを縛るには GitHub のルールセットが必要です。
 
 CI（`.github/workflows/i18n.yml`）は 2 ジョブ構成です。**Locale checks** が
 `i18n:scan` / `check:i18n` / `check:layout` と `en.json` からのずれを検査し

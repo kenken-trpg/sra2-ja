@@ -1,0 +1,63 @@
+#!/bin/sh
+# Fork push guardrail (local only; not distributed with the repo).
+#
+# Deny by default. A push is refused unless the destination ref is on the
+# allow list for that remote, and refused outright if the source branch is
+# one that must stay local.
+#
+# Override for a single command (deliberate, visible in shell history):
+#   SRA2_PUSH_OVERRIDE=1 git push ...
+
+remote_name="$1"
+remote_url="$2"
+status=0
+
+# Branches whose contents must never leave this machine, whatever the
+# destination. localization/ja-compendium holds rulebook-derived compendium
+# work that is not cleared for redistribution.
+never_push='localization/ja-compendium'
+
+case "$remote_name" in
+  origin)  allowed='refs/heads/master' ;;
+  prfork)  allowed='refs/heads/fix/* refs/heads/feat/*' ;;
+  *)       allowed='' ;;
+esac
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -z "$local_ref" ] && continue
+
+  # Deleting a ref pushes the zero sha as local_sha; leave those to the
+  # allow list below rather than inspecting a nonexistent branch.
+  local_branch=${local_ref#refs/heads/}
+
+  for blocked in $never_push; do
+    if [ "$local_branch" = "$blocked" ]; then
+      echo "pre-push: REFUSED  $local_branch is local-only (not cleared for redistribution)." >&2
+      status=1
+    fi
+  done
+
+  ok=0
+  for pattern in $allowed; do
+    case "$remote_ref" in
+      $pattern) ok=1 ;;
+    esac
+  done
+
+  if [ "$ok" -ne 1 ]; then
+    echo "pre-push: REFUSED  $local_ref -> $remote_ref on '$remote_name' is not on the allow list." >&2
+    echo "pre-push:          allowed on '$remote_name': ${allowed:-（なし）}" >&2
+    status=1
+  fi
+done
+
+if [ "$status" -ne 0 ]; then
+  if [ -n "$SRA2_PUSH_OVERRIDE" ]; then
+    echo "pre-push: SRA2_PUSH_OVERRIDE set - allowing the push anyway ($remote_url)." >&2
+    exit 0
+  fi
+  echo "pre-push: nothing was pushed. Re-run with SRA2_PUSH_OVERRIDE=1 if this is intended." >&2
+  exit 1
+fi
+
+exit 0

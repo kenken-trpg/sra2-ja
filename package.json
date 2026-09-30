@@ -15,6 +15,7 @@
     "i18n:scan": "node ./tools/i18n/scan.mjs",
     "i18n:sync": "node ./tools/i18n/sync-ja.mjs",
     "i18n:hardcoded": "node ./tools/i18n/find-hardcoded.mjs",
+    "setup:hooks": "sh tools/git-hooks/install.sh",
     "check:i18n": "node ./tools/i18n/compare-locales.mjs --target ja",
     "check:layout": "node ./tools/i18n/layout-risk.mjs --target ja",
     "check:glossary": "node ./tools/i18n/glossary-crossref.mjs",
