@@ -37,6 +37,12 @@
 ## 未決定
 
 - `Complication` … 「コンプリケーション」で仮固定。訳語化する場合は要再検討。
+- `SRA2.FEATS.WEAPON.RANGE_DICE` … 「ダイス」で仮置き。武器射程の選択肢
+  （`none` / `ok` / `dice` / `disadvantage`）の一つだが、`dice` を参照する
+  処理がコード上に存在せず、ルール上の意味を確認できていない。値名をそのまま
+  写した暫定訳なので、ルールブックで挙動を確認してから確定する。
+- `slug`（`SRA2.SKILLS.SLUG` / `SRA2.SPECIALIZATIONS.SLUG`）… 「識別子」。
+  Compendium アイテムの照合キーで、ユーザーが自由に編集する値ではない。
 - `Server` / `Host` … SRA2 の用法が SR5 と一致するか確認が必要。
 - NPC ジェネレーターの技能・専門化名 … 上記で仮固定。Compendium の
   アイテム名を日本語化する場合、そちらと不一致にならないよう再確認する。

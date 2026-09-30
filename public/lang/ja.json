@@ -178,6 +178,8 @@
             }
         },
         "ICE": {
+            "CANNOT_ATTACK": "この IC 種別は攻撃できません。",
+            "SERVER_INDEX": "サーバー指数",
             "NAME": "IC名",
             "ICE_TYPE": "IC種別",
             "SELECT_TYPE": "種別を選択...",
@@ -463,6 +465,9 @@
             "GAUGE_MATRIX": "マトリックス"
         },
         "FEATS": {
+            "FIRST_FEAT_TRANSFERRED": "「最初の特徴」の指定が、他の特徴からこの特徴に移動されました。",
+            "VEHICLE_CREATION_ERROR": "車両アクターの作成に失敗しました。",
+            "RR_LIST": "リスク軽減の一覧",
             "BOOKMARKED": "お気に入り",
             "LABEL": "フィート",
             "NAME": "フィート名",
@@ -726,6 +731,7 @@
                 "LONG_SHORT": "遠",
                 "RANGE_NONE": "-",
                 "RANGE_OK": "OK",
+                "RANGE_DICE": "ダイス",
                 "RANGE_DISADVANTAGE": "ディスアドバンテージ",
                 "IMPROVE_RANGE": "射程を改善",
                 "RANGE_IMPROVEMENTS": "射程の改善",
@@ -963,6 +969,7 @@
             }
         },
         "SKILLS": {
+            "SLUG": "識別子",
             "BOOKMARKED": "お気に入り",
             "LABEL": "技能",
             "NAME": "技能名",
@@ -1023,6 +1030,7 @@
             "LABEL": "アイテム"
         },
         "SPECIALIZATIONS": {
+            "SLUG": "識別子",
             "LABEL": "専門化",
             "NAME": "専門化名",
             "EDIT": "専門化を編集",
@@ -1119,6 +1127,7 @@
             "GM_ONLY": "グループ・エッジを変更できるのはGMのみです"
         },
         "ROLL_DIALOG": {
+            "NO_SKILL_SELECTED": "防御技能を選択してください",
             "TITLE": "ダイスロール",
             "ACTION": "行動",
             "DAMAGE": "ダメージ",

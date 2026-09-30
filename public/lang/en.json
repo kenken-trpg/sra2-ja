@@ -178,6 +178,8 @@
             }
         },
         "ICE": {
+            "CANNOT_ATTACK": "This ICE type cannot attack.",
+            "SERVER_INDEX": "Server Index",
             "NAME": "ICE Name",
             "ICE_TYPE": "ICE Type",
             "SELECT_TYPE": "Select a type...",
@@ -463,6 +465,9 @@
             "GAUGE_MATRIX": "Matrix"
         },
         "FEATS": {
+            "FIRST_FEAT_TRANSFERRED": "The \"first trait\" flag has been moved from the other trait(s) to this one.",
+            "VEHICLE_CREATION_ERROR": "Failed to create the vehicle actor.",
+            "RR_LIST": "Risk Reduction List",
             "BOOKMARKED": "Favorite",
             "LABEL": "Feats",
             "NAME": "Feat Name",
@@ -726,6 +731,7 @@
                 "LONG_SHORT": "Long",
                 "RANGE_NONE": "-",
                 "RANGE_OK": "OK",
+                "RANGE_DICE": "Dice",
                 "RANGE_DISADVANTAGE": "Disadvantage",
                 "IMPROVE_RANGE": "Improve range",
                 "RANGE_IMPROVEMENTS": "Range improvements",
@@ -963,6 +969,7 @@
             }
         },
         "SKILLS": {
+            "SLUG": "Identifier",
             "BOOKMARKED": "Favorite",
             "LABEL": "Skills",
             "NAME": "Skill Name",
@@ -1023,6 +1030,7 @@
             "LABEL": "Items"
         },
         "SPECIALIZATIONS": {
+            "SLUG": "Identifier",
             "LABEL": "Specializations",
             "NAME": "Specialization Name",
             "EDIT": "Edit Specialization",
@@ -1119,6 +1127,7 @@
             "GM_ONLY": "Only the GM can modify Group Edge"
         },
         "ROLL_DIALOG": {
+            "NO_SKILL_SELECTED": "Please select a defense skill",
             "TITLE": "Dice Roll",
             "ACTION": "Action",
             "DAMAGE": "Damage",

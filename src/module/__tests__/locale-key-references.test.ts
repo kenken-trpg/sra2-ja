@@ -13,24 +13,6 @@ const SRC = path.join(ROOT, 'src');
 const LANG_DIR = path.join(ROOT, 'public', 'lang');
 const LOCALES = ['en', 'fr', 'ja'] as const;
 
-/**
- * Keys referenced by upstream code that no locale defines. Each one renders
- * as a raw key today; they are listed here so this test guards against *new*
- * gaps instead of failing on inherited ones. Removing an entry from this list
- * is the way to close it.
- */
-const KNOWN_UNDEFINED = new Set([
-  'SRA2.FEATS.FIRST_FEAT_TRANSFERRED',
-  'SRA2.ROLL_DIALOG.NO_SKILL_SELECTED',
-  'SRA2.ICE.CANNOT_ATTACK',
-  'SRA2.FEATS.VEHICLE_CREATION_ERROR',
-  'SRA2.ICE.SERVER_INDEX',
-  'SRA2.FEATS.RR_LIST',
-  'SRA2.FEATS.WEAPON.RANGE_DICE',
-  'SRA2.SKILLS.SLUG',
-  'SRA2.SPECIALIZATIONS.SLUG',
-]);
-
 function sourceFiles(dir: string): string[] {
   const out: string[] = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -80,7 +62,6 @@ describe('locale key references', () => {
     it('defines every key referenced from src/', () => {
       const missing: string[] = [];
       for (const [key, file] of referenced) {
-        if (KNOWN_UNDEFINED.has(key)) continue;
         if (key in defined) continue;
         // A trailing-dot literal is a namespace built up at runtime; require
         // that at least one key lives under it.
@@ -95,13 +76,5 @@ describe('locale key references', () => {
       const empty = [...referenced.keys()].filter((k) => k in defined && defined[k].trim() === '');
       expect(empty).toEqual([]);
     });
-  });
-
-  it('keeps the known-undefined list accurate', () => {
-    // If a key here gets defined, or stops being referenced, the list is stale.
-    const stale = [...KNOWN_UNDEFINED].filter(
-      (k) => !referenced.has(k) || LOCALES.some((lang) => k in locales[lang]),
-    );
-    expect(stale).toEqual([]);
   });
 });

@@ -178,6 +178,8 @@
             }
         },
         "ICE": {
+            "CANNOT_ATTACK": "Ce type de GLACE ne peut pas attaquer.",
+            "SERVER_INDEX": "Indice du Serveur",
             "NAME": "Nom de la GLACE",
             "ICE_TYPE": "Type de GLACE",
             "SELECT_TYPE": "Sélectionner un type...",
@@ -353,6 +355,9 @@
             "GAUGE_MATRIX": "Matriciel"
         },
         "FEATS": {
+            "FIRST_FEAT_TRANSFERRED": "L'indicateur « premier trait » a été déplacé de l'autre trait (ou des autres) vers celui-ci.",
+            "VEHICLE_CREATION_ERROR": "Échec de la création de l'acteur véhicule.",
+            "RR_LIST": "Liste des Réductions de Risque",
             "BOOKMARKED": "Favori",
             "LABEL": "Atouts",
             "NAME": "Nom de l'Atout",
@@ -623,6 +628,7 @@
                 "LONG_SHORT": "Longue",
                 "RANGE_NONE": "-",
                 "RANGE_OK": "OK",
+                "RANGE_DICE": "Dés",
                 "RANGE_DISADVANTAGE": "Désavantage",
                 "IMPROVE_RANGE": "Améliorer portée",
                 "RANGE_IMPROVEMENTS": "Améliorations de portée",
@@ -963,6 +969,7 @@
             "TYPE_FEAT": "Atout"
         },
         "SKILLS": {
+            "SLUG": "Identifiant",
             "BOOKMARKED": "Favori",
             "LABEL": "Compétences",
             "NAME": "Nom de la Compétence",
@@ -1023,6 +1030,7 @@
             "LABEL": "Objets"
         },
         "SPECIALIZATIONS": {
+            "SLUG": "Identifiant",
             "LABEL": "Spécialisations",
             "NAME": "Nom de la Spécialisation",
             "EDIT": "Éditer la Spécialisation",
@@ -1119,6 +1127,7 @@
             "GM_ONLY": "Seul le MJ peut modifier l'Anarchy du groupe"
         },
         "ROLL_DIALOG": {
+            "NO_SKILL_SELECTED": "Veuillez sélectionner une compétence de défense",
             "TITLE": "Jet de Dés",
             "ACTION": "Action",
             "DAMAGE": "Dégâts",
