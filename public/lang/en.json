@@ -1210,6 +1210,7 @@
         "CONFIRM": "Confirm",
         "CANCEL": "Cancel",
         "COMMON": {
+            "REFERENCE": "Reference",
             "ROLL_DICE": "Roll dice",
             "ACTIVATE": "Activate",
             "DEACTIVATE": "Deactivate",

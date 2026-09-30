@@ -1210,6 +1210,7 @@
         "CONFIRM": "確定",
         "CANCEL": "キャンセル",
         "COMMON": {
+            "REFERENCE": "参照",
             "ROLL_DICE": "ダイスを振る",
             "ACTIVATE": "有効化",
             "DEACTIVATE": "無効化",

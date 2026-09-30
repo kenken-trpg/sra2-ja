@@ -1210,6 +1210,7 @@
         "CONFIRM": "Confirmer",
         "CANCEL": "Annuler",
         "COMMON": {
+            "REFERENCE": "Référence",
             "ROLL_DICE": "Lancer les dés",
             "ACTIVATE": "Activer",
             "DEACTIVATE": "Désactiver",

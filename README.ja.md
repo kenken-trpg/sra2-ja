@@ -109,6 +109,7 @@ npm run build          # dist/ にビルド
 npm run build:public   # public/ の同梱ビルド成果物を更新
 npm run i18n:scan      # 翻訳の進捗を表示
 npm run check:i18n     # en.json とのキー整合・構文破損を検査
+npm run check:layout   # 日本語ラベルがレイアウトに収まるかの推定レポート
 npm run i18n:sync      # en.json の変更を ja.json に取り込む
 npm run test
 ```
