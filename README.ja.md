@@ -37,7 +37,13 @@ https://raw.githubusercontent.com/kenken-trpg/sra2-ja/master/public/system.json
 上流 `sra2` の配布 zip には `packs/anarchy-items-en` と `packs/anarchy-items-fr`
 が含まれています（内容はアイテム名と数値データのみで、説明文フィールドは空です）。
 上流 README も「著作権上、完成品の Compendium は提供しない」としており、
-ルールブックの文章は含まれません。
+この 2 パックにルールブックの文章は含まれません（`src/packs/` の全 230
+ファイルを走査して `description` が 0 件であることを確認済み）。
+
+> 同じ zip の `packs/packs.tgz` は**別物**です。宣言されていない 2 パック
+> （feat 559 件・NPC 1903 件）が入っており、ルール内容を説明する文章が
+> 約 200 件・計 32,500 文字（最長 604 文字）含まれます。本フォークは
+> これを翻訳・再配布しません。
 
 Foundry を終了した状態で、上流 zip 内の
 
@@ -61,7 +67,30 @@ Foundry を起動すると Compendium タブに現れます。
 > ここに置いた Compendium は消える可能性があります。残したい内容は
 > ワールド側の Compendium（後述）へインポートしてください。
 
-### 2. 自分の Compendium を作る
+### 2. 日本語版の名称パックを生成する
+
+上記 1 の英語パックから、**名称のみを日本語化した Compendium** をローカルで
+生成できます。配布 zip には含まれません（`LICENSE.md` の「完成品の Compendium
+を同梱しない」方針を変えないため）。
+
+```sh
+npm run compendium:ja                            # local/packs/anarchy-items-ja を生成
+node tools/compendium/generate-ja.mjs --check    # 訳語の抜けだけ確認（書き出さない）
+```
+
+訳語は `public/lang/{en,ja}.json` から引きます（115 件のうち 88 件）。UI と
+Compendium が食い違わないようにするためで、専用の辞書は持ちません。ロケールに
+対応する文字列がない 25 件だけを `tools/compendium/names-ja.json` が補います。
+
+設置方法はコマンドの出力が案内します（インストール先へのコピーと、`system.json`
+の `packs` への 1 エントリ追記）。`_id` を含め `name` 以外のフィールドは一切
+変更しないので、既存キャラクターのアイテム参照は壊れません。
+
+> このスクリプトは説明文を持つドキュメントを検出すると**中止します**。名称のみ
+> を扱う方針をコード側で強制しているため、`packs.tgz` の内容を誤って入力にして
+> も翻訳されません。
+
+### 3. 自分の Compendium を作る
 
 **ワールド内に作る方法（推奨）**
 Foundry の Compendium タブ →「Compendium パックを作成」でワールド所属の

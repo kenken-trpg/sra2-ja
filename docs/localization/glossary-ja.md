@@ -109,3 +109,35 @@ chummer-web の日本語データは chummer5a/chummer5a（**GPL-3.0**）の派�
 ※ `Light`（本フォーク「軽傷」）のように、同じ英単語が SR5 側では別の文脈を
 指していて**相違ではない**行もある。スクリプトは英語ラベルの一致でしか
 突き合わせられないので、文脈の判定は人が行う。
+
+## Compendium の名称対訳（`npm run compendium:ja`）
+
+宣言済みパック `anarchy-items-en`（技能 16・専門化 91・メタタイプ 5・フォルダ 3）
+の名称のみを日本語化する。**説明文は 1 件も含まれないため、名称対訳以外の判断が
+発生しない。** `packs.tgz` 側（feat 559・NPC 1903・説明文 203 件）は対象外で、
+スクリプトが説明文を検出したら中止する。
+
+訳語の 88/115 は `public/lang/{en,ja}.json` から引く。UI と Compendium の
+不一致を構造的に防ぐためで、専用辞書は持たない。残り 25 件は
+`tools/compendium/names-ja.json` が補完し、いずれも既存の ja.json 内の
+パターンに従っている。
+
+| 補完した語 | 日本語 | 準拠したパターン |
+| --- | --- | --- |
+| `Spec: Engineering` / `Stealth` / `Magic` | 専門化：工学 / 隠密 / 魔法 | 技能名の訳をそのまま使う |
+| `Spec: Astral Stealth` | 専門化：アストラル隠密 | 物理隠密 / マトリックス隠密 |
+| `Spec: C&R Mechanical Devices` | 専門化：機械装置整備 | ドローン整備 / 車両整備（C&R = 整備） |
+| `Spec: Kin Spirits` / `Plant Spirits` | 専門化：同族の精霊 / 植物の精霊 | 大気の精霊 / 大地の精霊 / 火の精霊 |
+| `Spec: Aquatic Drones` | 専門化：水中ドローン | 地上ドローン / 飛行ドローン |
+| `Spec: Personal Electronics` | 専門化：個人用電子機器 | 個人用デバイス（`Personal Devices`）と区別 |
+
+### 上流由来の気付き
+
+- `Spec: La rue` … 英語パックにフランス語が残っている。本フォークは
+  `ja.json` の「専門化：ストリート」を当てている
+- `Spec: Matrix` / `Spec: Thrown Weapons` … 英語パック内で名称が重複している
+- `Spec: Remote ConTrolled Weapons` / `Spec: monofilament` … 大文字小文字の誤り
+- `npm run pack:compendiums` は新規パックを `system: "sra2"`（上流の ID）で
+  `system.json` に自動追記する。本フォークでは ID 不一致になるため、生成
+  スクリプトは `system.json` を触らず自己完結させている（`system-manifest`
+  テストがこの不一致を検出する）
