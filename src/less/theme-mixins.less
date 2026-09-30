@@ -1,14 +1,20 @@
 // Common Variables Mixin
 
+// The bundled theme fonts cover Latin only, so every font variable ends with a
+// CJK stack: Latin glyphs still come from the theme font and Japanese text
+// falls back to a system font with consistent metrics instead of whatever the
+// browser picks per glyph.
+@font-fallback-cjk: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", "Yu Gothic", Meiryo, "Noto Sans JP", "Noto Sans CJK JP", sans-serif;
+
 .theme-vars() {
   
   // Fonts
-  --sr-font-body: @font-body;
-  --sr-font-title: @font-title;
-  --sr-font-title-alt: @font-title-alt;
-  --sr-font-journal: @font-journal;
-  --sr-font-journal-shadowtalk: @font-journal-shadowtalk;
-  --sr-font-journal-shadowtalk-arrow:  @font-journal-shadowtalk-arrow;
+  --sr-font-body: @font-body, @font-fallback-cjk;
+  --sr-font-title: @font-title, @font-fallback-cjk;
+  --sr-font-title-alt: @font-title-alt, @font-fallback-cjk;
+  --sr-font-journal: @font-journal, @font-fallback-cjk;
+  --sr-font-journal-shadowtalk: @font-journal-shadowtalk, @font-fallback-cjk;
+  --sr-font-journal-shadowtalk-arrow:  @font-journal-shadowtalk-arrow, @font-fallback-cjk;
 
   // Font Sizes
   --sr-font-size-h0: @font-size-h0;
