@@ -1,12 +1,12 @@
 {
-  "id": "sra2",
-  "version": "14.3.3",
-  "manifest": "https://raw.githubusercontent.com/VincentVk9373/sra2/master/public/system.json",
-  "download": "https://github.com/VincentVk9373/sra2/releases/download/v14.3.3/foundry-sra2-v14.3.3.zip",
-  "url": "https://github.com/VincentVk9373/sra2",
-  "bugs": "https://github.com/VincentVk9373/sra2/issues",
-  "title": "Shadowrun Anarchy 2",
-  "description": "Shadowrun Anarchy 2 unofficial system for FoundryVTT",
+  "id": "sra2-ja",
+  "version": "14.3.3-ja.1",
+  "manifest": "https://raw.githubusercontent.com/kenken-trpg/sra2-ja/master/public/system.json",
+  "download": "https://github.com/kenken-trpg/sra2-ja/releases/download/v14.3.3-ja.1/foundry-sra2-ja-v14.3.3-ja.1.zip",
+  "url": "https://github.com/kenken-trpg/sra2-ja",
+  "bugs": "https://github.com/kenken-trpg/sra2-ja/issues",
+  "title": "Shadowrun Anarchy 2 (日本語)",
+  "description": "Japanese localization fork of the unofficial Shadowrun Anarchy 2 system for Foundry VTT. Not an official Topps / Catalyst Game Labs product.",
   "compatibility": {
     "minimum": 14,
     "verified": 14
@@ -45,6 +45,12 @@
     {
       "name": "Asimov",
       "discord": "asimov_"
+    },
+    {
+      "name": "kenken-trpg",
+      "flags": {
+        "role": "Japanese localization fork maintainer"
+      }
     }
   ],
   "flags": {
@@ -94,7 +100,7 @@
       "name": "anarchy-items-en",
       "label": "Anarchy Items (EN)",
       "type": "Item",
-      "system": "sra2",
+      "system": "sra2-ja",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
@@ -104,7 +110,7 @@
       "name": "anarchy-items-fr",
       "label": "Anarchy Items (FR)",
       "type": "Item",
-      "system": "sra2",
+      "system": "sra2-ja",
       "ownership": {
         "PLAYER": "OBSERVER",
         "ASSISTANT": "OWNER"
@@ -114,7 +120,7 @@
   "media": [
     {
       "type": "cover",
-      "url": "systems/sra2/style/sra2-logo.webp"
+      "url": "systems/sra2-ja/style/sra2-logo.webp"
     }
   ],
   "relationships": {},

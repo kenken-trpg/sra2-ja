@@ -1,4 +1,4 @@
-const SYSTEM_ID = 'sra2';
+const SYSTEM_ID = 'sra2-ja';
 
 export interface SystemConfig {
   id: string;

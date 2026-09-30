@@ -3,13 +3,13 @@ import { visualizer } from 'rollup-plugin-visualizer';
 
 const config: UserConfig = {
     publicDir: 'public',
-    base: '/systems/sra2/',
+    base: '/systems/sra2-ja/',
     root: '.',
     server: {
         port: 30001,
         open: true,
         proxy: {
-            '^(?!/systems/sra2/)': 'http://localhost:30000/',
+            '^(?!/systems/sra2-ja/)': 'http://localhost:30000/',
             '/socket.io': {
                 target: 'ws://localhost:30000',
                 ws: true,
@@ -26,7 +26,7 @@ const config: UserConfig = {
         emptyOutDir: true,
         sourcemap: true,
         lib: {
-            name: 'sra2',
+            name: 'sra2ja',
             entry: 'src/start.ts',
             formats: ['es'],
             fileName: 'index',
