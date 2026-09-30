@@ -1,3 +1,22 @@
+# Shadowrun Anarchy 2 — Japanese localization fork (`sra2-ja`)
+
+> **This is a fork.** It is the Japanese localization of the unofficial
+> Shadowrun Anarchy 2 system for Foundry VTT. The upstream project is
+> [VincentVk9373/sra2](https://github.com/VincentVk9373/sra2); all credit for
+> the system itself belongs to its authors.
+>
+> It installs as its own system id (`sra2-ja`), so it can be installed
+> alongside upstream `sra2`. Worlds created with upstream `sra2` will **not**
+> open under this system.
+>
+> 日本語の案内は **[README.ja.md](README.ja.md)**、翻訳方針は
+> **[docs/localization/](docs/localization/)** を参照してください。
+> ライセンスは [LICENSE.md](LICENSE.md)（本フォークは CC BY-SA 4.0）。
+
+The original upstream README follows.
+
+---
+
 # Welcome to Shadowrun Anarchy 2 Unofficial System
 
 If you are here, you probably know the world has changed, with technology melting with flesh, mythological creatures and magic raising back from the past.
@@ -187,9 +206,13 @@ Feats can provide RR bonuses to:
 
 ## License
 
-The system is developed under [Creative Commons BY-SA]("http://creativecommons.org/licenses/by/4.0/), more details in [LICENSE.md](LICENSE.md).
+This fork is released under
+[Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/)
+(CC BY-SA 4.0). See [LICENSE.md](LICENSE.md) for the details, including the
+upstream notice and why BY-SA was chosen while upstream's own statement is
+being clarified.
 
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+<a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
 
 ## Trademarks
 
