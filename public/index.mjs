@@ -4060,20 +4060,20 @@ function calculateAttackPool(actor, skillSpecResult, itemRRList = [], itemName =
     allRRSources
   };
 }
-function findSkillByName(actor, skillName) {
-  if (!actor || !skillName) return void 0;
-  const normalizedName = normalizeSearchText(skillName);
+function findSkillByName(actor, skillName2) {
+  if (!actor || !skillName2) return void 0;
+  const normalizedName = normalizeSearchText(skillName2);
   return actor.items.find(
-    (i) => i.type === "skill" && (normalizeSearchText(i.name) === normalizedName || i.system?.slug === skillName)
+    (i) => i.type === "skill" && (normalizeSearchText(i.name) === normalizedName || i.system?.slug === skillName2)
   );
 }
-function findSpecByName(actor, specName) {
-  if (!actor || !specName) return void 0;
+function findSpecByName(actor, specName2) {
+  if (!actor || !specName2) return void 0;
   const bySlug = actor.items.find(
-    (i) => i.type === "specialization" && i.system?.slug === specName
+    (i) => i.type === "specialization" && i.system?.slug === specName2
   );
   if (bySlug) return bySlug;
-  const normalizedName = normalizeForComparison(specName);
+  const normalizedName = normalizeForComparison(specName2);
   return actor.items.find(
     (i) => i.type === "specialization" && normalizeForComparison(i.name) === normalizedName
   );
@@ -4159,10 +4159,10 @@ function findDefenseSelection(actor, linkedDefenseSpec, linkedDefenseSkill) {
   }
   return result;
 }
-function getSpecializationsForSkill(actor, skillName) {
-  if (!actor || !skillName) return [];
-  const normalizedSkillName = normalizeSearchText(skillName);
-  const skillItem = actor.items.find((i) => i.type === "skill" && (i.system?.slug === skillName || normalizeSearchText(i.name) === normalizedSkillName));
+function getSpecializationsForSkill(actor, skillName2) {
+  if (!actor || !skillName2) return [];
+  const normalizedSkillName = normalizeSearchText(skillName2);
+  const skillItem = actor.items.find((i) => i.type === "skill" && (i.system?.slug === skillName2 || normalizeSearchText(i.name) === normalizedSkillName));
   const skillSlug = skillItem?.system?.slug || "";
   return actor.items.filter((i) => {
     if (i.type !== "specialization") return false;
@@ -4632,8 +4632,8 @@ class RollDialog extends Application {
     let skillLevel = void 0;
     let specLevel = void 0;
     let linkedAttribute = void 0;
-    let skillName = baseSkillName;
-    let specName = void 0;
+    let skillName2 = baseSkillName;
+    let specName2 = void 0;
     if (linkedSkillItem) {
       const skillSystem = linkedSkillItem.system;
       const skillRating = skillSystem.rating || 0;
@@ -4643,7 +4643,7 @@ class RollDialog extends Application {
     }
     let rrList = [];
     const weaponRRList = filterItemRRForRoll(weaponSystem?.rrList || [], [
-      skillName,
+      skillName2,
       linkedSkillItem?.name,
       linkedSkillItem?.system?.slug || baseSkillName,
       preferredSpecName,
@@ -4656,18 +4656,18 @@ class RollDialog extends Application {
     }));
     let skillSpecRRList = [];
     if (preferredSpecName) {
-      specName = preferredSpecName;
+      specName2 = preferredSpecName;
       const attributeValue = linkedAttribute ? this.actor.system?.attributes?.[linkedAttribute] || 0 : 0;
       const parentSkill = linkedSkillItem;
       const skillRating = parentSkill ? parentSkill.system.rating || 0 : 0;
       specLevel = attributeValue + skillRating + 2;
-      const specRRSources = getRRSources$1(this.actor, "specialization", specName);
+      const specRRSources = getRRSources$1(this.actor, "specialization", specName2);
       const skillRRSources = linkedSkillItem ? getRRSources$1(this.actor, "skill", baseSkillName) : [];
       const attributeRRSources = linkedAttribute ? getRRSources$1(this.actor, "attribute", linkedAttribute) : [];
       skillSpecRRList = [...specRRSources, ...skillRRSources, ...attributeRRSources];
     } else {
-      if (skillName) {
-        const skillRRSources = getRRSources$1(this.actor, "skill", skillName);
+      if (skillName2) {
+        const skillRRSources = getRRSources$1(this.actor, "skill", skillName2);
         const attributeRRSources = linkedAttribute ? getRRSources$1(this.actor, "attribute", linkedAttribute) : [];
         skillSpecRRList = [...skillRRSources, ...attributeRRSources];
       }
@@ -4678,11 +4678,11 @@ class RollDialog extends Application {
     const shortRange = selectedWeapon.shortRange || weaponSystem?.shortRange || wepTypeData?.short || "none";
     const mediumRange = selectedWeapon.mediumRange || weaponSystem?.mediumRange || wepTypeData?.medium || "none";
     const longRange = selectedWeapon.longRange || weaponSystem?.longRange || wepTypeData?.long || "none";
-    this.rollData.skillName = skillName;
+    this.rollData.skillName = skillName2;
     this.rollData.skillSlug = linkedSkillItem ? linkedSkillItem.system.slug || baseSkillName : baseSkillName;
-    this.rollData.specName = specName;
+    this.rollData.specName = specName2;
     this.rollData.linkedAttackSkill = baseSkillName;
-    this.rollData.linkedAttackSpecialization = weaponLinkedSpecialization || specName;
+    this.rollData.linkedAttackSpecialization = weaponLinkedSpecialization || specName2;
     this.rollData.linkedAttribute = linkedAttribute;
     this.rollData.skillLevel = skillLevel;
     this.rollData.specLevel = specLevel;
@@ -5311,8 +5311,8 @@ class RollDialog extends Application {
       let skillLevel = void 0;
       let specLevel = void 0;
       let linkedAttribute = void 0;
-      let skillName = baseSkillName;
-      let specName = void 0;
+      let skillName2 = baseSkillName;
+      let specName2 = void 0;
       if (linkedSkillItem) {
         const skillSystem = linkedSkillItem.system;
         const skillRating = skillSystem.rating || 0;
@@ -5322,7 +5322,7 @@ class RollDialog extends Application {
       }
       const { getRRSources: getRRSources2 } = SheetHelpers;
       const weaponRRList = filterItemRRForRoll(weaponSystem?.rrList || [], [
-        skillName,
+        skillName2,
         linkedSkillItem?.name,
         linkedSkillItem?.system?.slug || baseSkillName,
         preferredSpecName,
@@ -5335,18 +5335,18 @@ class RollDialog extends Application {
       }));
       let skillSpecRRList = [];
       if (preferredSpecName) {
-        specName = preferredSpecName;
+        specName2 = preferredSpecName;
         const attributeValue = linkedAttribute ? this.actor.system?.attributes?.[linkedAttribute] || 0 : 0;
         const parentSkill = linkedSkillItem;
         const skillRating = parentSkill ? parentSkill.system.rating || 0 : 0;
         specLevel = attributeValue + skillRating + 2;
-        const specRRSources = getRRSources2(this.actor, "specialization", specName);
+        const specRRSources = getRRSources2(this.actor, "specialization", specName2);
         const skillRRSources = linkedSkillItem ? getRRSources2(this.actor, "skill", baseSkillName) : [];
         const attributeRRSources = linkedAttribute ? getRRSources2(this.actor, "attribute", linkedAttribute) : [];
         skillSpecRRList = [...specRRSources, ...skillRRSources, ...attributeRRSources];
       } else {
-        if (skillName) {
-          const skillRRSources = getRRSources2(this.actor, "skill", skillName);
+        if (skillName2) {
+          const skillRRSources = getRRSources2(this.actor, "skill", skillName2);
           const attributeRRSources = linkedAttribute ? getRRSources2(this.actor, "attribute", linkedAttribute) : [];
           skillSpecRRList = [...skillRRSources, ...attributeRRSources];
         }
@@ -5357,11 +5357,11 @@ class RollDialog extends Application {
       const shortRange = selectedWeapon.shortRange || weaponSystem?.shortRange || wepTypeData?.short || "none";
       const mediumRange = selectedWeapon.mediumRange || weaponSystem?.mediumRange || wepTypeData?.medium || "none";
       const longRange = selectedWeapon.longRange || weaponSystem?.longRange || wepTypeData?.long || "none";
-      this.rollData.skillName = skillName;
+      this.rollData.skillName = skillName2;
       this.rollData.skillSlug = linkedSkillItem ? linkedSkillItem.system.slug || baseSkillName : baseSkillName;
-      this.rollData.specName = specName;
+      this.rollData.specName = specName2;
       this.rollData.linkedAttackSkill = baseSkillName;
-      this.rollData.linkedAttackSpecialization = weaponLinkedSpecialization || specName;
+      this.rollData.linkedAttackSpecialization = weaponLinkedSpecialization || specName2;
       this.rollData.linkedAttribute = linkedAttribute;
       this.rollData.skillLevel = skillLevel;
       this.rollData.specLevel = specLevel;
@@ -5743,7 +5743,7 @@ class RollDialog extends Application {
       this.close();
     }));
   }
-  updateRRForSkill(skillName, linkedAttribute, dicePool) {
+  updateRRForSkill(skillName2, linkedAttribute, dicePool) {
     if (!this.actor) return;
     let itemRRList = [];
     let weaponName = "";
@@ -5761,7 +5761,7 @@ class RollDialog extends Application {
       }
     }
     const normalizedWeaponName = weaponName ? normalizeSearchText(weaponName) : "";
-    const allSkillRRSources = skillName ? getRRSources$1(this.actor, "skill", skillName) : [];
+    const allSkillRRSources = skillName2 ? getRRSources$1(this.actor, "skill", skillName2) : [];
     const allAttributeRRSources = linkedAttribute ? getRRSources$1(this.actor, "attribute", linkedAttribute) : [];
     const skillRRSources = normalizedWeaponName === "" ? allSkillRRSources : allSkillRRSources.filter((source) => normalizeSearchText(source.featName) !== normalizedWeaponName);
     const attributeRRSources = normalizedWeaponName === "" ? allAttributeRRSources : allAttributeRRSources.filter((source) => normalizeSearchText(source.featName) !== normalizedWeaponName);
@@ -5782,7 +5782,7 @@ class RollDialog extends Application {
       this.rollData.threshold = Math.round(dicePool / 3) + totalRR + 1;
     }
   }
-  updateRRForSpec(specName, skillName, linkedAttribute, dicePool) {
+  updateRRForSpec(specName2, skillName2, linkedAttribute, dicePool) {
     if (!this.actor) return;
     let itemRRList = [];
     let weaponName = "";
@@ -5800,8 +5800,8 @@ class RollDialog extends Application {
       }
     }
     const normalizedWeaponName = weaponName ? normalizeSearchText(weaponName) : "";
-    const allSpecRRSources = specName ? getRRSources$1(this.actor, "specialization", specName) : [];
-    const allSkillRRSources = skillName ? getRRSources$1(this.actor, "skill", skillName) : [];
+    const allSpecRRSources = specName2 ? getRRSources$1(this.actor, "specialization", specName2) : [];
+    const allSkillRRSources = skillName2 ? getRRSources$1(this.actor, "skill", skillName2) : [];
     const allAttributeRRSources = linkedAttribute ? getRRSources$1(this.actor, "attribute", linkedAttribute) : [];
     const specRRSources = normalizedWeaponName === "" ? allSpecRRSources : allSpecRRSources.filter((source) => normalizeSearchText(source.featName) !== normalizedWeaponName);
     const skillRRSources = normalizedWeaponName === "" ? allSkillRRSources : allSkillRRSources.filter((source) => normalizeSearchText(source.featName) !== normalizedWeaponName);
@@ -6614,11 +6614,11 @@ async function whisperComplicationSuggestions(rollData, rollResult) {
     };
     const color = colors[level] || "#ffc107";
     const label = isEn ? labels[level]?.en : labels[level]?.fr;
-    const skillName = rollData.itemName || rollData.skillName || lookupKey;
+    const skillName2 = rollData.itemName || rollData.skillName || lookupKey;
     const content = `
 <div style="border-left:3px solid ${color};padding:6px 10px;background:rgba(0,0,0,0.3);border-radius:4px;font-size:0.9em;">
   <div style="color:${color};font-weight:bold;margin-bottom:4px;">
-    <i class="fas fa-exclamation-triangle"></i> ${label} — ${skillName}
+    <i class="fas fa-exclamation-triangle"></i> ${label} — ${skillName2}
   </div>
   ${byTheBookText ? `<div style="opacity:0.9;margin-bottom:6px;padding:4px 8px;background:rgba(255,255,255,0.05);border-radius:3px;font-size:0.9em;">
     <i class="fas fa-book"></i> ${byTheBookText}
@@ -8131,15 +8131,15 @@ class CharacterSheet extends ActorSheet {
   async _onRollOrphanSpec(event) {
     event.preventDefault();
     const element = event.currentTarget;
-    const specName = element.dataset.specName;
+    const specName2 = element.dataset.specName;
     const linkedAttribute = element.dataset.attribute;
-    if (!specName || !linkedAttribute) return;
+    if (!specName2 || !linkedAttribute) return;
     const attributeLabel = game.i18n.localize(`SRA2.ATTRIBUTES.${linkedAttribute.toUpperCase()}`);
-    const rrSources = this.getRRSources("specialization", specName);
+    const rrSources = this.getRRSources("specialization", specName2);
     handleRollRequest({
       itemType: "specialization",
-      itemName: `${specName} (${attributeLabel})`,
-      skillName: specName,
+      itemName: `${specName2} (${attributeLabel})`,
+      skillName: specName2,
       skillLevel: 0,
       // No skill level since the linked skill doesn't exist
       linkedAttribute,
@@ -8381,9 +8381,9 @@ class CharacterSheet extends ActorSheet {
     event.preventDefault();
     event.stopPropagation();
     const button = event.currentTarget;
-    const skillName = button.dataset.skillName;
-    if (!skillName) return;
-    const formattedName = skillName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+    const skillName2 = button.dataset.skillName;
+    if (!skillName2) return;
+    const formattedName = skillName2.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
     const skillData = {
       name: formattedName,
       type: "skill",
@@ -12669,10 +12669,10 @@ class SpecializationSheet extends ItemSheet {
     event.preventDefault();
     event.stopPropagation();
     const button = event.currentTarget;
-    const skillName = button.dataset.skillName;
+    const skillName2 = button.dataset.skillName;
     const skillSlug = button.dataset.skillSlug;
-    if (!skillName) return;
-    await this.item.update({ "system.linkedSkill": skillSlug || skillName });
+    if (!skillName2) return;
+    await this.item.update({ "system.linkedSkill": skillSlug || skillName2 });
     const sheetEl = this.element instanceof HTMLElement ? this.element : this.element?.[0];
     const searchInput = sheetEl?.querySelector(".skill-search-input");
     if (searchInput) {
@@ -12683,7 +12683,7 @@ class SpecializationSheet extends ItemSheet {
       resultsDiv2.style.display = "none";
     }
     this.render(false);
-    ui.notifications?.info(game.i18n.format("SRA2.SPECIALIZATIONS.SKILL_LINKED", { name: skillName }));
+    ui.notifications?.info(game.i18n.format("SRA2.SPECIALIZATIONS.SKILL_LINKED", { name: skillName2 }));
   }
   /**
    * Handle skill search focus
@@ -12727,9 +12727,9 @@ class SpecializationSheet extends ItemSheet {
     event.preventDefault();
     event.stopPropagation();
     const button = event.currentTarget;
-    const skillName = button.dataset.skillName;
-    if (!skillName) return;
-    const formattedName = skillName.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
+    const skillName2 = button.dataset.skillName;
+    if (!skillName2) return;
+    const formattedName = skillName2.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(" ");
     const skillData = {
       name: formattedName,
       type: "skill",
@@ -14020,90 +14020,90 @@ const CATCHPHRASES_EN = [
   "My implants are worth more than your apartment. And they're more reliable."
 ];
 const SKILL_DEFINITIONS = {
-  "close-combat": { nameFr: "Combat rapproché", linkedAttribute: "agility" },
-  "ranged-weapons": { nameFr: "Armes à distance", linkedAttribute: "agility" },
-  "athletics": { nameFr: "Athlétisme", linkedAttribute: "strength" },
-  "stealth": { nameFr: "Furtivité", linkedAttribute: "agility" },
-  "cracking": { nameFr: "Piratage", linkedAttribute: "logic" },
-  "engineering": { nameFr: "Ingénierie", linkedAttribute: "logic" },
-  "electronics": { nameFr: "Électronique", linkedAttribute: "logic" },
-  "piloting": { nameFr: "Pilotage", linkedAttribute: "agility" },
-  "sorcery": { nameFr: "Sorcellerie", linkedAttribute: "willpower" },
-  "conjuration": { nameFr: "Conjuration", linkedAttribute: "logic" },
-  "technomancer": { nameFr: "Technomancie", linkedAttribute: "logic" },
-  "influence": { nameFr: "Influence", linkedAttribute: "charisma" },
-  "perception": { nameFr: "Perception", linkedAttribute: "logic" },
-  "survival": { nameFr: "Survie", linkedAttribute: "willpower" },
-  "networking": { nameFr: "Réseau", linkedAttribute: "charisma" },
-  "astral-combat": { nameFr: "Combat astral", linkedAttribute: "willpower" }
+  "close-combat": { nameFr: "Combat rapproché", nameEn: "Close Combat", linkedAttribute: "agility" },
+  "ranged-weapons": { nameFr: "Armes à distance", nameEn: "Ranged Weapons", linkedAttribute: "agility" },
+  "athletics": { nameFr: "Athlétisme", nameEn: "Athletics", linkedAttribute: "strength" },
+  "stealth": { nameFr: "Furtivité", nameEn: "Stealth", linkedAttribute: "agility" },
+  "cracking": { nameFr: "Piratage", nameEn: "Cracking", linkedAttribute: "logic" },
+  "engineering": { nameFr: "Ingénierie", nameEn: "Engineering", linkedAttribute: "logic" },
+  "electronics": { nameFr: "Électronique", nameEn: "Electronics", linkedAttribute: "logic" },
+  "piloting": { nameFr: "Pilotage", nameEn: "Piloting", linkedAttribute: "agility" },
+  "sorcery": { nameFr: "Sorcellerie", nameEn: "Sorcery", linkedAttribute: "willpower" },
+  "conjuration": { nameFr: "Conjuration", nameEn: "Conjuration", linkedAttribute: "logic" },
+  "technomancer": { nameFr: "Technomancie", nameEn: "Technomancer", linkedAttribute: "logic" },
+  "influence": { nameFr: "Influence", nameEn: "Influence", linkedAttribute: "charisma" },
+  "perception": { nameFr: "Perception", nameEn: "Perception", linkedAttribute: "logic" },
+  "survival": { nameFr: "Survie", nameEn: "Survival", linkedAttribute: "willpower" },
+  "networking": { nameFr: "Réseau", nameEn: "Networking", linkedAttribute: "charisma" },
+  "astral-combat": { nameFr: "Combat astral", nameEn: "Astral Combat", linkedAttribute: "willpower" }
 };
 const SPEC_DEFINITIONS = {
-  "spec_blades": { nameFr: "Spé : Lames", linkedSkill: "close-combat", linkedAttribute: "agility" },
-  "spec_unarmed": { nameFr: "Spé : Mains nues", linkedSkill: "close-combat", linkedAttribute: "agility" },
-  "spec_blunt-weapons": { nameFr: "Spé : Armes contondantes", linkedSkill: "close-combat", linkedAttribute: "agility" },
-  "spec_monofilament": { nameFr: "Spé : monofilament", linkedSkill: "close-combat", linkedAttribute: "agility" },
-  "spec_defense": { nameFr: "Spé : Défense", linkedSkill: "close-combat", linkedAttribute: "agility" },
-  "spec_pistols": { nameFr: "Spé : Pistolets", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
-  "spec_rifles": { nameFr: "Spé : Fusils", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
-  "spec_shotguns": { nameFr: "Spé : Shotguns", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
-  "spec_smgs": { nameFr: "Spé : Mitraillettes", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
-  "spec_heavy-weapons": { nameFr: "Spé : Armes lourdes", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
-  "spec_thrown-weapons": { nameFr: "Spé : Armes de jet", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
-  "spec_ranged-defense": { nameFr: "Spé : Défense à distance", linkedSkill: "athletics", linkedAttribute: "agility" },
-  "spec_running": { nameFr: "Spé : Course", linkedSkill: "athletics", linkedAttribute: "strength" },
-  "spec_climbing": { nameFr: "Spé : Escalade", linkedSkill: "athletics", linkedAttribute: "strength" },
-  "spec_physical-stealth": { nameFr: "Spé : Discrétion Physique", linkedSkill: "stealth", linkedAttribute: "agility" },
-  "spec_matrix-stealth": { nameFr: "Spé : Discrétion matricielle", linkedSkill: "stealth", linkedAttribute: "logic" },
-  "spec_lockpicking": { nameFr: "Spé : Crochetage", linkedSkill: "stealth", linkedAttribute: "agility" },
-  "spec_backdoor": { nameFr: "Spé : Backdoor", linkedSkill: "cracking", linkedAttribute: "logic" },
-  "spec_brute-force": { nameFr: "Spé : Force brute", linkedSkill: "cracking", linkedAttribute: "logic" },
-  "spec_complex-forms": { nameFr: "Spé : Cybercombat", linkedSkill: "cracking", linkedAttribute: "logic" },
-  "spec_electronic-warfare": { nameFr: "Spé : Guerre électronique", linkedSkill: "cracking", linkedAttribute: "logic" },
-  "spec_cybernetics": { nameFr: "Spé : C/R implants cybernétiques", linkedSkill: "engineering", linkedAttribute: "logic" },
-  "spec_cr-drones": { nameFr: "Spé : C/R drones", linkedSkill: "engineering", linkedAttribute: "logic" },
-  "spec_cr-vehicles": { nameFr: "Spé : C/R véhicules", linkedSkill: "engineering", linkedAttribute: "logic" },
-  "spec_explosives": { nameFr: "Spé : Explosifs", linkedSkill: "engineering", linkedAttribute: "logic" },
-  "spec_personal-devices": { nameFr: "Spé : Appareils personnels", linkedSkill: "electronics", linkedAttribute: "logic" },
-  "spec_matrix-search": { nameFr: "Spé : Recherche matricielle", linkedSkill: "electronics", linkedAttribute: "logic" },
-  "spec_matrix-perception": { nameFr: "Spé : Perception matricielle", linkedSkill: "electronics", linkedAttribute: "logic" },
-  "spec_matrix-protection": { nameFr: "Spé : Protection matricielle", linkedSkill: "electronics", linkedAttribute: "logic" },
-  "spec_cars": { nameFr: "Spé : Voitures", linkedSkill: "piloting", linkedAttribute: "agility" },
-  "spec_bikes": { nameFr: "Spé : Motos", linkedSkill: "piloting", linkedAttribute: "agility" },
-  "spec_ground-drones": { nameFr: "Spé : Drones terrestres", linkedSkill: "piloting", linkedAttribute: "agility" },
-  "spec_flying-drones": { nameFr: "Spé : Drones volants", linkedSkill: "piloting", linkedAttribute: "agility" },
-  "spec_combat-spells": { nameFr: "Spé : Sorts de combat", linkedSkill: "sorcery", linkedAttribute: "willpower" },
-  "spec_detection-spells": { nameFr: "Spé : Sorts de détection", linkedSkill: "sorcery", linkedAttribute: "willpower" },
-  "spec_health-spells": { nameFr: "Spé : Sorts de santé", linkedSkill: "sorcery", linkedAttribute: "willpower" },
-  "spec_illusion-spells": { nameFr: "Spé : Sorts d'illusion", linkedSkill: "sorcery", linkedAttribute: "willpower" },
-  "spec_manipulation-spells": { nameFr: "Spé : Sorts de manipulation", linkedSkill: "sorcery", linkedAttribute: "willpower" },
-  "spec_counterspelling": { nameFr: "Spé : Contresort", linkedSkill: "sorcery", linkedAttribute: "willpower" },
-  "spec_banishing": { nameFr: "Spé : Bannissement", linkedSkill: "conjuration", linkedAttribute: "logic" },
-  "spec_air-spirits": { nameFr: "Spé : Esprits de l'air", linkedSkill: "conjuration", linkedAttribute: "logic" },
-  "spec_earth-spirits": { nameFr: "Spé : Esprits de la terre", linkedSkill: "conjuration", linkedAttribute: "logic" },
-  "spec_fire-spirits": { nameFr: "Spé : Esprits du feu", linkedSkill: "conjuration", linkedAttribute: "logic" },
-  "spec_water-spirits": { nameFr: "Spé : Esprits de l'eau", linkedSkill: "conjuration", linkedAttribute: "logic" },
-  "spec_beast-spirits": { nameFr: "Spé : Esprits des bêtes", linkedSkill: "conjuration", linkedAttribute: "logic" },
-  "spec_compilation": { nameFr: "Spé : Compilation", linkedSkill: "technomancer", linkedAttribute: "logic" },
-  "spec_decompilation": { nameFr: "Spé : Décompilation", linkedSkill: "technomancer", linkedAttribute: "logic" },
-  "spec_complex-forms": { nameFr: "Spé : Formes complexes", linkedSkill: "technomancer", linkedAttribute: "logic" },
-  "spec_bluff": { nameFr: "Spé : Bluff", linkedSkill: "influence", linkedAttribute: "charisma" },
-  "spec_intimidation": { nameFr: "Spé : Intimidation", linkedSkill: "influence", linkedAttribute: "charisma" },
-  "spec_negotiation": { nameFr: "Spé : Négociation", linkedSkill: "influence", linkedAttribute: "charisma" },
-  "spec_impersonation": { nameFr: "Spé : Imposture", linkedSkill: "influence", linkedAttribute: "charisma" },
-  "spec_etiquette": { nameFr: "Spé : Étiquette", linkedSkill: "influence", linkedAttribute: "charisma" },
-  "spec_physical-perception": { nameFr: "Spé : Perception physique", linkedSkill: "perception", linkedAttribute: "logic" },
-  "spec_social-perception": { nameFr: "Spé : Perception sociale", linkedSkill: "perception", linkedAttribute: "logic" },
-  "spec_astral-perception": { nameFr: "Spé : Perception astrale", linkedSkill: "perception", linkedAttribute: "logic" },
-  "spec_composure": { nameFr: "Spé : Sang-froid", linkedSkill: "survival", linkedAttribute: "willpower" },
-  "spec_wilderness-survival": { nameFr: "Spé : Survie en milieu naturel", linkedSkill: "survival", linkedAttribute: "logic" },
-  "spec_navigation": { nameFr: "Spé : Orientation", linkedSkill: "survival", linkedAttribute: "logic" },
-  "spec_first-aid": { nameFr: "Spé : Premiers soins", linkedSkill: "survival", linkedAttribute: "logic" },
-  "spec_corporate": { nameFr: "Spé : Corporatiste", linkedSkill: "networking", linkedAttribute: "charisma" },
-  "spec_criminal": { nameFr: "Spé : Criminel", linkedSkill: "networking", linkedAttribute: "charisma" },
-  "spec_la-rue": { nameFr: "Spé : La rue", linkedSkill: "networking", linkedAttribute: "charisma" },
-  "spec_government": { nameFr: "Spé : Gouvernemental", linkedSkill: "networking", linkedAttribute: "charisma" },
-  "spec_media": { nameFr: "Spé : Médiatique", linkedSkill: "networking", linkedAttribute: "charisma" },
-  "spec_astral-combat": { nameFr: "Spé : Combat astral", linkedSkill: "astral-combat", linkedAttribute: "willpower" }
+  "spec_blades": { nameFr: "Spé : Lames", nameEn: "Spec: Blades", linkedSkill: "close-combat", linkedAttribute: "agility" },
+  "spec_unarmed": { nameFr: "Spé : Mains nues", nameEn: "Spec: Unarmed", linkedSkill: "close-combat", linkedAttribute: "agility" },
+  "spec_blunt-weapons": { nameFr: "Spé : Armes contondantes", nameEn: "Spec: Blunt Weapons", linkedSkill: "close-combat", linkedAttribute: "agility" },
+  "spec_monofilament": { nameFr: "Spé : monofilament", nameEn: "Spec: monofilament", linkedSkill: "close-combat", linkedAttribute: "agility" },
+  "spec_defense": { nameFr: "Spé : Défense", nameEn: "Spec: Defense", linkedSkill: "close-combat", linkedAttribute: "agility" },
+  "spec_pistols": { nameFr: "Spé : Pistolets", nameEn: "Spec: Pistols", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
+  "spec_rifles": { nameFr: "Spé : Fusils", nameEn: "Spec: Rifles", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
+  "spec_shotguns": { nameFr: "Spé : Shotguns", nameEn: "Spec: Shotguns", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
+  "spec_smgs": { nameFr: "Spé : Mitraillettes", nameEn: "Spec: SMGs", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
+  "spec_heavy-weapons": { nameFr: "Spé : Armes lourdes", nameEn: "Spec: Heavy Weapons", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
+  "spec_thrown-weapons": { nameFr: "Spé : Armes de jet", nameEn: "Spec: Thrown Weapons", linkedSkill: "ranged-weapons", linkedAttribute: "agility" },
+  "spec_ranged-defense": { nameFr: "Spé : Défense à distance", nameEn: "Spec: Ranged Defense", linkedSkill: "athletics", linkedAttribute: "agility" },
+  "spec_running": { nameFr: "Spé : Course", nameEn: "Spec: Running", linkedSkill: "athletics", linkedAttribute: "strength" },
+  "spec_climbing": { nameFr: "Spé : Escalade", nameEn: "Spec: Climbing", linkedSkill: "athletics", linkedAttribute: "strength" },
+  "spec_physical-stealth": { nameFr: "Spé : Discrétion Physique", nameEn: "Spec: Physical Stealth", linkedSkill: "stealth", linkedAttribute: "agility" },
+  "spec_matrix-stealth": { nameFr: "Spé : Discrétion matricielle", nameEn: "Spec: Matrix Stealth", linkedSkill: "stealth", linkedAttribute: "logic" },
+  "spec_lockpicking": { nameFr: "Spé : Crochetage", nameEn: "Spec: Lockpicking", linkedSkill: "stealth", linkedAttribute: "agility" },
+  "spec_backdoor": { nameFr: "Spé : Backdoor", nameEn: "Spec: Backdoor", linkedSkill: "cracking", linkedAttribute: "logic" },
+  "spec_brute-force": { nameFr: "Spé : Force brute", nameEn: "Spec: Brute Force", linkedSkill: "cracking", linkedAttribute: "logic" },
+  "spec_cybercombat": { nameFr: "Spé : Cybercombat", nameEn: "Spec: Cybercombat", linkedSkill: "cracking", linkedAttribute: "logic" },
+  "spec_electronic-warfare": { nameFr: "Spé : Guerre électronique", nameEn: "Spec: Electronic Warfare", linkedSkill: "cracking", linkedAttribute: "logic" },
+  "spec_cybernetics": { nameFr: "Spé : C/R implants cybernétiques", nameEn: "Spec: Cybernetics", linkedSkill: "engineering", linkedAttribute: "logic" },
+  "spec_cr-drones": { nameFr: "Spé : C/R drones", nameEn: "Spec: C&R Drones", linkedSkill: "engineering", linkedAttribute: "logic" },
+  "spec_cr-vehicles": { nameFr: "Spé : C/R véhicules", nameEn: "Spec: C&R Vehicles", linkedSkill: "engineering", linkedAttribute: "logic" },
+  "spec_explosives": { nameFr: "Spé : Explosifs", nameEn: "Spec: Explosives", linkedSkill: "engineering", linkedAttribute: "logic" },
+  "spec_personal-devices": { nameFr: "Spé : Appareils personnels", nameEn: "Spec: Personal Devices", linkedSkill: "electronics", linkedAttribute: "logic" },
+  "spec_matrix-search": { nameFr: "Spé : Recherche matricielle", nameEn: "Spec: Matrix Search", linkedSkill: "electronics", linkedAttribute: "logic" },
+  "spec_matrix-perception": { nameFr: "Spé : Perception matricielle", nameEn: "Spec: Matrix Perception", linkedSkill: "electronics", linkedAttribute: "logic" },
+  "spec_matrix-protection": { nameFr: "Spé : Protection matricielle", nameEn: "Spec: Matrix Protection", linkedSkill: "electronics", linkedAttribute: "logic" },
+  "spec_cars": { nameFr: "Spé : Voitures", nameEn: "Spec: Cars", linkedSkill: "piloting", linkedAttribute: "agility" },
+  "spec_bikes": { nameFr: "Spé : Motos", nameEn: "Spec: Bikes", linkedSkill: "piloting", linkedAttribute: "agility" },
+  "spec_ground-drones": { nameFr: "Spé : Drones terrestres", nameEn: "Spec: Ground Drones", linkedSkill: "piloting", linkedAttribute: "agility" },
+  "spec_flying-drones": { nameFr: "Spé : Drones volants", nameEn: "Spec: Flying Drones", linkedSkill: "piloting", linkedAttribute: "agility" },
+  "spec_combat-spells": { nameFr: "Spé : Sorts de combat", nameEn: "Spec: Combat Spells", linkedSkill: "sorcery", linkedAttribute: "willpower" },
+  "spec_detection-spells": { nameFr: "Spé : Sorts de détection", nameEn: "Spec: Detection Spells", linkedSkill: "sorcery", linkedAttribute: "willpower" },
+  "spec_health-spells": { nameFr: "Spé : Sorts de santé", nameEn: "Spec: Health Spells", linkedSkill: "sorcery", linkedAttribute: "willpower" },
+  "spec_illusion-spells": { nameFr: "Spé : Sorts d'illusion", nameEn: "Spec: Illusion Spells", linkedSkill: "sorcery", linkedAttribute: "willpower" },
+  "spec_manipulation-spells": { nameFr: "Spé : Sorts de manipulation", nameEn: "Spec: Manipulation Spells", linkedSkill: "sorcery", linkedAttribute: "willpower" },
+  "spec_counterspelling": { nameFr: "Spé : Contresort", nameEn: "Spec: Counterspelling", linkedSkill: "sorcery", linkedAttribute: "willpower" },
+  "spec_banishing": { nameFr: "Spé : Bannissement", nameEn: "Spec: Banishing", linkedSkill: "conjuration", linkedAttribute: "logic" },
+  "spec_air-spirits": { nameFr: "Spé : Esprits de l'air", nameEn: "Spec: Air Spirits", linkedSkill: "conjuration", linkedAttribute: "logic" },
+  "spec_earth-spirits": { nameFr: "Spé : Esprits de la terre", nameEn: "Spec: Earth Spirits", linkedSkill: "conjuration", linkedAttribute: "logic" },
+  "spec_fire-spirits": { nameFr: "Spé : Esprits du feu", nameEn: "Spec: Fire Spirits", linkedSkill: "conjuration", linkedAttribute: "logic" },
+  "spec_water-spirits": { nameFr: "Spé : Esprits de l'eau", nameEn: "Spec: Water Spirits", linkedSkill: "conjuration", linkedAttribute: "logic" },
+  "spec_beast-spirits": { nameFr: "Spé : Esprits des bêtes", nameEn: "Spec: Beast Spirits", linkedSkill: "conjuration", linkedAttribute: "logic" },
+  "spec_compilation": { nameFr: "Spé : Compilation", nameEn: "Spec: Compilation", linkedSkill: "technomancer", linkedAttribute: "logic" },
+  "spec_decompilation": { nameFr: "Spé : Décompilation", nameEn: "Spec: Decompilation", linkedSkill: "technomancer", linkedAttribute: "logic" },
+  "spec_complex-forms": { nameFr: "Spé : Formes complexes", nameEn: "Spec: Complex Forms", linkedSkill: "technomancer", linkedAttribute: "logic" },
+  "spec_bluff": { nameFr: "Spé : Bluff", nameEn: "Spec: Bluff", linkedSkill: "influence", linkedAttribute: "charisma" },
+  "spec_intimidation": { nameFr: "Spé : Intimidation", nameEn: "Spec: Intimidation", linkedSkill: "influence", linkedAttribute: "charisma" },
+  "spec_negotiation": { nameFr: "Spé : Négociation", nameEn: "Spec: Negotiation", linkedSkill: "influence", linkedAttribute: "charisma" },
+  "spec_impersonation": { nameFr: "Spé : Imposture", nameEn: "Spec: Impersonation", linkedSkill: "influence", linkedAttribute: "charisma" },
+  "spec_etiquette": { nameFr: "Spé : Étiquette", nameEn: "Spec: Etiquette", linkedSkill: "influence", linkedAttribute: "charisma" },
+  "spec_physical-perception": { nameFr: "Spé : Perception physique", nameEn: "Spec: Physical Perception", linkedSkill: "perception", linkedAttribute: "logic" },
+  "spec_social-perception": { nameFr: "Spé : Perception sociale", nameEn: "Spec: Social Perception", linkedSkill: "perception", linkedAttribute: "logic" },
+  "spec_astral-perception": { nameFr: "Spé : Perception astrale", nameEn: "Spec: Astral Perception", linkedSkill: "perception", linkedAttribute: "logic" },
+  "spec_composure": { nameFr: "Spé : Sang-froid", nameEn: "Spec: Composure", linkedSkill: "survival", linkedAttribute: "willpower" },
+  "spec_wilderness-survival": { nameFr: "Spé : Survie en milieu naturel", nameEn: "Spec: Wilderness Survival", linkedSkill: "survival", linkedAttribute: "logic" },
+  "spec_navigation": { nameFr: "Spé : Orientation", nameEn: "Spec: Navigation", linkedSkill: "survival", linkedAttribute: "logic" },
+  "spec_first-aid": { nameFr: "Spé : Premiers soins", nameEn: "Spec: First Aid", linkedSkill: "survival", linkedAttribute: "logic" },
+  "spec_corporate": { nameFr: "Spé : Corporatiste", nameEn: "Spec: Corporate", linkedSkill: "networking", linkedAttribute: "charisma" },
+  "spec_criminal": { nameFr: "Spé : Criminel", nameEn: "Spec: Criminal", linkedSkill: "networking", linkedAttribute: "charisma" },
+  "spec_la-rue": { nameFr: "Spé : La rue", nameEn: "Spec: La rue", linkedSkill: "networking", linkedAttribute: "charisma" },
+  "spec_government": { nameFr: "Spé : Gouvernemental", nameEn: "Spec: Government", linkedSkill: "networking", linkedAttribute: "charisma" },
+  "spec_media": { nameFr: "Spé : Médiatique", nameEn: "Spec: Media", linkedSkill: "networking", linkedAttribute: "charisma" },
+  "spec_astral-combat": { nameFr: "Spé : Combat astral", nameEn: "Spec: Astral Combat", linkedSkill: "astral-combat", linkedAttribute: "willpower" }
 };
 const FEAT_DEFAULTS = {
   rating: 0,
@@ -16559,6 +16559,59 @@ const ARCHETYPES = {
     maxEssenceLoss: 2
   }
 };
+function generatorLang() {
+  return game.i18n?.lang === "fr" ? "fr" : "en";
+}
+function localized(group, key, fr, en) {
+  const path = `SRA2.NPC_GEN.${group}.${key}`;
+  const translated = game.i18n?.localize(path);
+  if (translated && translated !== path) return translated;
+  return generatorLang() === "fr" ? fr : en;
+}
+const humanizeSlug = (slug) => slug.replace(/^spec_/, "").replace(/-/g, " ");
+function skillName(slug) {
+  const def = SKILL_DEFINITIONS[slug];
+  if (!def) return humanizeSlug(slug);
+  return localized("SKILLS", slug, def.nameFr, def.nameEn);
+}
+function specName(slug) {
+  const def = SPEC_DEFINITIONS[slug];
+  if (!def) return humanizeSlug(slug);
+  return localized("SPECS", slug, def.nameFr, def.nameEn);
+}
+function metatypeName(key) {
+  const def = METATYPES[key];
+  if (!def) return humanizeSlug(key);
+  return localized("METATYPES", key, def.nameFr, def.nameEn);
+}
+function powerLevelLabel(key) {
+  const def = POWER_LEVELS[key];
+  if (!def) return humanizeSlug(key);
+  return localized("POWER_LEVELS", key, def.labelFr, def.labelEn);
+}
+function archetypeLabel(key) {
+  const def = ARCHETYPES[key];
+  if (!def) return humanizeSlug(key);
+  return localized("ARCHETYPES", key, def.labelFr, def.labelEn);
+}
+function keyOf(table, def) {
+  return Object.keys(table).find((k) => table[k] === def);
+}
+function metatypeNameOf(def) {
+  if (!def) return "";
+  const key = keyOf(METATYPES, def);
+  return key ? metatypeName(key) : generatorLang() === "fr" ? def.nameFr : def.nameEn;
+}
+function archetypeLabelOf(def) {
+  if (!def) return "";
+  const key = keyOf(ARCHETYPES, def);
+  return key ? archetypeLabel(key) : generatorLang() === "fr" ? def.labelFr : def.labelEn;
+}
+function powerLevelLabelOf(def) {
+  if (!def) return "";
+  const key = keyOf(POWER_LEVELS, def);
+  return key ? powerLevelLabel(key) : generatorLang() === "fr" ? def.labelFr : def.labelEn;
+}
 const PHYSICAL_TRAITS = [
   { fr: "Cicatrice de balle en travers de la joue gauche", en: "Bullet scar across the left cheek" },
   { fr: "Bras chrome qui grince quand il pleut", en: "Chrome arm that creaks when it rains" },
@@ -19035,13 +19088,13 @@ function generatePersonality(metatypeKey, archetypeKey, gender) {
   for (const cat of categories) {
     keywords.push(pickOne(keywordsTable[cat]));
   }
-  const metatypeName = isEn ? metatype.nameEn : metatype.nameFr;
+  const metatypeName2 = metatypeNameOf(metatype);
   const genderLabel = isEn ? gender === "female" ? "Woman" : "Man" : gender === "female" ? "Femme" : "Homme";
   if (metatype) {
-    keywords[0] = `${metatypeName} — ${genderLabel}`;
+    keywords[0] = `${metatypeName2} — ${genderLabel}`;
   }
-  const archetypeLabel = isEn ? archetype.labelEn : archetype.labelFr;
-  keywords[2] = archetypeLabel;
+  const archetypeLabel2 = archetypeLabelOf(archetype);
+  keywords[2] = archetypeLabel2;
   const behaviors = pickRandom(isEn ? BEHAVIORS_EN : BEHAVIORS, 4);
   const catchphrases = pickRandom(isEn ? CATCHPHRASES_EN : CATCHPHRASES, 4);
   return { keywords, behaviors, catchphrases };
@@ -19085,8 +19138,7 @@ function generateImagePrompt(metatypeKey, archetypeKey, gender, flavorBg, items,
   const topSkills = [...skills].sort((a, b) => b.rating - a.rating).slice(0, 5);
   if (topSkills.length > 0) {
     const skillDescs = topSkills.map((s) => {
-      const def = SKILL_DEFINITIONS[s.slug];
-      return def ? getLang() === "en" ? s.slug.replace(/-/g, " ") : def.nameFr : s.slug;
+      return skillName(s.slug);
     });
     parts.push(`Expert in: ${skillDescs.join(", ")} — this expertise should be visually apparent in their posture, gear, and attitude`);
   }
@@ -19167,13 +19219,11 @@ function resolveRRLabel(compendiumItems, rrTarget, rrType) {
   if (rrType === "specialization" || rrTarget.startsWith("spec_")) {
     const comp = compendiumItems.find((it) => it.type === "specialization" && it.system?.slug === rrTarget);
     if (comp) return comp.name;
-    const def = SPEC_DEFINITIONS[rrTarget];
-    if (def) return def.nameFr;
+    if (SPEC_DEFINITIONS[rrTarget]) return specName(rrTarget);
   } else if (rrType === "skill") {
     const comp = compendiumItems.find((it) => it.type === "skill" && it.system?.slug === rrTarget);
     if (comp) return comp.name;
-    const def = SKILL_DEFINITIONS[rrTarget];
-    if (def) return def.nameFr;
+    if (SKILL_DEFINITIONS[rrTarget]) return skillName(rrTarget);
   } else if (rrType === "attribute") {
     return rrTarget;
   }
@@ -19200,8 +19250,7 @@ function buildMetatypeItem(metatypeKey, metatype, compendiumItems) {
       return item;
     }
   }
-  const isEn = getLang() === "en";
-  const mtName = isEn ? metatype.nameEn : metatype.nameFr;
+  const mtName = metatypeName(metatypeKey);
   return {
     name: mtName,
     type: "metatype",
@@ -19239,7 +19288,7 @@ function buildSkillItem(compendiumItems, slug, rating, sortIndex) {
   const def = SKILL_DEFINITIONS[slug];
   if (!def) return null;
   return {
-    name: def.nameFr,
+    name: skillName(slug),
     type: "skill",
     _id: generateItemId(),
     img: "icons/svg/item-bag.svg",
@@ -19275,7 +19324,7 @@ function buildSpecItem(compendiumItems, specSlug, sortIndex) {
   const def = SPEC_DEFINITIONS[specSlug];
   if (!def) return null;
   return {
-    name: def.nameFr,
+    name: specName(specSlug),
     type: "specialization",
     _id: generateItemId(),
     img: "icons/svg/item-bag.svg",
@@ -19452,9 +19501,9 @@ async function generateSingleNPC(options) {
   }
   const compendiumItems = await getCompendiumItems();
   const isEn = getLang() === "en";
-  const mtName = isEn ? metatype.nameEn : metatype.nameFr;
-  const archLabel = isEn ? archetype.labelEn : archetype.labelFr;
-  const plLabel = isEn ? powerLevel.labelEn : powerLevel.labelFr;
+  const mtName = metatypeNameOf(metatype);
+  const archLabel = archetypeLabelOf(archetype);
+  const plLabel = powerLevelLabelOf(powerLevel);
   const resolvedGender = options.gender === "random" || !options.gender ? Math.random() < 0.5 ? "male" : "female" : options.gender;
   options.gender = resolvedGender;
   const name = generateName(options.gender, archetype.streetNameTheme);
@@ -20128,8 +20177,7 @@ async function generateSingleNPC(options) {
     await createRiggerDrones(actor, isEn, folder);
   }
   const topSkills = skillResult.skills.sort((a, b) => b.rating - a.rating).slice(0, 5).map((s) => {
-    const def = SKILL_DEFINITIONS[s.slug];
-    return `<span style="color:var(--sr-ui-color-active,#0ff);">${def?.nameFr ?? s.slug}</span> <strong>${s.rating}</strong>`;
+    return `<span style="color:var(--sr-ui-color-active,#0ff);">${skillName(s.slug)}</span> <strong>${s.rating}</strong>`;
   }).join(" · ");
   const attrLabels = {
     strength: "FOR",
@@ -20214,17 +20262,20 @@ class NPCGeneratorDialog extends Dialog {
   static buildContent() {
     const i18n = game.i18n;
     let powerOptions = "";
+    const numberLocale = i18n.lang || "en";
+    const currency = i18n.localize("SRA2.RESOURCES.YENS");
     for (const [key, pl] of Object.entries(POWER_LEVELS)) {
       const selected = key === "runner" ? "selected" : "";
-      powerOptions += `<option value="${key}" ${selected}>${pl.labelFr} (${pl.budget.toLocaleString("fr-FR")} ¥)</option>`;
+      const budget = pl.budget.toLocaleString(numberLocale);
+      powerOptions += `<option value="${key}" ${selected}>${powerLevelLabel(key)} (${budget} ${currency})</option>`;
     }
     let archetypeOptions = `<option value="random">${i18n.localize("SRA2.NPC_GENERATOR.RANDOM")}</option>`;
-    for (const [key, arch] of Object.entries(ARCHETYPES)) {
-      archetypeOptions += `<option value="${key}">${arch.labelFr}</option>`;
+    for (const key of Object.keys(ARCHETYPES)) {
+      archetypeOptions += `<option value="${key}">${archetypeLabel(key)}</option>`;
     }
     let metatypeOptions = `<option value="random">${i18n.localize("SRA2.NPC_GENERATOR.RANDOM")}</option>`;
-    for (const [key, mt] of Object.entries(METATYPES)) {
-      metatypeOptions += `<option value="${key}">${mt.nameFr}</option>`;
+    for (const key of Object.keys(METATYPES)) {
+      metatypeOptions += `<option value="${key}">${metatypeName(key)}</option>`;
     }
     return `
       <form class="npc-gen-form">
@@ -23159,9 +23210,9 @@ function buildPromptFromActor(actor) {
   const sys = actor.system;
   const name = actor.name || "Unknown";
   const metatypeItem = actor.items?.find((i) => i.type === "metatype");
-  const metatypeName = metatypeItem?.name || "";
-  const metatypeKey = metatypeName.toLowerCase().trim();
-  const metatypeVisual = METATYPE_VISUALS[metatypeKey] || metatypeName || "metahuman";
+  const metatypeName2 = metatypeItem?.name || "";
+  const metatypeKey = metatypeName2.toLowerCase().trim();
+  const metatypeVisual = METATYPE_VISUALS[metatypeKey] || metatypeName2 || "metahuman";
   const keywords = [];
   if (sys?.keywords) {
     for (let i = 1; i <= 5; i++) {
@@ -24191,8 +24242,8 @@ class SRA2System {
           const techSkillDef = findSkillBySlug(defenderActorForRoll, SKILL_SLUGS.TECHNOMANCER);
           const cyberSpecDef = findSpecBySlug(defenderActorForRoll, SPEC_SLUGS.CYBERCOMBAT, SKILL_SLUGS.CRACKING);
           const cfSpecDef = findSpecBySlug(defenderActorForRoll, SPEC_SLUGS.COMPLEX_FORMS, SKILL_SLUGS.TECHNOMANCER);
-          let skillName;
-          let specName;
+          let skillName2;
+          let specName2;
           let skillLevel;
           let specLevel;
           let rrTarget;
@@ -24204,8 +24255,8 @@ class SRA2System {
             );
             const fw = activeCyberdeck ? Math.max(0, (activeCyberdeck.system.firewall || 1) - (activeCyberdeck.system.firewallMalus || 0)) : 1;
             const pirRating = pirSkillDef.system?.rating ?? 0;
-            skillName = pirSkillDef.name;
-            specName = cyberSpecDef.name;
+            skillName2 = pirSkillDef.name;
+            specName2 = cyberSpecDef.name;
             skillLevel = pirRating + fw;
             specLevel = skillLevel + 2;
             rrTarget = cyberSpecDef.name;
@@ -24214,8 +24265,8 @@ class SRA2System {
           } else if (cfSpecDef && techSkillDef) {
             const volonte = defenderActorForRoll.system?.attributes?.willpower ?? 0;
             const techRating = techSkillDef.system?.rating ?? 0;
-            skillName = techSkillDef.name;
-            specName = cfSpecDef.name;
+            skillName2 = techSkillDef.name;
+            specName2 = cfSpecDef.name;
             skillLevel = techRating + volonte;
             specLevel = skillLevel + 2;
             rrTarget = cfSpecDef.name;
@@ -24227,21 +24278,21 @@ class SRA2System {
             );
             const fw = activeCyberdeck ? Math.max(0, (activeCyberdeck.system.firewall || 1) - (activeCyberdeck.system.firewallMalus || 0)) : 1;
             const pirRating = pirSkillDef.system?.rating ?? 0;
-            skillName = pirSkillDef.name;
-            specName = null;
+            skillName2 = pirSkillDef.name;
+            specName2 = null;
             skillLevel = pirRating + fw;
             specLevel = void 0;
-            rrTarget = skillName;
+            rrTarget = skillName2;
             rrItemType = "skill";
             defLinkedAttribute = "firewall";
           } else {
             const volonte = defenderActorForRoll.system?.attributes?.willpower ?? 0;
             const techRating = techSkillDef?.system?.rating ?? 0;
-            skillName = techSkillDef?.name || "Technomancie";
-            specName = null;
+            skillName2 = techSkillDef?.name || "Technomancie";
+            specName2 = null;
             skillLevel = techRating + volonte;
             specLevel = void 0;
-            rrTarget = skillName;
+            rrTarget = skillName2;
             rrItemType = "skill";
             defLinkedAttribute = "willpower";
           }
@@ -24250,8 +24301,8 @@ class SRA2System {
           const defenderTokenUuid = defenderToken?.uuid ?? defenderToken?.document?.uuid ?? messageFlags.defenderTokenUuid;
           const originalAttackerTokenUuid = attackerToken?.uuid ?? attackerToken?.document?.uuid ?? messageFlags.attackerTokenUuid;
           const defenseRollData = {
-            skillName,
-            specName,
+            skillName: skillName2,
+            specName: specName2,
             linkedAttribute: defLinkedAttribute,
             skillLevel,
             specLevel,
