@@ -5,7 +5,7 @@ export class MetatypeSheet extends ItemSheet {
   static override get defaultOptions(): DocumentSheet.Options<Item> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'item', 'metatype'],
-      template: 'systems/sra2/templates/item-metatype-sheet.hbs',
+      template: 'systems/sra2-ja/templates/item-metatype-sheet.hbs',
       width: 520,
       height: 580,
       tabs: [],

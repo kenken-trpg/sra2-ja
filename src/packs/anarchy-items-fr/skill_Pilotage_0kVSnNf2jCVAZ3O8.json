@@ -3,7 +3,7 @@
   "name": "Pilotage",
   "type": "skill",
   "_id": "0kVSnNf2jCVAZ3O8",
-  "img": "systems/sra2/icons/status/dazed.svg",
+  "img": "systems/sra2-ja/icons/status/dazed.svg",
   "system": {
     "description": "",
     "rating": 2,

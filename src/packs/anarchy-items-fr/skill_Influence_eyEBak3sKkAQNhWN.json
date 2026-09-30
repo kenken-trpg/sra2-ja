@@ -3,7 +3,7 @@
   "name": "Influence",
   "type": "skill",
   "_id": "eyEBak3sKkAQNhWN",
-  "img": "systems/sra2/icons/magic/Adept_Controle-Corporel.svg",
+  "img": "systems/sra2-ja/icons/magic/Adept_Controle-Corporel.svg",
   "system": {
     "description": "",
     "rating": 2,

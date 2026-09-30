@@ -33,7 +33,7 @@ export class VehicleSheet extends ActorSheet {
   static override get defaultOptions(): DocumentSheet.Options<Actor> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'actor', 'vehicle'],
-      template: 'systems/sra2/templates/actor-vehicle-sheet.hbs',
+      template: 'systems/sra2-ja/templates/actor-vehicle-sheet.hbs',
       width: 800,
       height: 700,
       tabs: [],

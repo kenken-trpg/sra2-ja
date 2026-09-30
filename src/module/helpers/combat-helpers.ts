@@ -617,7 +617,7 @@ export async function createIceAttackMessage(
   };
   
   // Render template
-  const html = await renderTemplate('systems/sra2/templates/roll-result.hbs', templateData);
+  const html = await renderTemplate('systems/sra2-ja/templates/roll-result.hbs', templateData);
   
   // Create chat message
   const messageData: any = {

@@ -3,7 +3,7 @@
   "name": "Troll",
   "type": "metatype",
   "_id": "oeqewh8iMBvEHBZi",
-  "img": "systems/sra2/actors/generic_tokens/metatypes/Troll.webp",
+  "img": "systems/sra2-ja/actors/generic_tokens/metatypes/Troll.webp",
   "system": {
     "description": "",
     "maxStrength": 6,

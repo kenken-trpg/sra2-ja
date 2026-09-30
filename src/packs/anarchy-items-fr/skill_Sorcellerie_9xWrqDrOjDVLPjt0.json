@@ -3,7 +3,7 @@
   "name": "Sorcellerie",
   "type": "skill",
   "_id": "9xWrqDrOjDVLPjt0",
-  "img": "systems/sra2/icons/status/confused.svg",
+  "img": "systems/sra2-ja/icons/status/confused.svg",
   "system": {
     "description": "",
     "rating": 2,

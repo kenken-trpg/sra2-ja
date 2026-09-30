@@ -38,7 +38,7 @@ export class FeatSheet extends ItemSheet {
   static override get defaultOptions(): DocumentSheet.Options<Item> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'item', 'feat'],
-      template: 'systems/sra2/templates/item-feat-sheet.hbs',
+      template: 'systems/sra2-ja/templates/item-feat-sheet.hbs',
       width: 720,
       height: 680,
       tabs: [],

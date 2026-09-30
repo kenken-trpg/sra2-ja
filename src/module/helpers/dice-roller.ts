@@ -854,7 +854,7 @@ async function createRollChatMessage(
     aoeZone:         rollData.aoeZone || 0,
   };
 
-  const html = await renderTemplate('systems/sra2/templates/roll-result.hbs', templateData);
+  const html = await renderTemplate('systems/sra2-ja/templates/roll-result.hbs', templateData);
 
   const messageData: any = {
     user:    game.user?.id,

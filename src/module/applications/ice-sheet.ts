@@ -9,7 +9,7 @@ export class IceSheet extends ActorSheet {
   static override get defaultOptions(): DocumentSheet.Options<Actor> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'actor', 'ice'],
-      template: 'systems/sra2/templates/actor-ice-sheet.hbs',
+      template: 'systems/sra2-ja/templates/actor-ice-sheet.hbs',
       width: 600,
       height: 840,
       tabs: [],

@@ -11,7 +11,7 @@ export class ServerSheet extends ActorSheet {
   static override get defaultOptions(): DocumentSheet.Options<Actor> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'actor', 'server'],
-      template: 'systems/sra2/templates/actor-server-sheet.hbs',
+      template: 'systems/sra2-ja/templates/actor-server-sheet.hbs',
       width: 700,
       height: 800,
       tabs: [],

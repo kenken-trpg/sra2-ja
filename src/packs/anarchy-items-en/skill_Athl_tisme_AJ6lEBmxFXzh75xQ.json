@@ -3,7 +3,7 @@
   "name": "Athletics",
   "type": "skill",
   "_id": "AJ6lEBmxFXzh75xQ",
-  "img": "systems/sra2/icons/magic/Adept_Wall-running.svg",
+  "img": "systems/sra2-ja/icons/magic/Adept_Wall-running.svg",
   "system": {
     "description": "",
     "rating": 2,

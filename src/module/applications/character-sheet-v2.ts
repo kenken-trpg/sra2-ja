@@ -28,7 +28,7 @@ export class CharacterSheetV2 extends CharacterSheet {
   static override get defaultOptions(): DocumentSheet.Options<Actor> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'actor', 'character', 'character-v2'],
-      template: 'systems/sra2/templates/actor-character-sheet-v2.hbs',
+      template: 'systems/sra2-ja/templates/actor-character-sheet-v2.hbs',
     });
   }
 

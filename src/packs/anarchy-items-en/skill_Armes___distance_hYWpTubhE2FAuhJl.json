@@ -3,7 +3,7 @@
   "name": "Ranged Weapons",
   "type": "skill",
   "_id": "hYWpTubhE2FAuhJl",
-  "img": "systems/sra2/icons/weapons/Ares-viper-Silvergun.svg",
+  "img": "systems/sra2-ja/icons/weapons/Ares-viper-Silvergun.svg",
   "system": {
     "description": "",
     "rating": 2,

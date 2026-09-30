@@ -3,7 +3,7 @@
   "name": "Dwarf",
   "type": "metatype",
   "_id": "yDQMgYx9tQ8g7JFo",
-  "img": "systems/sra2/actors/generic_tokens/metatypes/Dwarf.webp",
+  "img": "systems/sra2-ja/actors/generic_tokens/metatypes/Dwarf.webp",
   "system": {
     "description": "",
     "maxStrength": 4,

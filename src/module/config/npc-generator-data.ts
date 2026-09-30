@@ -113,27 +113,27 @@ export const METATYPES: Record<string, MetatypeProfile> = {
   human: {
     maxes: { strength: 4, agility: 4, willpower: 4, logic: 4, charisma: 4 },
     anarchyBonus: 1, nameFr: 'Humain', nameEn: 'Human',
-    img: 'systems/sra2/actors/generic_tokens/metatypes/Human.webp',
+    img: 'systems/sra2-ja/actors/generic_tokens/metatypes/Human.webp',
   },
   elf: {
     maxes: { strength: 4, agility: 4, willpower: 4, logic: 4, charisma: 5 },
     anarchyBonus: 0, nameFr: 'Elfe', nameEn: 'Elf',
-    img: 'systems/sra2/actors/generic_tokens/metatypes/Elf.webp',
+    img: 'systems/sra2-ja/actors/generic_tokens/metatypes/Elf.webp',
   },
   dwarf: {
     maxes: { strength: 4, agility: 4, willpower: 5, logic: 4, charisma: 4 },
     anarchyBonus: 0, nameFr: 'Nain', nameEn: 'Dwarf',
-    img: 'systems/sra2/actors/generic_tokens/metatypes/Dwarf.webp',
+    img: 'systems/sra2-ja/actors/generic_tokens/metatypes/Dwarf.webp',
   },
   ork: {
     maxes: { strength: 5, agility: 4, willpower: 4, logic: 4, charisma: 4 },
     anarchyBonus: 0, nameFr: 'Ork', nameEn: 'Ork',
-    img: 'systems/sra2/actors/generic_tokens/metatypes/Ork.webp',
+    img: 'systems/sra2-ja/actors/generic_tokens/metatypes/Ork.webp',
   },
   troll: {
     maxes: { strength: 6, agility: 4, willpower: 4, logic: 4, charisma: 4 },
     anarchyBonus: 0, nameFr: 'Troll', nameEn: 'Troll',
-    img: 'systems/sra2/actors/generic_tokens/metatypes/Troll.webp',
+    img: 'systems/sra2-ja/actors/generic_tokens/metatypes/Troll.webp',
   },
 };
 

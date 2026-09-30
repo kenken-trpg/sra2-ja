@@ -3,7 +3,7 @@
   "name": "Elfe",
   "type": "metatype",
   "_id": "WFdERg3CsYpbVqbJ",
-  "img": "systems/sra2/actors/generic_tokens/metatypes/Elf.webp",
+  "img": "systems/sra2-ja/actors/generic_tokens/metatypes/Elf.webp",
   "system": {
     "description": "",
     "maxStrength": 4,

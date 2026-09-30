@@ -5,7 +5,7 @@ export class SkillSheet extends ItemSheet {
   static override get defaultOptions(): DocumentSheet.Options<Item> {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ['sra2', 'sheet', 'item', 'skill'],
-      template: 'systems/sra2/templates/item-skill-sheet.hbs',
+      template: 'systems/sra2-ja/templates/item-skill-sheet.hbs',
       width: 520,
       height: 480,
       tabs: [],

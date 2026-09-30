@@ -3,7 +3,7 @@
   "name": "Ork",
   "type": "metatype",
   "_id": "Cdh8QJp9XMMx8FND",
-  "img": "systems/sra2/actors/generic_tokens/metatypes/Ork.webp",
+  "img": "systems/sra2-ja/actors/generic_tokens/metatypes/Ork.webp",
   "system": {
     "description": "",
     "maxStrength": 5,

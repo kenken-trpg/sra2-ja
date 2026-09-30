@@ -3,7 +3,7 @@
   "name": "Conjuration",
   "type": "skill",
   "_id": "ZSVNUCIf8C12ESRX",
-  "img": "systems/sra2/icons/status/frightened.svg",
+  "img": "systems/sra2-ja/icons/status/frightened.svg",
   "system": {
     "description": "",
     "rating": 2,

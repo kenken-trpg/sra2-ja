@@ -3,7 +3,7 @@
   "name": "Combat rapproché",
   "type": "skill",
   "_id": "sa588wnH6gzMcfDp",
-  "img": "systems/sra2/icons/magic/Adept_Poing-Perforant.svg",
+  "img": "systems/sra2-ja/icons/magic/Adept_Poing-Perforant.svg",
   "system": {
     "description": "",
     "rating": 2,

@@ -3,7 +3,7 @@
   "name": "Cracking",
   "type": "skill",
   "_id": "bRhw3vIAzzcW0zPO",
-  "img": "systems/sra2/icons/gameicons/skills/hacking.svg",
+  "img": "systems/sra2-ja/icons/gameicons/skills/hacking.svg",
   "system": {
     "description": "",
     "rating": 2,
