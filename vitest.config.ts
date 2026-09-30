@@ -4,6 +4,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    // Defines the Foundry globals that data models need at import time.
+    setupFiles: ['src/module/__tests__/setup-foundry.ts'],
     include: ['src/**/__tests__/**/*.test.ts', 'src/**/*.test.ts'],
     coverage: {
       provider: 'v8',

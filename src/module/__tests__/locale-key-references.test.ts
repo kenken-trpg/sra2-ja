@@ -51,7 +51,8 @@ const referenced = new Map<string, string>();
 for (const file of SCAN_DIRS.flatMap(sourceFiles)) {
   const text = fs.readFileSync(file, 'utf-8');
   for (const m of text.matchAll(/["'`](SRA2\.[A-Za-z0-9_.]*)["'`]/g)) {
-    if (!referenced.has(m[1])) referenced.set(m[1], path.relative(ROOT, file));
+    const key = m[1];
+    if (key && !referenced.has(key)) referenced.set(key, path.relative(ROOT, file));
   }
 }
 
@@ -78,7 +79,7 @@ describe('locale key references', () => {
     });
 
     it('has no empty value for a referenced key', () => {
-      const empty = [...referenced.keys()].filter((k) => k in defined && defined[k].trim() === '');
+      const empty = [...referenced.keys()].filter((k) => defined[k]?.trim() === '');
       expect(empty).toEqual([]);
     });
   });

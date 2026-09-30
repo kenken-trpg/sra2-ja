@@ -94,7 +94,7 @@ describe('shipped stylesheet assets', () => {
   const css = fs.readFileSync(path.join(PUBLIC, 'style', 'sra2.css'), 'utf-8');
   const refs = [...css.matchAll(/url\(\s*['"]?([^'")]+)['"]?\s*\)/g)]
     .map((m) => m[1])
-    .filter((r) => !/^(data:|https?:)/.test(r));
+    .filter((r): r is string => !!r && !/^(data:|https?:)/.test(r));
 
   it('finds asset references to check', () => {
     expect(refs.length).toBeGreaterThan(0);
