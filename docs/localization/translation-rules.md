@@ -93,3 +93,31 @@ Compendium・ルール本文の日本語化に着手する場合は、権利関�
 - `src/module/config/npc-generator-data.ts` などに、locale キーを通らない
   表示文字列が多数ある（`npm run i18n:hardcoded`）。日本語 UI を完全にするには
   本体コード側の i18n 化が必要で、これは翻訳ではなく実装変更。別タスク。
+
+## 8. 人間の判断を待って保留しているキー（41件）
+
+次の2群は **意図的に未訳** のままにしている。値がルールブックのデータ表
+そのもの（武器の分類と実在の製品名、車両の能力値一式）であり、指示書の
+「ルールブック由来データの翻訳・再配布は対象外」に該当するか、人間の判断が
+必要なため。
+
+- `SRA2.FEATS.WEAPON.TYPES.*`（22件）
+  例: `Heavy Pistols (Ares Viper Slivergun, Browning Ultra Power, Colt Manhunter)`
+- `SRA2.FEATS.VEHICLE.TYPES.*`（19件）
+  例: `Microdrone (Autopilot 6, Structure 0, Handling 10, Speed 0 (flying 1), Armor 0, no weapon mount)`
+
+いずれもドロップダウンの選択肢ラベルなので、未訳でも機能は損なわれない
+（英語が表示される）。翻訳して良いと判断された場合は、短い分類名だけを訳し
+製品名は原文のまま残す方針を推奨する。
+
+なお `SRA2.VEHICLE.TYPES.*`（車両アクターの種別名）は能力値を含まない短い
+分類名のみなので翻訳済み。
+
+## 9. 日本語 CSS の状況
+
+- `src/less/theme-mixins.less` の全フォント変数に CJK フォールバックを追加した。
+  同梱テーマフォント（`sra2_foundry_*`）は Latin のみを収録しているため、
+  これがないと日本語がグリフ単位でブラウザ既定フォントに落ちる。
+- 固定幅は多い（`width|height: <n>px` が 256 箇所、`white-space: nowrap` が
+  38 箇所）。**文字切れ・重なりの有無は Foundry 上での目視確認が必要** で、
+  未確認のまま幅を変更すると英語・フランス語のレイアウトを壊すため手を付けていない。
