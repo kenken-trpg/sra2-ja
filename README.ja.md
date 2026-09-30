@@ -26,13 +26,70 @@ https://raw.githubusercontent.com/kenken-trpg/sra2-ja/master/public/system.json
 
 インストール後、Foundry の言語設定で **日本語** を選択してください。
 
+## Compendium の追加
+
+本フォークの配布 zip には **Compendium を同梱していません**（`packs/` を含めずに
+アーカイブしています）。ルールブック本文を再配布しないためです。
+そのかわり、以下のいずれかの方法で Compendium を利用できます。
+
+### 1. 上流版の Compendium を持ち込む
+
+上流 `sra2` の配布 zip には `packs/anarchy-items-en` と `packs/anarchy-items-fr`
+が含まれています（内容はアイテム名と数値データのみで、説明文フィールドは空です）。
+上流 README も「著作権上、完成品の Compendium は提供しない」としており、
+ルールブックの文章は含まれません。
+
+Foundry を終了した状態で、上流 zip 内の
+
+```
+sra2/packs/anarchy-items-en/
+sra2/packs/anarchy-items-fr/
+```
+
+を、本システムのインストール先へ **同じフォルダ名のまま** コピーします。
+
+```
+<Foundry Data>/systems/sra2-ja/packs/anarchy-items-en/
+<Foundry Data>/systems/sra2-ja/packs/anarchy-items-fr/
+```
+
+フォルダ名は `public/system.json` の `packs[].name` と一致していなければ
+認識されません。本フォークが宣言しているのは上記 2 つです。
+Foundry を起動すると Compendium タブに現れます。
+
+> システムを更新すると `systems/sra2-ja/` 以下は置き換えられるため、
+> ここに置いた Compendium は消える可能性があります。残したい内容は
+> ワールド側の Compendium（後述）へインポートしてください。
+
+### 2. 自分の Compendium を作る
+
+**ワールド内に作る方法（推奨）**
+Foundry の Compendium タブ →「Compendium パックを作成」でワールド所属の
+Compendium を作り、自分で作成したアイテムをドラッグして登録します。
+システム更新の影響を受けません。
+
+**システムに同梱する方法（上級者向け）**
+本リポジトリのソース形式に合わせるなら、`src/packs/<パック名>/` に
+1 ドキュメント 1 ファイルの JSON（`_id` / `_key` / `type` を持つ形式）を置き、
+
+```sh
+npm run pack:compendiums     # src/packs/ → public/packs/（LevelDB 形式に変換）
+npm run unpack:compendiums   # public/packs/ → src/packs/（JSON に戻す）
+```
+
+で変換します。新しいパック名を使う場合は `public/system.json` の `packs[]` に
+同じ `name` の項目を追加してください。
+
+**お手持ちのルールブックの文章をそのまま入力したデータは、個人利用の範囲に
+留めてください。** 本リポジトリへの取り込みや再配布は行いません。
+
 ## 日本語化の範囲
 
 | 対象 | 状態 |
 | --- | --- |
 | システム UI（シート、設定、ダイアログ、ダイス、エラー） | 日本語化済み |
 | 日本語表示のためのフォント・レイアウト調整 | 実施済み（最小限） |
-| Compendium / ルールブック本文 | **対象外** |
+| Compendium / ルールブック本文 | **対象外**（同梱なし。[Compendium の追加](#compendium-の追加)参照） |
 
 ルールブックの文章は転載していません。UI の文言のみを翻訳しています。
 Compendium の日本語化は権利関係の確認が必要な別課題として切り離しており、

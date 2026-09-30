@@ -103,7 +103,8 @@ jobs:
 
           # This fork ships no pre-made compendiums: upstream states it cannot
           # bundle them for copyright reasons, and LICENSE.md repeats that.
-          # Foundry creates the packs declared in system.json as empty ones.
+          # The packs declared in system.json are expected to show up empty;
+          # users can drop in their own pack folders (see README.ja.md).
           rm -rf release/sra2-ja/packs
           rm -f release/sra2-ja/packs.tgz 2>/dev/null || true
           
@@ -130,6 +131,20 @@ jobs:
             
             **Direct Download**:
             Download the zip file below and extract it to your Foundry `Data/systems/` folder.
+            
+            ### Compendium について
+            
+            この zip には Compendium を同梱していません（ルールブック本文を
+            再配布しないため）。宣言済みのパックは空の状態になります。
+            
+            上流 `sra2` の zip に含まれる `packs/anarchy-items-en` /
+            `packs/anarchy-items-fr`（アイテム名と数値データのみ）や、
+            ご自分で用意した Compendium を、Foundry 終了中に
+            `Data/systems/sra2-ja/packs/<パック名>/` へ同名で配置すれば
+            利用できます。フォルダ名は `system.json` の `packs[].name` と
+            一致させてください。詳細は
+            [README.ja.md](https://github.com/kenken-trpg/sra2-ja/blob/master/README.ja.md#compendium-の追加)
+            を参照してください。
             
             ---
             *Compatible with Foundry VTT v14*
