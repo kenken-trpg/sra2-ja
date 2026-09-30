@@ -115,8 +115,11 @@ npm run i18n:sync      # en.json の変更を ja.json に取り込む
 npm run test
 ```
 
-`npm run check:i18n` は CI（`.github/workflows/i18n.yml`）でも実行され、
-上流の `en.json` と `ja.json` がずれた場合に失敗します。
+CI（`.github/workflows/i18n.yml`）は 2 ジョブ構成です。**Locale checks** が
+`i18n:scan` / `check:i18n` / `check:layout` と `en.json` からのずれを検査し
+（依存なしで動くので `npm ci` 不要）、**Test suite** が `npm ci` の後に
+`npm test`（187 件）と、本フォークが追加したテスト・ツールの型検査を実行
+します。上流由来の型エラーは対象外です。
 
 ### 既知の問題（上流由来）
 

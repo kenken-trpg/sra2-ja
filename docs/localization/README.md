@@ -10,7 +10,8 @@
 | `npm run i18n:scan` | 進捗レポート（全体・セクション別・ハードコード文字列） |
 | `npm run i18n:sync` | `en.json` から `ja.json` を生成・更新（既訳は保持、新規は `[JA] ` プレースホルダ） |
 | `npm run check:i18n` | キー一致・プレースホルダ・HTML タグの検査（CI ゲート） |
-| `npm run check:layout` | 固定 px 幅・`nowrap` に日本語ラベルが収まるかの推定（Foundry 起動前の優先確認リスト） |
+| `npm test` | 単体テスト 187 件（ロケールキー参照・マニフェスト整合・レイアウト予算ほか・CI ゲート） |
+| `npm run check:layout` | 固定 px 幅・`nowrap` に日本語ラベルが収まるかの推定（Foundry 起動前の優先確認リスト・CI ゲート） |
 | `npm run check:glossary` | SR5 用語集との相違・一致の突き合わせ表を生成（別途 chummer-web の checkout が必要。出力は Git 管理外） |
 | `npm run i18n:hardcoded` | `game.i18n` を通っていない文字列の候補 |
 | `node tools/i18n/apply-batch.mjs <batch.json>` | 翻訳バッチを検査付きで適用 |

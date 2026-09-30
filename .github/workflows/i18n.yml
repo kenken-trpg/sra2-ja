@@ -1,25 +1,52 @@
 name: i18n
 
+# The locale checks and the test suite guard different things, so both need to
+# run whenever either the strings or the code around them change.
 on:
   push:
-    paths: ['public/lang/**', 'public/system.json', 'tools/i18n/**', '.github/workflows/i18n.yml']
+    paths:
+      - 'public/lang/**'
+      - 'public/system.json'
+      - 'public/templates/**'
+      - 'public/style/**'
+      - 'public/icons/nav/**'
+      - 'src/**'
+      - 'tools/i18n/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vitest.config.ts'
+      - '.github/workflows/i18n.yml'
   pull_request:
-    paths: ['public/lang/**', 'public/system.json', 'tools/i18n/**', '.github/workflows/i18n.yml']
+    paths:
+      - 'public/lang/**'
+      - 'public/system.json'
+      - 'public/templates/**'
+      - 'public/style/**'
+      - 'public/icons/nav/**'
+      - 'src/**'
+      - 'tools/i18n/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vitest.config.ts'
+      - '.github/workflows/i18n.yml'
   workflow_dispatch:
 
 jobs:
-  check:
+  locale:
+    name: Locale checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      # The checks are dependency-free, so no install step is needed.
+      # These checks are dependency-free, so no install step is needed.
       - name: Progress report
         run: npm run i18n:scan
       - name: Key, placeholder and markup integrity
         run: npm run check:i18n
+      - name: Japanese label layout budget
+        run: npm run check:layout
       - name: Fail if the locale drifted from en.json
         run: |
           npm run i18n:sync
@@ -27,3 +54,31 @@ jobs:
             echo "::error::public/lang/ja.json is out of sync with en.json. Run 'npm run i18n:sync' and commit."
             exit 1
           }
+
+  test:
+    name: Test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      # vitest needs the dev dependencies, unlike the locale checks above.
+      - name: Install
+        run: npm ci
+      - name: Type-check the localization tests
+        # Upstream's own type errors are out of scope for this fork, so the
+        # gate is narrowed to the files it added rather than to a clean run.
+        run: |
+          npx tsc --noEmit > tsc.log 2>&1 || true
+          if ! [ -s tsc.log ] && ! npx tsc --noEmit > /dev/null 2>&1; then
+            echo "::error::tsc produced no output and did not succeed."
+            exit 1
+          fi
+          if grep -E '__tests__|tools/i18n' tsc.log; then
+            echo "::error::A localization test or tool no longer type-checks."
+            exit 1
+          fi
+      - name: Unit tests
+        run: npm test
