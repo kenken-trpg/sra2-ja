@@ -68,9 +68,6 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Pack compendiums
-        run: node ./tools/compendium/packCompendiumsToPublic.mjs
-
       - name: Update master branch with new system.json
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -103,6 +100,12 @@ jobs:
           # Remove unnecessary files for release
           rm -rf release/sra2-ja/.git* 2>/dev/null || true
           rm -f release/sra2-ja/*.map 2>/dev/null || true
+
+          # This fork ships no pre-made compendiums: upstream states it cannot
+          # bundle them for copyright reasons, and LICENSE.md repeats that.
+          # Foundry creates the packs declared in system.json as empty ones.
+          rm -rf release/sra2-ja/packs
+          rm -f release/sra2-ja/packs.tgz 2>/dev/null || true
           
           # Create the zip archive
           cd release
