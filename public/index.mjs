@@ -1,4 +1,4 @@
-const SYSTEM_ID = "sra2";
+const SYSTEM_ID = "sra2-ja";
 const SYSTEM$1 = {
   id: SYSTEM_ID,
   LOG: {
@@ -3703,6 +3703,13 @@ function getCurrentActiveSection(html) {
   const activeNavItem = el.querySelector(".section-nav .nav-item.active");
   return activeNavItem ? activeNavItem.dataset.section || null : null;
 }
+function enableSectionNavigation(html) {
+  const el = html instanceof HTMLElement ? html : html[0];
+  if (!el) return;
+  el.querySelectorAll(".section-nav .nav-item[disabled]").forEach((button) => {
+    button.disabled = false;
+  });
+}
 function enrichFeats(feats, actorStrength, calculateFinalDamageValueFn, actor) {
   return feats.map((feat2) => {
     feat2.rrEntries = [];
@@ -4288,6 +4295,7 @@ const SheetHelpers = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.define
   calculateRawDamageString,
   calculateSkillDicePool,
   calculateSpecDicePool,
+  enableSectionNavigation,
   enrichFeats,
   filterItemRRForRoll,
   findAttackSkillAndSpec,
@@ -4724,7 +4732,7 @@ class RollDialog extends Application {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "roll-dialog"],
-      template: "systems/sra2/templates/roll-dialog.hbs",
+      template: "systems/sra2-ja/templates/roll-dialog.hbs",
       width: 760,
       height: 630,
       resizable: true,
@@ -6363,7 +6371,7 @@ async function createRollChatMessage(attacker, defenders, attackerToken, rollDat
     isCyberdeckVsIce,
     aoeZone: rollData.aoeZone || 0
   };
-  const html = await renderTemplate("systems/sra2/templates/roll-result.hbs", templateData);
+  const html = await renderTemplate("systems/sra2-ja/templates/roll-result.hbs", templateData);
   const messageData = {
     user: game.user?.id,
     speaker: { actor: attacker?.id, alias: attacker?.name },
@@ -6911,7 +6919,7 @@ async function createIceAttackMessage(iceActor, iceToken, defender, defenderToke
     attackerTokenUuid: iceTokenUuid,
     defenderTokenUuid
   };
-  const html = await renderTemplate("systems/sra2/templates/roll-result.hbs", templateData);
+  const html = await renderTemplate("systems/sra2-ja/templates/roll-result.hbs", templateData);
   const messageData = {
     user: game.user?.id,
     speaker: {
@@ -7171,7 +7179,7 @@ class CharacterSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "actor", "character"],
-      template: "systems/sra2/templates/actor-character-sheet.hbs",
+      template: "systems/sra2-ja/templates/actor-character-sheet.hbs",
       width: 900,
       height: 750,
       tabs: [],
@@ -9589,7 +9597,7 @@ class CharacterSheetV2 extends CharacterSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "actor", "character", "character-v2"],
-      template: "systems/sra2/templates/actor-character-sheet-v2.hbs"
+      template: "systems/sra2-ja/templates/actor-character-sheet-v2.hbs"
     });
   }
   render(force, options) {
@@ -10096,7 +10104,7 @@ class VehicleSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "actor", "vehicle"],
-      template: "systems/sra2/templates/actor-vehicle-sheet.hbs",
+      template: "systems/sra2-ja/templates/actor-vehicle-sheet.hbs",
       width: 800,
       height: 700,
       tabs: [],
@@ -10517,6 +10525,7 @@ class VehicleSheet extends ActorSheet {
         restoreActiveSection(form, activeSection);
       }
     }));
+    enableSectionNavigation(html);
   }
   /**
    * Handle section navigation
@@ -10856,7 +10865,7 @@ class IceSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "actor", "ice"],
-      template: "systems/sra2/templates/actor-ice-sheet.hbs",
+      template: "systems/sra2-ja/templates/actor-ice-sheet.hbs",
       width: 600,
       height: 840,
       tabs: [],
@@ -10948,7 +10957,7 @@ class ServerSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "actor", "server"],
-      template: "systems/sra2/templates/actor-server-sheet.hbs",
+      template: "systems/sra2-ja/templates/actor-server-sheet.hbs",
       width: 700,
       height: 800,
       tabs: [],
@@ -11197,7 +11206,7 @@ class FeatSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "item", "feat"],
-      template: "systems/sra2/templates/item-feat-sheet.hbs",
+      template: "systems/sra2-ja/templates/item-feat-sheet.hbs",
       width: 720,
       height: 680,
       tabs: [],
@@ -11326,6 +11335,7 @@ class FeatSheet extends ItemSheet {
         }
       });
     }, { signal });
+    enableSectionNavigation(html);
   }
   /**
    * Handle section navigation
@@ -12380,7 +12390,7 @@ class SkillSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "item", "skill"],
-      template: "systems/sra2/templates/item-skill-sheet.hbs",
+      template: "systems/sra2-ja/templates/item-skill-sheet.hbs",
       width: 520,
       height: 480,
       tabs: [],
@@ -12408,7 +12418,7 @@ class SpecializationSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "item", "specialization"],
-      template: "systems/sra2/templates/item-specialization-sheet.hbs",
+      template: "systems/sra2-ja/templates/item-specialization-sheet.hbs",
       width: 520,
       height: 480,
       tabs: [],
@@ -12756,7 +12766,7 @@ class MetatypeSheet extends ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["sra2", "sheet", "item", "metatype"],
-      template: "systems/sra2/templates/item-metatype-sheet.hbs",
+      template: "systems/sra2-ja/templates/item-metatype-sheet.hbs",
       width: 520,
       height: 580,
       tabs: [],
@@ -13144,35 +13154,35 @@ const METATYPES = {
     anarchyBonus: 1,
     nameFr: "Humain",
     nameEn: "Human",
-    img: "systems/sra2/actors/generic_tokens/metatypes/Human.webp"
+    img: "systems/sra2-ja/actors/generic_tokens/metatypes/Human.webp"
   },
   elf: {
     maxes: { strength: 4, agility: 4, willpower: 4, logic: 4, charisma: 5 },
     anarchyBonus: 0,
     nameFr: "Elfe",
     nameEn: "Elf",
-    img: "systems/sra2/actors/generic_tokens/metatypes/Elf.webp"
+    img: "systems/sra2-ja/actors/generic_tokens/metatypes/Elf.webp"
   },
   dwarf: {
     maxes: { strength: 4, agility: 4, willpower: 5, logic: 4, charisma: 4 },
     anarchyBonus: 0,
     nameFr: "Nain",
     nameEn: "Dwarf",
-    img: "systems/sra2/actors/generic_tokens/metatypes/Dwarf.webp"
+    img: "systems/sra2-ja/actors/generic_tokens/metatypes/Dwarf.webp"
   },
   ork: {
     maxes: { strength: 5, agility: 4, willpower: 4, logic: 4, charisma: 4 },
     anarchyBonus: 0,
     nameFr: "Ork",
     nameEn: "Ork",
-    img: "systems/sra2/actors/generic_tokens/metatypes/Ork.webp"
+    img: "systems/sra2-ja/actors/generic_tokens/metatypes/Ork.webp"
   },
   troll: {
     maxes: { strength: 6, agility: 4, willpower: 4, logic: 4, charisma: 4 },
     anarchyBonus: 0,
     nameFr: "Troll",
     nameEn: "Troll",
-    img: "systems/sra2/actors/generic_tokens/metatypes/Troll.webp"
+    img: "systems/sra2-ja/actors/generic_tokens/metatypes/Troll.webp"
   }
 };
 const POWER_LEVELS = {
@@ -20311,14 +20321,14 @@ class Migration {
     };
   }
   async applyItemsUpdates(computeUpdates = (items) => []) {
-    await game.actors.forEach(async (actor) => {
+    for (const actor of game.actors) {
       const actorItemUpdates = computeUpdates(actor.items);
       if (actorItemUpdates.length > 0) {
         const message = game.i18n.format("SRA2.MIGRATION.APPLYING_ACTOR_ITEMS", { name: actor.name });
         console.log(SYSTEM.LOG.HEAD, this.code, message, actorItemUpdates);
         await actor.updateEmbeddedDocuments("Item", actorItemUpdates);
       }
-    });
+    }
     const itemUpdates = computeUpdates(game.items);
     if (itemUpdates.length > 0) {
       const message = game.i18n.localize("SRA2.MIGRATION.APPLYING_ITEMS");
@@ -20337,7 +20347,7 @@ class Migrations {
       default: "0.0.0"
     });
   }
-  migrate() {
+  async migrate() {
     const currentVersion = game.settings.get(SYSTEM.id, CURRENT_SYSTEM_VERSION);
     if (foundry.utils.isNewerVersion(game.system.version, currentVersion)) {
       let migrations = [];
@@ -20349,11 +20359,11 @@ class Migrations {
       });
       if (migrations.length > 0) {
         migrations.sort((a, b) => foundry.utils.isNewerVersion(a.version, b.version) ? 1 : foundry.utils.isNewerVersion(b.version, a.version) ? -1 : 0);
-        migrations.forEach(async (m) => {
+        for (const m of migrations) {
           const message2 = game.i18n.format("SRA2.MIGRATION.EXECUTING", { code: m.code, currentVersion, targetVersion: m.version });
           this.$notify(message2);
           await m.migrate();
-        });
+        }
         const message = game.i18n.format("SRA2.MIGRATION.DONE", { version: game.system.version });
         this.$notify(message);
       } else {
@@ -24556,7 +24566,7 @@ class SRA2System {
           attackerTokenUuid: actorToken?.uuid || actorToken?.document?.uuid,
           defenderTokenUuid: null
         };
-        const html = await renderTemplate("systems/sra2/templates/roll-result.hbs", templateData);
+        const html = await renderTemplate("systems/sra2-ja/templates/roll-result.hbs", templateData);
         const messageData = {
           user: game.user?.id,
           speaker: {
@@ -24730,7 +24740,7 @@ class SRA2System {
     this.setupNPCGeneratorButton();
     await this.buildSkillSlugCache();
     const migrations = new Migrations();
-    migrations.migrate();
+    await migrations.migrate();
     await this.migrateFeatsToArrayFormat();
     await this.migrateAnarchyNimbusToSpent();
   }
