@@ -1127,7 +1127,7 @@ export const FEAT_NAMES_JA: Record<string, Record<string, string>> = {
     'Absorption de mana': 'マナ吸収',
     'Posture du roc': '磐石の構え',
     'Contre-sort instinctif': '本能の対抗呪文',
-    'Résistance au drain': '反動耐性',
+    'Résistance au drain': 'ドレイン耐性',
     'Sang coagulant': '凝固する血',
     'Effacement de traces numériques': '電子痕跡の消去',
     'Dédoublement illusoire': '幻影の分身',
