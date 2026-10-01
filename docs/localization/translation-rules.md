@@ -133,8 +133,11 @@ Compendium・ルール本文の日本語化に着手する場合は、権利関�
 
 > 上流の `en.json` には、同じ車両を `SRA2.VEHICLE.TYPES.bus-truck` では
 > `Bus / Truck`、`SRA2.FEATS.VEHICLE.TYPES.BUS_TRUCK` では
-> `Bus / Semi-trailer` と書いている不整合がある。ja は**それぞれの原文に忠実に**
-> 訳した（`バス／トラック` と `バス／セミトレーラー`）。上流への報告候補。
+> `Bus / Semi-trailer` と書いている不整合がある。当初は**それぞれの原文に忠実に**
+> 訳していたが、原書が 2 か所とも `Bus / semi-remorque` であることを確認したため
+> （§11）、**両方を `バス／セミトレーラー` に揃えた**。英語側の `Bus / Truck` は
+> 誤りなので、原文への忠実さよりも原書との一致を採る。上流への報告候補
+> （[upstream-reports.md](upstream-reports.md) §6）。
 
 ## 9. NPC ジェネレーターの装備名（段階実施中）
 
@@ -360,8 +363,12 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 
 ### 新たに見つかった不整合
 
-いずれも `fr.json` / `en.json` 側の問題なので、こちらでは直さず報告候補に回した
-（[upstream-reports.md](upstream-reports.md) §12〜§14）。
+いずれも `fr.json` / `en.json` 側の問題なので、**英語・フランス語は直さない**
+（標準ルール）。報告候補に回した（[upstream-reports.md](upstream-reports.md)
+§6 / §12〜§14）。ただし日本語側は原書に合わせられるので、`bus-truck` の
+`バス／トラック` は `バス／セミトレーラー` に改めた（§8 の注記も更新済み）。
+`glider-wing` の日本語は両方 `グライダー・ウィング` で既に一致しているため
+変更不要。
 
 | 内容 | 原書 |
 | --- | --- |
@@ -370,7 +377,7 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 | `Bâteau pneumatique semi-rigide` の綴り | **`Bateau`**（アクサン無し） |
 | `SRA2.NPC_GEN.SPECS.spec_la-rue` の英語が `Spec: La rue`（フランス語のまま） | 原書の専門化は `la rue`。英語は `Street` が妥当。日本語の `ストリート` は正しい |
 
-### 未決：`Anarchy` と `Edge`
+### 決定：`Anarchy` を採る（`Edge` ではない）
 
 原書のリソースは **`point d'Anarchy`**（137 箇所）で、`Edge` は一度も出てこない。
 `fr.json` もそれに従って `points d'Anarchy` / `Anarchy du Groupe` としている。
@@ -382,7 +389,36 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 上流が独自に置き換えたのなら日本語は `アナーキー・ポイント` 側であるべき。
 **手元にあるのはフランス語版だけなので、英語版の表記は確認できていない。**
 日本語版の表記を参照して決めることは公式日本語版からの流用に当たるため行わない。
-この 6 キー（`SRA2.ANARCHY_COUNTER.*`）は人間の判断が出るまで現状のままとする。
+
+**判断：`アナーキー` を採る。** 根拠は、原書がこのリソースを一貫して
+`point d'Anarchy` と呼び `Edge` を一度も使わないこと、および**ロケールキー自身が
+`SRA2.ANARCHY_COUNTER` / `SRA2.RESOURCES.ANARCHY` / `BONUS_ANARCHY` と
+`ANARCHY` で命名されている**こと。キー名は上流が表示文字列を `Edge` に
+差し替える前の語を残しており、`Edge` が後からの置き換えであることを示している。
+したがって日本語を英語にフォールバックさせる原則の**例外**として扱う。
+
+語形は 2 つ。リソースそのものの正式名を `アナーキー・ポイント`、
+ラベル・複合語では短い `アナーキー` を使う（原書も `Anarchy du Groupe` /
+`Bonus d'Anarchy` のように `point` を省く）。
+
+| キー | 変更前 | 変更後 |
+| --- | --- | --- |
+| `RESOURCES.ANARCHY` | `エッジ` | `アナーキー` |
+| `RESOURCES.ANARCHY_BONUS_COMBAT` | `戦闘エッジ` | `戦闘アナーキー` |
+| `RESOURCES.ANARCHY_TEMP` | `一時エッジ` | `一時アナーキー` |
+| `RESOURCES.ANARCHY_SPENT` | `消費済みエッジ` | `消費済みアナーキー` |
+| `ANARCHY_COUNTER.TITLE` / `.SETTING_NAME` | `グループ・エッジ` | `グループ・アナーキー` |
+| `ANARCHY_COUNTER.ADD` / `.REMOVE` | `エッジを1点…` | `アナーキーを1点…` |
+| `ANARCHY_COUNTER.SETTING_HINT` / `.GM_ONLY` | （同） | （同） |
+| `FEATS.BONUS_ANARCHY` / `.BREAKDOWN.ANARCHY_BONUS` / `METATYPES.ANARCHY_BONUS` | `エッジ・ボーナス` | `アナーキー・ボーナス` |
+| `FEATS.BONUS_ANARCHY_SHORT` | `エッジ` | `アナーキー` |
+| `FEATS.BONUS_ANARCHY_HINT` / `METATYPES.ANARCHY_BONUS_HINT` | （同） | （同） |
+| `TOOLTIP.ANARCHY_POINTS` | `エッジ・ポイント` | `アナーキー・ポイント` |
+
+計 17 キー。`SETTINGS.THEME.SRA2`（製品名 `Shadowrun Anarchy 2`）は対象外。
+`terminology.json` の `Edge` も `アナーキー` に改めた。SR の `エッジ` とは
+別物なので、将来の作業者が元に戻さないよう `glossary-ja.md` に理由を残した。
+`check:layout` では 17 キーいずれにも警告は出ていない。
 
 ### `ICE` / `IC`（§7 の裏付け）
 

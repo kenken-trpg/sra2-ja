@@ -5,7 +5,7 @@
 
 | English | 日本語 | 備考 |
 | --- | --- | --- |
-| Edge | エッジ | SR 既存訳 |
+| Edge | アナーキー | `en.json` の `Edge` は原書の `point d'Anarchy`。SR の `エッジ` ではない（translation-rules.md §11） |
 | Attribute | 能力値 | SR 既存訳。「属性」は使わない |
 | Dice Pool | ダイス・プール | 中黒あり |
 | Critical Glitch | クリティカル・グリッチ | 幅が広いので固定幅UIに注意 |

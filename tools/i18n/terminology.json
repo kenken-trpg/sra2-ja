@@ -1,7 +1,7 @@
 {
   "$comment": "Fixed Japanese renderings. Priority: existing Japanese Shadowrun terminology > SRA2-specific coinage. 'keep' entries must stay in the original script.",
   "terms": {
-    "Edge": "エッジ",
+    "Edge": "アナーキー",
     "Skill": "技能",
     "Attribute": "能力値",
     "Dice Pool": "ダイス・プール",
