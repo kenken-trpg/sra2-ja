@@ -170,19 +170,55 @@ npm run test
 > フックは GitHub 側の操作（Web UI・`gh`）には効きません。origin 側でのブランチ
 > 作成やマージを縛るには GitHub のルールセットが必要です。
 
+### GitHub ルールセット（サーバー側）
+
+フックは clone 内にしか効かないため、origin 側にもルールセットを置いています。
+いずれも `bypass_actors` が空で、**リポジトリ管理者も解除できません**
+（`current_user_can_bypass: "never"`）。
+
+| ID | 対象 | ルール | 目的 |
+| --- | --- | --- | --- |
+| `24287336` | `refs/heads/master` | `deletion` / `non_fast_forward` | 公開ブランチの削除と履歴改変を防ぐ |
+| `24287364` | `localization/ja-compendium` と同 `/**` | `creation` / `update` | ローカル限定ブランチが origin に現れるのを防ぐ |
+| `24299481` | `refs/tags/v*-ja.*` | `deletion` / `update` / `non_fast_forward` | リリースタグの削除と貼り替えを防ぐ |
+
+一覧の確認:
+
+```bash
+gh api repos/kenken-trpg/sra2-ja/rulesets -q '.[]|"\(.id)  \(.target)  \(.name)  \(.enforcement)"'
+```
+
+タグ側は `creation` を**含めていません**。新しいリリースタグは通常どおり作れます。
+既存タグの貼り替えが本当に必要になった場合だけ、一時的に解除します。
+
+```bash
+gh api -X PUT repos/kenken-trpg/sra2-ja/rulesets/24299481 -f enforcement=disabled
+# 作業後に必ず戻す
+gh api -X PUT repos/kenken-trpg/sra2-ja/rulesets/24299481 -f enforcement=active
+```
+
+> `branch_name_pattern` は Team / Enterprise 限定で、本アカウントでは 422 になります
+> （`enforcement: disabled` でも同様で、ルール種別そのものが使えません）。そのため
+> 禁止ブランチは名前パターンではなく、`creation` と `update` の適用対象を
+> `refs/heads/localization/ja-compendium` と同 `/**` に限定する形で表現しています。
+> `tag_name_pattern` は未試行です。
+
 CI（`.github/workflows/i18n.yml`）は 2 ジョブ構成です。**Locale checks** が
 `i18n:scan` / `check:i18n` / `check:layout` と `en.json` からのずれを検査し
 （依存なしで動くので `npm ci` 不要）、**Test suite** が `npm ci` の後に
-`npm test`（187 件）と、本フォークが追加したテスト・ツールの型検査を実行
+`npm test`（201 件）と、本フォークが追加したテスト・ツールの型検査を実行
 します。上流由来の型エラーは対象外です。
 
 ### 既知の問題（上流由来）
 
 以下は本フォークの変更ではなく、上流 `master` でも同じ結果になります。
 
-- `npm run typecheck` が 88 件のエラーを出す
-- `npm run test` で `src/module/__tests__/dice-roller.test.ts` が失敗する
-  （`ReferenceError: foundry is not defined`）。他 90 件のテストは成功。
+- `npm run typecheck` が 80 件のエラーを出す（本フォークが追加したファイルは
+  CI で個別に型検査しており、そちらは通る）
+
+> かつてここに挙げていた `dice-roller.test.ts` の
+> `ReferenceError: foundry is not defined` は解消済みで、`npm test` は
+> 201 件すべて成功します（`src/module/__tests__/setup-foundry.ts`）。
 
 ## ライセンス
 
