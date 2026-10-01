@@ -185,9 +185,15 @@ Kurogane AR-77 / Neon Arms Stiletto .22 / Apex Thunderclap …
 
 | フランス語 | 英語 | 採用 |
 | --- | --- | --- |
-| `Lame monofilament`（刃） | `Monofilament Whip`（鞭） | ウィップ |
-| `Grenades fumigènes`（発煙） | `Gas Grenades`（ガス） | ガスグレネード |
-| `SteetHide`（綴り誤り） | `StreetHide` | StreetHide |
+| `Lame monofilament`（刃） | `Monofilament Whip`（鞭） | `モノフィラメント・ウィップ` |
+| `Grenades fumigènes`（発煙） | `Gas Grenades`（ガス） | `ガスグレネード` |
+| `SteetHide`（綴り誤り） | `StreetHide` | `StreetHide` |
+
+食い違っているのは**分類語だけ**（刃か鞭か）で、`Monofilament` の部分は共通している。
+訳語化して `単分子鞭` とはせず、カタカナの `モノフィラメント・ウィップ` を採る。
+同じテーブルに `Chaîne monofilament`（`モノフィラメント・チェーン`）と
+サイバーウェアの `Wuxing Serpent Monofilament Whip` があり、3 件を同じ語形で
+揃える必要があるため。
 
 ### 段階
 
