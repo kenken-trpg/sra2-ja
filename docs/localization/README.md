@@ -46,7 +46,7 @@ src/module/config/npc-generator-descs-ja.ts
 tools/i18n/                    同期・検査スクリプト（依存ゼロ）
 tools/i18n/intentionally-identical.json
                                英語のまま残すキーの一覧（略号・記号・製品名）
-docs/localization/             ルールと用語
+docs/localization/             ルールと用語、上流への報告候補
 .github/workflows/i18n.yml     CI
 ```
 

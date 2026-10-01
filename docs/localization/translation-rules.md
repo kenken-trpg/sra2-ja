@@ -188,12 +188,18 @@ Kurogane AR-77 / Neon Arms Stiletto .22 / Apex Thunderclap …
 | `Lame monofilament`（刃） | `Monofilament Whip`（鞭） | `モノフィラメント・ウィップ` |
 | `Grenades fumigènes`（発煙） | `Gas Grenades`（ガス） | `ガスグレネード` |
 | `SteetHide`（綴り誤り） | `StreetHide` | `StreetHide` |
+| `Proxénète : Velvet`（ポン引き） | `Fixer: Velvet`（フィクサー） | `フィクサー：ヴェルヴェット` |
 
 食い違っているのは**分類語だけ**（刃か鞭か）で、`Monofilament` の部分は共通している。
 訳語化して `単分子鞭` とはせず、カタカナの `モノフィラメント・ウィップ` を採る。
 同じテーブルに `Chaîne monofilament`（`モノフィラメント・チェーン`）と
 サイバーウェアの `Wuxing Serpent Monofilament Whip` があり、3 件を同じ語形で
 揃える必要があるため。
+
+`Proxénète` / `Fixer` は分類語ではなく**職業そのものが別**で、説明文
+（「個人的なサービスと内密な情報の仲介」）はどちらとも取れる。英語に合わせたが、
+どちらが意図なのかは上流に確認が必要。報告一覧は
+[upstream-reports.md](upstream-reports.md)。
 
 ### 段階
 
