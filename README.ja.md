@@ -157,6 +157,13 @@ npm run test
 | `push.default=nothing` | 引数なし `git push` を拒否 |
 | `push.followTags=false` | タグが push に相乗りしない |
 | `remote.upstream.pushurl=no_push` | 上流（作者のリポジトリ）へ push できない |
+| `remote.origin.gh-resolved=base` | `gh` の既定リポジトリを本フォークに固定 |
+
+remote が3つあると `gh` は対象リポジトリを自分で解決するため、`gh pr create` や
+`gh issue create` が**作者のリポジトリに向く**ことがあります。`origin` が
+本フォークのときだけ既定に固定し、上流の clone では何もせず警告だけ出します
+（そこで `base` を設定すると逆に作者のリポジトリを指してしまうため）。
+既に設定済みの値は上書きしません。
 
 `pre-push` は**既定で拒否**し、remote ごとの許可リストに載った宛先だけを通します
 （`origin` は `master` のみ、`prfork` は `fix/*` と `feat/*`）。さらに
