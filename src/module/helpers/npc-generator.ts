@@ -12,6 +12,7 @@ import {
   powerLevelLabelOf,
 } from "../config/npc-generator-i18n.js";
 import { featNameJa } from "../config/npc-generator-data-ja.js";
+import { featDescJa } from "../config/npc-generator-descs-ja.js";
 import {
   WEAPON_TYPES,
   computeFeatLevel,
@@ -1112,13 +1113,16 @@ function buildFeatItem(template: FeatTemplate, sortIndex: number, compendiumItem
   const { level: rating } = computeFeatLevel(template.featType, template);
 
   // Resolve localized name and description.
-  // Japanese names live in npc-generator-data-ja.ts rather than in the data
-  // table; a template with no entry there falls back to English, which is
-  // what every language other than French already did.
+  // Japanese names and descriptions live in npc-generator-data-ja.ts and
+  // npc-generator-descs-ja.ts rather than in the data table; a template with
+  // no entry there falls back to English, which is what every language other
+  // than French already did.
   const isEn = getLang() === 'en';
+  const isJa = game.i18n?.lang === 'ja';
   const baseName = (isEn && template.nameEn) ? template.nameEn : template.name;
-  const featName = (game.i18n?.lang === 'ja' && featNameJa(template.featType, template.name)) || baseName;
-  const featDesc = (isEn && template.descriptionEn) ? template.descriptionEn : template.description;
+  const featName = (isJa && featNameJa(template.featType, template.name)) || baseName;
+  const baseDesc = (isEn && template.descriptionEn) ? template.descriptionEn : template.description;
+  const featDesc = (isJa && featDescJa(template.featType, template.name)) || baseDesc;
 
   return {
     name: featName,
