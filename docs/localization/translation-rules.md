@@ -306,3 +306,88 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 これは `en.json` / `fr.json` に新キーが必要なため上流案件
 （[upstream-reports.md](upstream-reports.md) §9）。残り 4 件は表示されない
 （未使用フィールド 3 件、フォルダ検索キー 1 件）。
+
+## 11. フランス語版原書との用語突き合わせ（2026-10-01）
+
+フランス語版基本ルールブック（322 ページ）を参照し、`fr.json` の用語が原書と
+一致しているか、そこから日本語訳が正しい語に当たっているかを検証した。
+
+### 方法と境界
+
+**原文を repo に残していない。** PDF からテキストを抽出したのはセッション専用の
+作業領域で、repo に入れたのは「用語が原書に存在するか」の判定結果と、
+下に挙げた**単語**だけである。説明文・ルール本文は抽出もしていないし、
+転記もしていない。`npc-generator-descs-ja.ts` のような説明文を原書から作る
+作業は行わない（[upstream-reports.md](upstream-reports.md) の禁止事項）。
+
+照合は機械的に行った。`fr.json` の値を正規化（行末ハイフン結合・小文字化）した
+原書テキストに対して部分一致で検索し、一致しなかったものだけを人間が目で確認。
+
+### 一致を確認した用語
+
+| 対象 | 件数 | 結果 |
+| --- | --- | --- |
+| 能力値 5 種（`Force` / `Agilité` / `Volonté` / `Logique` / `Charisme`） | 5 | 全一致 |
+| 技能名（`SRA2.NPC_GEN.SKILLS`） | 16 | **全 16 件が原書の表記どおり** |
+| 専門化名（`SRA2.NPC_GEN.SPECS`、`Spé : ` を除いた本体） | 66 | 58 件一致。残り 8 件は原書が表組みで抽出が崩れた箇所 |
+| CI の種別（`SRA2.ICE.TYPES`） | 8 | 全一致（`Patrouilleuse` / `Noire` など女性形まで一致） |
+| アトウト種別（`SRA2.FEATS.FEAT_TYPE`） | 16 | 一致 |
+| ダメージ段階（`Léger` / `Modéré` / `Grave` / `Incapacitant`） | 4 | 全一致 |
+| コンプリケーション段階（`mineure` / `critique` / `Désastre`） | 3 | 全一致 |
+
+技能 16 件が原書どおりだったことで、そこから訳した日本語（`近接戦闘` /
+`隠密` / `クラッキング` ほか）が**正しい語を訳している**ことは確認できた。
+
+### 原書で裏が取れた上流の不整合
+
+§9「上流の不整合（英語側に従った）」の 4 件のうち、3 件は原書で判定できた。
+
+| 件 | 原書の語 | 判定 |
+| --- | --- | --- |
+| `Lame monofilament`（刃）/ `Monofilament Whip`（鞭） | **`Fouet monofilament`**（鞭）。`Lame monofilament` は原書に無い | **仏名が誤り。英語に合わせた判断が正しい** |
+| `Grenades fumigènes`（発煙）/ `Gas Grenades`（ガス） | **`Grenades à gaz`**。原書は発煙手榴弾とガス手榴弾を別物として扱う | **仏名が誤り。英語に合わせた判断が正しい** |
+| `Proxénète : Velvet` / `Fixer: Velvet` | **どちらも原書に無い**。フィクサー相当のコネは `Intermédiaire` | 下記のとおり未決 |
+
+`SteetHide` の綴り誤りは製品名なので原書には現れない（製品名そのものが上流の創作）。
+
+`Velvet` については、原書の語彙では `Fixer` も `Proxénète` も使われていない
+（原書のフィクサー系コネは `Intermédiaire`、ポン引きに当たるコネは存在しない）。
+一方、同じテーブルの近くに `Recruteur du milieu : Broker`（runner と雇い主を
+仲介する＝フィクサーの役割）と `Prostituée : Candy` が既にあり、`Proxénète` は
+他に埋まっていない枠に収まる。つまり**仏名が意図で、英名 `Fixer` が誤りである
+可能性が高い**が、確証ではない。現状の `フィクサー：ヴェルヴェット` を
+`ポン引き：ヴェルヴェット` に変えるかは、語感の問題も含むため人間の判断に委ねる。
+
+### 新たに見つかった不整合
+
+いずれも `fr.json` / `en.json` 側の問題なので、こちらでは直さず報告候補に回した
+（[upstream-reports.md](upstream-reports.md) §12〜§14）。
+
+| 内容 | 原書 |
+| --- | --- |
+| `SRA2.VEHICLE.TYPES.bus-truck` = `Bus / Camion` が `SRA2.FEATS.VEHICLE.TYPES.BUS_TRUCK` = `Bus / Semi-remorque` と食い違う | **`Bus / semi-remorque`**（2 箇所で同じ）。`FEATS` 側が正しい |
+| `SRA2.VEHICLE.TYPES.glider-wing` = `Aile planante` が `FEATS` 側の `Aile volante` と食い違う | **`aile volante`**。`FEATS` 側が正しい（該当機体は `Artemis Industries Nightwing`、能力値も一致） |
+| `Bâteau pneumatique semi-rigide` の綴り | **`Bateau`**（アクサン無し） |
+| `SRA2.NPC_GEN.SPECS.spec_la-rue` の英語が `Spec: La rue`（フランス語のまま） | 原書の専門化は `la rue`。英語は `Street` が妥当。日本語の `ストリート` は正しい |
+
+### 未決：`Anarchy` と `Edge`
+
+原書のリソースは **`point d'Anarchy`**（137 箇所）で、`Edge` は一度も出てこない。
+`fr.json` もそれに従って `points d'Anarchy` / `Anarchy du Groupe` としている。
+ところが `en.json` はこれを **`Edge`** / `Group Edge` に置き換えており、
+日本語は英語にフォールバックする方針に従って `エッジ` / `グループ・エッジ` と
+訳してある。
+
+英語版が公式に `Edge` を使っているなら英語に合わせたままで正しく、
+上流が独自に置き換えたのなら日本語は `アナーキー・ポイント` 側であるべき。
+**手元にあるのはフランス語版だけなので、英語版の表記は確認できていない。**
+日本語版の表記を参照して決めることは公式日本語版からの流用に当たるため行わない。
+この 6 キー（`SRA2.ANARCHY_COUNTER.*`）は人間の判断が出るまで現状のままとする。
+
+### `ICE` / `IC`（§7 の裏付け）
+
+原書の用語集は `glace`（女性名詞）を `contre-mesures d'intrusion` の略語 `CI` と
+定義し、英語形として `IC`、その口語形として `ice` を併記している。
+つまり `IC` が正式な略号であることは**原書自身が示している**一方、`ice` も
+口語として認められた形であり、誤りではない。上流への報告は「誤りの指摘」ではなく
+**表記統一の提案**として出すのが正確（報告一覧 §7 を同趣旨に修正済み）。

@@ -11,19 +11,26 @@
 確認は上流の素の木（`git archive upstream/master`）に対して行った。
 `master` = `be3672c` / `v14.3.3` 時点。
 
+§5〜§7 と §12〜§14 は、**フランス語版基本ルールブックの用語と突き合わせて**
+裏付けを取っている。方法と境界（原文を repo に残さないこと）は
+[translation-rules.md](translation-rules.md) §11 を参照。
+
 | # | 内容 | 影響 | 種別 |
 | --- | --- | --- | --- |
 | 1 | ロケールキー 5 件が全言語で未定義 | UI にキー文字列がそのまま出る | Bug |
 | 2 | マニフェストの cover 画像が存在しない | パッケージ一覧で画像が割れる | Bug |
 | 3 | `en` の Compendium 翻訳にフランス語が残存（説明文 145 件） | 英語環境で説明文がフランス語 | Bug |
 | 4 | `sra2.anarchy-objets.json` の `id` が 6 件重複 | 一方の訳が到達不能 | Bug |
-| 5 | NPC ジェネレーターの仏英名の食い違い 4 件 | 言語によって別の装備に見える | Bug |
-| 6 | `Bus / Truck` と `Bus / Semi-trailer` の不一致 | 同じ車種が 2 つの名前で出る | 軽微 |
-| 7 | `ICE` の表記（公式は `IC`） | 用語 | 要相談 |
+| 5 | NPC ジェネレーターの仏英名の食い違い 4 件（うち 2 件は原書で仏名が誤りと確定） | 言語によって別の装備に見える | Bug |
+| 6 | `Bus / Truck` と `Bus / Semi-trailer` の不一致（原書は後者） | 同じ車種が 2 つの名前で出る | 軽微 |
+| 7 | `ICE` の表記（原書の用語集は `IC`、`ice` は口語形） | 用語 | 要相談 |
 | 8 | 登録されていないシート基底クラスが存在しないテンプレートを指す | 実害なし（死んだコード） | 軽微 |
 | 9 | Dice So Nice のカラーセット名がロケールキーを通らない | 設定画面で翻訳できない | Bug |
 | 10 | サイバーデッキ・プログラム表の `label` が未使用 | 実害なし（死んだフィールド） | 軽微 |
 | 11 | `.gitignore` 済みの LevelDB 残骸が追跡されている | 作業ツリーでパックが開けない | 軽微 |
+| 12 | `Aile planante` と `Aile volante` の不一致（原書は後者） | 同じ機体が 2 つの名前で出る | 軽微 |
+| 13 | `Bâteau pneumatique semi-rigide` の綴り（原書は `Bateau`） | 表記 | 軽微 |
+| 14 | `spec_la-rue` の英語が `Spec: La rue`（フランス語のまま） | 英語環境で 1 件だけ仏語 | Bug |
 
 ---
 
@@ -108,6 +115,21 @@
 2655 だけは外から判断できない。説明文（「個人的なサービスと内密な情報の仲介」）と
 `spec_criminal` の RR はどちらの職業にも当てはまる。
 
+### 原書での裏付け
+
+| 行 | 原書の語 | 結論 |
+| --- | --- | --- |
+| 1131 | **`Fouet monofilament`**（鞭）。`Lame monofilament` は原書に存在しない | 仏名が誤り。英名が正しい |
+| 1338 | **`Grenades à gaz`**。原書は発煙手榴弾とガス手榴弾を別物として扱い、`fr.json` の `GAS_GRENADES` も `Grenades à gaz*` になっている | 仏名が誤り。英名が正しい |
+| 2368 | 製品名なので原書には現れない | 綴り誤りの判定は変わらず |
+| 2655 | **どちらの語も原書に無い。**フィクサー相当のコネ・アトウトは `Intermédiaire` | 下記 |
+
+2655 は、原書の語彙では `Fixer` も `Proxénète` も使われていない。ただし同じ
+テーブルに `Recruteur du milieu : Broker`（runner と雇い主を仲介する＝フィクサーの
+役割）が既にあり、`Proxénète` は他に埋まっていない枠に収まる。説明文も
+その読みと整合する。**仏名が意図で英名が誤りである可能性が高い**が、確証ではない
+ため、どちらを正とするかは作者に尋ねるのが妥当。
+
 ## 6. `Bus / Truck` と `Bus / Semi-trailer` の不一致
 
 同じ車種が 2 か所で別の名前になっている（仏語側も同様）。
@@ -117,11 +139,18 @@
 | 車種ラベル `bus-truck` | `Bus / Truck` | `Bus / Camion` |
 | 車両テンプレート `BUS_TRUCK` | `Bus / Semi-trailer (…)` | `Bus / Semi-remorque (…)` |
 
+**原書は 2 か所とも `Bus / semi-remorque`** なので、車種ラベル `bus-truck` 側
+（`Bus / Camion` / `Bus / Truck`）が誤り。
+
 ## 7. `ICE` の表記
 
-`en.json` の 20 件の値が `ICE` / `ICEs` を使っている。Shadowrun の公式表記は
-`IC`（Intrusion Countermeasures）で、`ICE` は旧版・俗称。仏語側は `Glace` で
+`en.json` の 20 件の値が `ICE` / `ICEs` を使っている。仏語側は `Glace` で
 統一されているため、影響は英語だけ。
+
+**原書の用語集自身が**、`glace`（女性名詞）を `contre-mesures d'intrusion` の
+略語 `CI` と定義し、英語形として `IC` を、その口語形として `ice` を併記している。
+したがって正式な略号は `IC` だが、`ice` も口語として認められた形であり
+**誤りではない**。報告するなら「誤りの指摘」ではなく**表記統一の提案**が正確。
 
 **これは用語の判断で、上流の方針を確認すべき事項。** 本フォークでは日本語を
 英語にフォールバックさせる設計上そのまま追従している。
@@ -205,6 +234,31 @@ public/packs/packs.tgz
 いない。本フォークでは上流と同一のまま触っていない。
 
 ---
+
+## 12. `Aile planante` と `Aile volante` の不一致
+
+§6 と同じ形の不一致がもう 1 件ある。
+
+| 場所 | en | fr |
+| --- | --- | --- |
+| 車種ラベル `glider-wing` | `Glider Wing` | `Aile planante` |
+| 車両テンプレート `GLIDER_WING` | `Glider wing (…)` | `Aile volante (…)` |
+
+**原書は `aile volante`** で、該当機体（`Artemis Industries Nightwing`）の
+能力値もテンプレート側と一致する。車種ラベルの `Aile planante` が誤り。
+
+## 13. `Bâteau pneumatique semi-rigide` の綴り
+
+`fr.json` の `SRA2.FEATS.VEHICLE.TYPES.RIGID_INFLATABLE_BOAT`。
+原書の表記は `Bateau`（アクサン・シルコンフレクスは付かない）。
+`bâteau` はフランス語として誤り。表示されるラベルなので目に入る。
+
+## 14. `spec_la-rue` の英語がフランス語のまま
+
+`en.json` の `SRA2.NPC_GEN.SPECS.spec_la-rue` が `Spec: La rue`。
+`en.json` 全体を走査して、フランス語が残っている値は**この 1 件だけ**だった
+（§3 の Compendium 翻訳とは別のファイル）。原書の専門化名は `la rue` なので、
+英語は `Spec: Street` が妥当。
 
 ## 報告しないもの
 
