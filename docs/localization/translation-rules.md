@@ -286,3 +286,23 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 
 結果として、固定幅の中にあるラベルは 10 → 8、`nowrap` は 27 → 22 件。
 「両方の言語で狭すぎる」は 2 → **0 件**になり、テスト側の許容リストも消えた。
+
+### `i18n:hardcoded` の精度について
+
+同じ問題が `i18n:hardcoded`（`tools/i18n/find-hardcoded.mjs`）にもあった。
+候補 **2,125 件**のうち、実際に見るべきものは 6 件だった。
+
+| 除外したもの | 件数 | 理由 |
+| --- | --- | --- |
+| NPC ジェネレーターのデータ表 | 1,907 | 内容物であって UI ではない。日本語は `npc-generator-*-ja.ts` にある |
+| ロケールキーそれ自体 | 101 | `label: 'SRA2.FEATS.RATING'` は Foundry が訳す。指摘が逆向き |
+| `console.warn` | — | 開発者向けログ。`Failed to …` の行はすべてこれ |
+| SCREAMING_CASE の識別子 | 1 | `name: 'SRA2_BOOKMARKS'` は内部 ID。表示されるのは隣の `title` |
+
+残った 6 件は `hardcoded-strings.test.ts` に**理由付きで列挙**してある。
+新しい候補が出たらテストが落ちるので、読まれない山に埋もれない。
+
+6 件のうち本当に直すべきものは **Dice So Nice のカラーセット名 2 件**で、
+これは `en.json` / `fr.json` に新キーが必要なため上流案件
+（[upstream-reports.md](upstream-reports.md) §9）。残り 4 件は表示されない
+（未使用フィールド 3 件、フォルダ検索キー 1 件）。

@@ -21,6 +21,8 @@
 | 6 | `Bus / Truck` と `Bus / Semi-trailer` の不一致 | 同じ車種が 2 つの名前で出る | 軽微 |
 | 7 | `ICE` の表記（公式は `IC`） | 用語 | 要相談 |
 | 8 | 登録されていないシート基底クラスが存在しないテンプレートを指す | 実害なし（死んだコード） | 軽微 |
+| 9 | Dice So Nice のカラーセット名がロケールキーを通らない | 設定画面で翻訳できない | Bug |
+| 10 | サイバーデッキ・プログラム表の `label` が未使用 | 実害なし（死んだフィールド） | 軽微 |
 
 ---
 
@@ -134,6 +136,37 @@
 `registerSheet` されているのは `CharacterSheetV2` だけで、そちらが `template` を
 上書きしているため**実行時には読まれない**。実害はないが、基底クラスを直接
 登録すると壊れる。
+
+## 9. Dice So Nice のカラーセット名がロケールキーを通らない
+
+`src/module/helpers/dice-so-nice.ts:23,36` の `description` が英語の直書き。
+
+```ts
+dice3d.addColorset({ name: SRA2_NORMAL_COLORSET, description: 'SRA2 - Normal dice', … });
+dice3d.addColorset({ name: SRA2_RISK_COLORSET,   description: 'SRA2 - Risk dice',   … });
+```
+
+この `description` は Dice So Nice の設定画面のカラーセット選択に出るため、
+**実際に目に見える文字列**。`game.i18n.localize()` を通していないので、
+フランス語でも英語のまま出る。
+
+本フォークでは直せない。直すには `en.json` / `fr.json` に新しいキーを追加する
+必要があり、既存の英語・フランス語翻訳には手を付けない方針のため。
+
+## 10. サイバーデッキ・プログラム表の `label` が未使用
+
+`src/module/helpers/npc-generator.ts:1457-1461` の表に `label` があるが、
+生成処理が読むのは `field` だけで `label` はどこからも参照されない。
+
+```ts
+const programs = [
+  { field: 'cyberdeckBiofeedback', label: 'Biofeedback' },
+  …
+];
+```
+
+表示されないので翻訳の対象ではないが、UI 文字列の検査に毎回引っかかる。
+意図して残しているのか、表示するつもりだったのかが外から分からない。
 
 ---
 
