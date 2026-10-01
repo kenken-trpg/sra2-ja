@@ -23,6 +23,7 @@
 | 8 | 登録されていないシート基底クラスが存在しないテンプレートを指す | 実害なし（死んだコード） | 軽微 |
 | 9 | Dice So Nice のカラーセット名がロケールキーを通らない | 設定画面で翻訳できない | Bug |
 | 10 | サイバーデッキ・プログラム表の `label` が未使用 | 実害なし（死んだフィールド） | 軽微 |
+| 11 | `.gitignore` 済みの LevelDB 残骸が追跡されている | 作業ツリーでパックが開けない | 軽微 |
 
 ---
 
@@ -167,6 +168,41 @@ const programs = [
 
 表示されないので翻訳の対象ではないが、UI 文字列の検査に毎回引っかかる。
 意図して残しているのか、表示するつもりだったのかが外から分からない。
+
+## 11. `.gitignore` 済みの LevelDB 残骸が追跡されている
+
+`.gitignore` に `/public/packs` があるが、次の 7 ファイルは追跡されたまま。
+
+```
+public/packs/anarchy-items-en/{CURRENT,LOCK,LOG}
+public/packs/anarchy-items-fr/{CURRENT,LOCK,LOG}
+public/packs/packs.tgz
+```
+
+`CURRENT` の中身は `MANIFEST-000024` だが、その MANIFEST はコミットされて
+いない。つまり**開けない LevelDB がコミットされている**。Foundry が使う
+`classic-level` で確認した。
+
+```
+コミットされた状態 → IO error: …/MANIFEST-000024: No such file or directory
+空のディレクトリ   → 新規作成されて正常に開く
+ディレクトリ無し   → 新規作成されて正常に開く
+```
+
+**コミットされているほうが、何もコミットされていない場合より悪い。**
+
+配布 zip には影響しない。リリースワークフローが `packCompendiumsToPublic.mjs`
+を実行して `src/packs/` から作り直すため、zip の中身は正しい。影響するのは
+作業ツリーをそのまま Foundry に読ませた場合だけで、`LOCK` のような実行時の
+ロックファイルを追跡していること自体も意図的とは思えない。
+
+`git rm --cached` で外すだけで済むが、`.gitignore` に入っている以上は
+もともと追跡する意図が無かったと思われる。
+
+同じ性質のものとして `src/module/config/complication-data.ts.bak`（1,789 行）も
+追跡されている。現行の `complication-data.ts` は 4,962 行で、`.bak` はその
+古い版。ビルドには含まれないが、`tsconfig.json` の対象外なので型検査も通って
+いない。本フォークでは上流と同一のまま触っていない。
 
 ---
 

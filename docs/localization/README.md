@@ -50,6 +50,26 @@ docs/localization/             ルールと用語、上流への報告候補
 .github/workflows/i18n.yml     CI
 ```
 
+## 開発環境で Foundry に読ませるとき
+
+作業ツリーを `<Foundry Data>/systems/sra2-ja` に置いて起動する場合、先に
+
+```
+npm run build:public        # src/ → public/ をビルド
+npm run pack:compendiums    # src/packs/ → public/packs/ を LevelDB にする
+```
+
+を実行する。`pack:compendiums` を飛ばすと **宣言済みの 2 パックが開けない**。
+`public/packs/anarchy-items-{en,fr}/` には `CURRENT` / `LOCK` / `LOG` だけが
+コミットされており、`CURRENT` が指す `MANIFEST-000024` は無いため、LevelDB が
+`IO error: …/MANIFEST-000024: No such file or directory` で失敗する
+（Foundry が使う `classic-level` で再現確認済み）。
+
+空のディレクトリ、または存在しないディレクトリなら LevelDB が新規に作るので
+問題にならない。**配布 zip は `packs/` を削除している**ため、インストール先では
+起こらない。作業ツリーだけの問題で、翻訳とは無関係に出るエラーなので、
+Foundry 上での目視確認の前にこれを潰しておく。
+
 ## 本家追従
 
 ```
