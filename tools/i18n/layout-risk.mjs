@@ -71,15 +71,23 @@ export function flatten(obj, prefix = '') {
 }
 
 /**
- * Indexes the built CSS by class, keeping only declarations whose *subject*
- * is that class. `.menu-item i { width: 16px }` sizes the icon, not the menu
- * item, so the last compound selector decides which class a width belongs
- * to; a rule whose subject is a bare tag cannot be tied to a template class
- * and is skipped.
+ * Indexes the built CSS by the last class of each selector's *subject*.
+ * `.menu-item i { width: 16px }` sizes the icon, not the menu item, so the
+ * subject compound decides which class a width belongs to; a rule whose
+ * subject is a bare tag cannot be tied to a template class and is skipped.
+ *
+ * The rest of the selector is kept, not discarded. A rule written
+ * `.sheet-v2 .dice .attribute-input { width: 40px }` says nothing about an
+ * `.attribute-input` elsewhere, and treating it as if it did invents
+ * findings in templates the rule cannot reach. So each entry records the
+ * other classes required on the subject element (`also`) and the classes
+ * required on its ancestors, in order (`ancestors`); `matchRule` below holds
+ * a candidate to them.
+ *
+ * @returns {Map<string, object[]>} class → candidate rules, in source order.
  */
 export function indexCss(css) {
   const index = new Map();
-  const put = (cls, extra) => index.set(cls, { ...(index.get(cls) ?? {}), ...extra });
 
   for (const [, selector, decls] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
     const width = /(?:^|;|\s)width\s*:\s*(\d+(?:\.\d+)?)px/.exec(decls);
@@ -90,28 +98,95 @@ export function indexCss(css) {
     if (!width && !maxWidth && !nowrap && !fontSize) continue;
 
     for (const one of selector.split(',')) {
-      const subject = one.trim().split(/\s*[>+~]\s*|\s+/).filter(Boolean).pop();
+      const compounds = one.trim().split(/\s*[>+~]\s*|\s+/).filter(Boolean);
+      const subject = compounds.pop();
       if (!subject) continue;
       const classes = [...subject.matchAll(/\.([A-Za-z0-9_-]+)/g)].map((m) => m[1]);
       if (!classes.length) continue;
       const cls = classes[classes.length - 1];
-      if (width) put(cls, { width: Number(width[1]) });
-      if (maxWidth) put(cls, { maxWidth: Number(maxWidth[1]) });
-      if (nowrap) put(cls, { nowrap: true });
-      if (padding) put(cls, { padding: Number(padding[1]) });
-      if (fontSize) {
-        put(cls, { fontSize: Number(fontSize[1]) * (fontSize[2] === 'px' ? 1 : 16) });
-      }
+
+      // A `:hover` or `::before` rule describes a state or a generated box,
+      // not the element a label sits in.
+      if (/::?[a-z-]+(\(|$|\.|\s)/.test(subject.replace(/^[^:]*/, ''))) continue;
+
+      const rule = {
+        also: classes.slice(0, -1),
+        ancestors: compounds
+          .map((c) => [...c.matchAll(/\.([A-Za-z0-9_-]+)/g)].map((m) => m[1]))
+          .filter((cs) => cs.length)
+          .map((cs) => cs[cs.length - 1]),
+      };
+      if (width) rule.width = Number(width[1]);
+      if (maxWidth) rule.maxWidth = Number(maxWidth[1]);
+      if (nowrap) rule.nowrap = true;
+      if (padding) rule.padding = Number(padding[1]);
+      if (fontSize) rule.fontSize = Number(fontSize[1]) * (fontSize[2] === 'px' ? 1 : 16);
+
+      if (!index.has(cls)) index.set(cls, []);
+      index.get(cls).push(rule);
     }
   }
   return index;
 }
 
 /**
+ * Whether `rule` can apply to `stack[i]`: every other class of its subject
+ * compound is on that element, and its ancestor classes appear below it in
+ * the stack, in order. Descendant combinators only; `>` and `+` were
+ * flattened by indexCss, which makes a match slightly too permissive rather
+ * than too strict.
+ *
+ * `outside` holds class names that no template contains, so they are put on
+ * by Foundry around the template — a Dialog's `.sra2.roll-dialog` wrapper,
+ * for instance. Requiring those would throw away rules that do apply at
+ * runtime, so they are not required; a class a template does use is.
+ */
+export function matchRule(rule, stack, i, outside = new Set()) {
+  for (const c of rule.also) if (!stack[i].includes(c)) return false;
+  let at = 0;
+  for (const want of rule.ancestors) {
+    if (outside.has(want)) continue;
+    while (at < i && !stack[at].includes(want)) at++;
+    if (at >= i) return false;
+    at++;
+  }
+  return true;
+}
+
+/** Every class name that appears in a template, i.e. one we can check for. */
+export function templateClasses(dir = TEMPLATE_DIR) {
+  const out = new Set();
+  for (const file of fs.readdirSync(dir).filter((f) => f.endsWith('.hbs'))) {
+    const text = fs.readFileSync(path.join(dir, file), 'utf-8');
+    for (const m of text.matchAll(/class="([^"]*)"/g)) {
+      for (const c of m[1].split(/\s+/)) {
+        if (/^[A-Za-z][\w-]*$/.test(c)) out.add(c);
+      }
+    }
+  }
+  return out;
+}
+
+/**
+ * The declarations in effect on `stack[i]`, merged in source order so a later
+ * rule wins, as the cascade does for selectors of equal specificity.
+ */
+export function declsFor(cssIndex, stack, i, outside) {
+  let out = null;
+  for (const cls of stack[i]) {
+    for (const rule of cssIndex.get(cls) ?? []) {
+      if (!matchRule(rule, stack, i, outside)) continue;
+      out = { ...(out ?? {}), ...rule, cls };
+    }
+  }
+  return out;
+}
+
+/**
  * Walks a template, tracking the open element stack, and yields one entry per
  * `{{localize "KEY"}}` with the constraints inherited from its ancestors.
  */
-export function collectSites(template, file, cssIndex) {
+export function collectSites(template, file, cssIndex, outside) {
   const sites = [];
   const stack = [];
   const token =
@@ -123,20 +198,18 @@ export function collectSites(template, file, cssIndex) {
       let nowrap = false;
       let fontSize = null;
       for (let i = stack.length - 1; i >= 0; i--) {
-        for (const cls of stack[i]) {
-          const d = cssIndex.get(cls);
-          if (!d) continue;
-          if (!box && (d.width || d.maxWidth)) {
-            box = {
-              cls,
-              px: d.width ?? d.maxWidth,
-              padding: d.padding ?? 0,
-              tag: stack[i].tag,
-            };
-          }
-          if (d.nowrap) nowrap = true;
-          if (fontSize === null && d.fontSize) fontSize = d.fontSize;
+        const d = declsFor(cssIndex, stack, i, outside);
+        if (!d) continue;
+        if (!box && (d.width || d.maxWidth)) {
+          box = {
+            cls: d.cls,
+            px: d.width ?? d.maxWidth,
+            padding: d.padding ?? 0,
+            tag: stack[i].tag,
+          };
         }
+        if (d.nowrap) nowrap = true;
+        if (fontSize === null && d.fontSize) fontSize = d.fontSize;
       }
       sites.push({ key: m[3], file, box, nowrap, fontSize: fontSize ?? DEFAULT_FONT_SIZE });
       continue;
@@ -175,10 +248,23 @@ export function analyze(target = 'ja') {
   const base = flatten(JSON.parse(fs.readFileSync(path.join(LANG_DIR, 'en.json'), 'utf-8')));
   const tgt = flatten(JSON.parse(fs.readFileSync(path.join(LANG_DIR, `${target}.json`), 'utf-8')));
 
+  const inTemplates = templateClasses();
+  const outside = new Set();
+  for (const rules of cssIndex.values()) {
+    for (const rule of rules) {
+      for (const c of rule.ancestors) if (!inTemplates.has(c)) outside.add(c);
+    }
+  }
+
   const sites = [];
   for (const file of fs.readdirSync(TEMPLATE_DIR).filter((f) => f.endsWith('.hbs'))) {
     sites.push(
-      ...collectSites(fs.readFileSync(path.join(TEMPLATE_DIR, file), 'utf-8'), file, cssIndex),
+      ...collectSites(
+        fs.readFileSync(path.join(TEMPLATE_DIR, file), 'utf-8'),
+        file,
+        cssIndex,
+        outside,
+      ),
     );
   }
 

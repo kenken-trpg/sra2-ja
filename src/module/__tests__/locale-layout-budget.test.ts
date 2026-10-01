@@ -26,25 +26,20 @@ interface Report {
   nowrapGrowth: { key: string; growth: number }[];
 }
 
-/**
- * Boxes too narrow for English as well, so this fork did not introduce them.
- * A 40px select cannot show its own option text in any language. Listed so a
- * *new* one is not lost among them; fixing the CSS is what removes an entry.
- */
-const UPSTREAM_TOO_NARROW = new Set([
-  'SRA2.VEHICLE.WEAPON_MOUNT_NONE',
-  'SRA2.VEHICLE.WEAPON_MOUNT_RIFLE',
-]);
-
 let report: Report;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+let indexCss: (css: string) => Map<string, any[]>;
+let matchRule: (rule: any, stack: string[][], i: number, outside?: Set<string>) => boolean;
 
 beforeAll(async () => {
   // A computed specifier: the tool is plain .mjs with no type declarations.
   const tool = pathToFileURL(
     path.resolve(__dirname, '../../..', 'tools/i18n/layout-risk.mjs'),
   ).href;
-  const { analyze } = await import(/* @vite-ignore */ tool);
-  report = analyze('ja') as Report;
+  const mod = await import(/* @vite-ignore */ tool);
+  report = mod.analyze('ja') as Report;
+  indexCss = mod.indexCss;
+  matchRule = mod.matchRule;
 });
 
 const describeFinding = (f: Finding): string =>
@@ -64,16 +59,42 @@ describe('Japanese label layout budget', () => {
     expect(report.regressions.map(describeFinding)).toEqual([]);
   });
 
-  it('reports no box too narrow for both languages beyond the known ones', () => {
-    const unexpected = report.preexisting
-      .filter((f) => !UPSTREAM_TOO_NARROW.has(f.key))
-      .map(describeFinding);
-    expect(unexpected).toEqual([]);
+  it('reports no box too narrow for both languages', () => {
+    // There was an allowlist of two here, the vehicle sheet's weapon-mount
+    // select. Both were artefacts of indexing the CSS by class alone: the
+    // 40px belongs to `.sra2-character-sheet-v2 … .dice .attribute-input`,
+    // which that select is not inside. The analysis now checks the ancestors,
+    // so a finding here is a real box again and the list is empty.
+    expect(report.preexisting.map(describeFinding)).toEqual([]);
+  });
+});
+
+describe('CSS indexing', () => {
+  it('does not apply a descendant rule outside its ancestor chain', () => {
+    const css = '.sheet .dice .attribute-input{width:40px}';
+    const index = indexCss(css);
+    const stack = (...classes: string[][]) => classes;
+
+    const inside = stack(['sheet'], ['dice'], ['attribute-input']);
+    const outside = stack(['sheet'], ['other'], ['attribute-input']);
+    const rule = index.get('attribute-input')![0];
+
+    expect(matchRule(rule, inside, 2)).toBe(true);
+    expect(matchRule(rule, outside, 2)).toBe(false);
   });
 
-  it('keeps the upstream-too-narrow list accurate', () => {
-    const flagged = new Set(report.preexisting.map((f) => f.key));
-    const stale = [...UPSTREAM_TOO_NARROW].filter((k) => !flagged.has(k));
-    expect(stale).toEqual([]);
+  it('does not require an ancestor class that no template carries', () => {
+    // Foundry wraps a Dialog's template in its own markup, so a rule scoped
+    // to that wrapper still applies to what the template renders.
+    const index = indexCss('.roll-dialog .header .label{white-space:nowrap}');
+    const rule = index.get('label')![0];
+    const stack = [['header'], ['label']];
+
+    expect(matchRule(rule, stack, 1)).toBe(false);
+    expect(matchRule(rule, stack, 1, new Set(['roll-dialog']))).toBe(true);
+  });
+
+  it('ignores a rule whose subject carries a pseudo-class', () => {
+    expect(indexCss('.box:hover{width:40px}').get('box')).toBeUndefined();
   });
 });

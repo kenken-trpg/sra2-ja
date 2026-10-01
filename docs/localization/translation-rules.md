@@ -262,3 +262,27 @@ HTML として描画する。タグを落としても壊れた表示になるだ
 - 固定幅は多い（`width|height: <n>px` が 256 箇所、`white-space: nowrap` が
   38 箇所）。**文字切れ・重なりの有無は Foundry 上での目視確認が必要** で、
   未確認のまま幅を変更すると英語・フランス語のレイアウトを壊すため手を付けていない。
+
+### `check:layout` の精度について
+
+`check:layout`（`tools/i18n/layout-risk.mjs`）は jsdom を使わない静的推定で、
+ビルド済み CSS とテンプレートを突き合わせる。当初は CSS を**クラス名だけ**で
+索引していたため、子孫セレクタのルールを無関係な場所に適用して
+誤検出を出していた。
+
+| 誤検出 | 原因 |
+| --- | --- |
+| 車両シートの武器マウント `<select>` が 40px（2 件） | 40px は `.sra2-character-sheet-v2 … .dice .attribute-input` のもの。この `<select>` はそのどれの中にも無い |
+| `roll-result.hbs` の `.damage-label` が `nowrap`（5 件） | `nowrap` は車両シートの `.armor-thresholds-section .damage-tracking .damage-label` だけに付いている |
+
+後者には `COMBAT.MATRIX_DAMAGE_LABEL` / `COMBAT.BIOFEEDBACK_DAMAGE_LABEL` など、
+**目視確認リストの上位 3 件が含まれていた**。確認すべき箇所を実際より多く
+見せていたことになる。
+
+現在は祖先クラスの連なりも照合する。ただしテンプレートに現れないクラスは
+Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）なので、
+照合の条件にしない。これを条件にすると、実行時には効いているルールを
+取り落として**今度は見落とす**。
+
+結果として、固定幅の中にあるラベルは 10 → 8、`nowrap` は 27 → 22 件。
+「両方の言語で狭すぎる」は 2 → **0 件**になり、テスト側の許容リストも消えた。
