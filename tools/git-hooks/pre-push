@@ -17,8 +17,12 @@ status=0
 # work that is not cleared for redistribution.
 never_push='localization/ja-compendium'
 
+# origin is this fork (kenken-trpg/sra2-ja). master mirrors upstream, and the
+# localization branches are the fork's own work; both are named in full rather
+# than matched with refs/heads/localization/* so that a new branch under that
+# prefix is not pushable by accident.
 case "$remote_name" in
-  origin)  allowed='refs/heads/master' ;;
+  origin)  allowed='refs/heads/master refs/heads/localization/ja refs/heads/localization/ja-stage2' ;;
   prfork)  allowed='refs/heads/fix/* refs/heads/feat/*' ;;
   *)       allowed='' ;;
 esac

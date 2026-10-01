@@ -166,7 +166,10 @@ remote が3つあると `gh` は対象リポジトリを自分で解決するた
 既に設定済みの値は上書きしません。
 
 `pre-push` は**既定で拒否**し、remote ごとの許可リストに載った宛先だけを通します
-（`origin` は `master` のみ、`prfork` は `fix/*` と `feat/*`）。さらに
+（`origin` は `master` と `localization/ja` / `localization/ja-stage2`、`prfork` は
+`fix/*` と `feat/*`）。`refs/heads/localization/*` のようなワイルドカードにはせず
+**ブランチ名を個別に列挙**しています。この接頭辞の下に新しいブランチを作ったとき、
+黙って push 可能になってしまうのを避けるためです。さらに
 `localization/ja-compendium` は**宛先を問わず送信元として禁止**します。宛先だけを
 見ると `localization/ja-compendium:master` と書けば通ってしまうため、送信元ブランチ
 名でも独立に判定しています（`--force` でも貫通しません）。
