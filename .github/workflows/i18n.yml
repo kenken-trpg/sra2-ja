@@ -36,10 +36,10 @@ jobs:
     name: Locale checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
       # These checks are dependency-free, so no install step is needed.
       - name: Progress report
         run: npm run i18n:scan
@@ -59,10 +59,10 @@ jobs:
     name: Test suite
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
       # vitest needs the dev dependencies, unlike the locale checks above.
       - name: Install
