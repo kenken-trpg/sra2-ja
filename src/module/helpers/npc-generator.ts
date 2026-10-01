@@ -11,6 +11,7 @@ import {
   archetypeLabelOf,
   powerLevelLabelOf,
 } from "../config/npc-generator-i18n.js";
+import { featNameJa } from "../config/npc-generator-data-ja.js";
 import {
   WEAPON_TYPES,
   computeFeatLevel,
@@ -1110,9 +1111,13 @@ function buildFeatItem(template: FeatTemplate, sortIndex: number, compendiumItem
   // Calculate the correct rating using the shared computation function
   const { level: rating } = computeFeatLevel(template.featType, template);
 
-  // Resolve localized name and description
+  // Resolve localized name and description.
+  // Japanese names live in npc-generator-data-ja.ts rather than in the data
+  // table; a template with no entry there falls back to English, which is
+  // what every language other than French already did.
   const isEn = getLang() === 'en';
-  const featName = (isEn && template.nameEn) ? template.nameEn : template.name;
+  const baseName = (isEn && template.nameEn) ? template.nameEn : template.name;
+  const featName = (game.i18n?.lang === 'ja' && featNameJa(template.featType, template.name)) || baseName;
   const featDesc = (isEn && template.descriptionEn) ? template.descriptionEn : template.description;
 
   return {

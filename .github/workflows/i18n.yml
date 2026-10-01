@@ -76,8 +76,8 @@ jobs:
             echo "::error::tsc produced no output and did not succeed."
             exit 1
           fi
-          if grep -E '__tests__|tools/i18n' tsc.log; then
-            echo "::error::A localization test or tool no longer type-checks."
+          if grep -E '__tests__|tools/i18n|npc-generator-data-ja' tsc.log; then
+            echo "::error::A localization test, tool or data file no longer type-checks."
             exit 1
           fi
       - name: Unit tests
