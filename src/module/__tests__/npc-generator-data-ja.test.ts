@@ -81,6 +81,7 @@ describe('FEAT_NAMES_JA', () => {
 
   it('resolves a known template and falls back for an unknown one', () => {
     const sample = entries[0];
+    if (!sample) throw new Error('the map is empty');
     expect(featNameJa(sample.featType, sample.fr)).toBe(sample.ja);
     expect(featNameJa(sample.featType, 'Objet inexistant')).toBeUndefined();
     expect(featNameJa('no-such-type', sample.fr)).toBeUndefined();
