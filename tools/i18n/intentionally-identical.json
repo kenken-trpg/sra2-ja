@@ -1,0 +1,21 @@
+{
+    "_comment": "Keys whose Japanese value is deliberately identical to the English one. Without this list the progress report counts them as untranslated, which understates how much is done. Every entry must still exist in en.json and must still be identical in the target locale; check:i18n fails on a stale entry so the list cannot rot.",
+    "keys": {
+        "SRA2.CHAT.RR": "略号。判定の再ロール表記で、日本語版 Shadowrun でも RR のまま使われる",
+        "SRA2.NPC.RR": "略号。NPC シートの再ロール列。日本語版 Shadowrun でも RR のまま",
+        "SRA2.ROLL_DIALOG.RR": "略号。ロールダイアログの再ロール欄。日本語版 Shadowrun でも RR のまま",
+        "SRA2.TOOLTIP.RR": "略号。ツールチップの再ロール表記。日本語版 Shadowrun でも RR のまま",
+        "SRA2.VEHICLE.RR": "略号。車両シートの再ロール列。日本語版 Shadowrun でも RR のまま",
+        "SRA2.FEATS.WEAPON.DAMAGE_VALUE_SHORT": "略号 DV。固定幅の武器テーブル用。全文は SRA2.FEATS.WEAPON.DAMAGE_VALUE で訳済み",
+        "SRA2.FEATS.CYBERDECK.ATTACK_SHORT": "略号 ATK。固定幅のサイバーデッキテーブル用",
+        "SRA2.FEATS.CYBERDECK.CONNECTION_MODE.AR": "略号 AR（拡張現実）。原文も略号のみ",
+        "SRA2.VEHICLE.TYPES.vtol": "略号 VTOL（垂直離着陸機）。日本語でも VTOL が通用表記",
+        "SRA2.FEATS.WEAPON.RANGE_OK": "射程表の記号。原文の OK をそのまま使う",
+        "SRA2.ROLL_DIALOG.RANGE_OK": "射程表の記号。ロールダイアログ側。原文の OK をそのまま使う",
+        "SRA2.FEATS.WEAPON.RANGE_NONE": "射程表の記号（ハイフン）。訳す対象ではない",
+        "SRA2.RESOURCES.YENS": "通貨記号 ¥。訳す対象ではない",
+        "SRA2.SETTINGS.THEME.SRA2": "製品名 Shadowrun Anarchy 2。固有名詞のため英字を維持",
+        "SRA2.SETTINGS.THEME.SR6": "製品名 Shadowrun 6。固有名詞のため英字を維持",
+        "SRA2.SETTINGS.THEME.SR5": "製品名 Shadowrun 5。固有名詞のため英字を維持"
+    }
+}

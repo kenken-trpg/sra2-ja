@@ -8,7 +8,7 @@
  */
 import path from 'node:path';
 import fs from 'node:fs';
-import { LANG_DIR, MARK, readJson, flatten, protectedTokens, htmlTags } from './lib.mjs';
+import { LANG_DIR, MARK, readJson, flatten, protectedTokens, htmlTags, intentionallyIdentical } from './lib.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name, dflt) => {
@@ -30,6 +30,8 @@ if (!fs.existsSync(targetFile)) {
 const b = flatten(readJson(baseFile));
 const t = flatten(readJson(targetFile));
 
+const sameOnPurpose = intentionallyIdentical(target);
+
 const missing = Object.keys(b).filter((k) => !(k in t));
 const extra = Object.keys(t).filter((k) => !(k in b));
 const untranslated = [];
@@ -40,9 +42,18 @@ for (const [k, bv] of Object.entries(b)) {
   if (!(k in t)) continue;
   const tv = t[k];
   if (typeof tv !== 'string') continue;
-  if (tv.startsWith(MARK) || tv === bv) untranslated.push(k);
+  if (tv.startsWith(MARK) || (tv === bv && !(k in sameOnPurpose))) untranslated.push(k);
   if (protectedTokens(bv).join('|') !== protectedTokens(tv).join('|')) tokenMismatch.push(k);
   if (htmlTags(bv).join('|') !== htmlTags(tv).join('|')) tagMismatch.push(k);
+}
+
+// The deliberate-identical list is only trustworthy while every entry is
+// still real: a key dropped upstream, or one that has since been translated,
+// would silently keep hiding something. Both are hard errors.
+const staleAllow = [];
+for (const k of Object.keys(sameOnPurpose)) {
+  if (!(k in b)) staleAllow.push(`${k} (not in ${base}.json any more)`);
+  else if (t[k] !== b[k]) staleAllow.push(`${k} (no longer identical — remove it from the list)`);
 }
 
 const show = (label, list, limit = 20) => {
@@ -61,9 +72,13 @@ show('✖ missing keys', missing);
 show('✖ extra keys (not in base)', extra);
 show('✖ placeholder/UUID mismatch', tokenMismatch);
 show('✖ HTML tag mismatch', tagMismatch);
+show('✖ stale intentionally-identical entries', staleAllow);
 show('· untranslated (placeholder)', untranslated, 10);
+if (Object.keys(sameOnPurpose).length) {
+  console.log(`\n· deliberately kept in English: ${Object.keys(sameOnPurpose).length}`);
+}
 
-const hard = missing.length + extra.length + tokenMismatch.length + tagMismatch.length;
+const hard = missing.length + extra.length + tokenMismatch.length + tagMismatch.length + staleAllow.length;
 const fail = hard > 0 || (strict && untranslated.length > 0);
 console.log(`\n${fail ? '✖ FAIL' : '✔ PASS'}`);
 process.exit(fail ? 1 : 0);

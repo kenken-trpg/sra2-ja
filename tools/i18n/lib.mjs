@@ -14,6 +14,19 @@ export function writeJson(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 4) + '\n', 'utf8');
 }
 
+/**
+ * Keys whose target value is deliberately the same as the English one
+ * (abbreviations, symbols, product names). Counting them as untranslated
+ * understates the real progress, so the reports read them from here.
+ * Only ja is covered; another locale decides its own abbreviations.
+ */
+export function intentionallyIdentical(target = 'ja') {
+  if (target !== 'ja') return {};
+  const file = path.resolve('tools/i18n/intentionally-identical.json');
+  if (!fs.existsSync(file)) return {};
+  return readJson(file).keys ?? {};
+}
+
 /** Flatten a nested locale object into { "A.B.C": "value" }. */
 export function flatten(obj, prefix = '', out = {}) {
   for (const [k, v] of Object.entries(obj)) {
