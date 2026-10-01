@@ -43,7 +43,16 @@
   写した暫定訳なので、ルールブックで挙動を確認してから確定する。
 - `slug`（`SRA2.SKILLS.SLUG` / `SRA2.SPECIALIZATIONS.SLUG`）… 「識別子」。
   Compendium アイテムの照合キーで、ユーザーが自由に編集する値ではない。
-- `Server` / `Host` … SRA2 の用法が SR5 と一致するか確認が必要。
+- `Server` / `Host`（14 キー）… **要確認。現行の「サーバー / サーバー指数」を維持する。**
+  キックスターター版プレビュー（英語）の目次は `Hosts 220` / `Hosts’ Defenses 221` /
+  `> Host’s Ratings 222` で、`Server` という節は存在しない。一方で本文の地の文は
+  `each second the hacker spends on a server is crucial` / `hacking a server` のように
+  `server` を普通名詞として使っている。公式フランス語版（現時点で唯一の刊行物）は
+  `Serveur`。つまり章題としての用語は `Host`、記述語としては `server` が併存する。
+  `SRA2.ICE.SERVER_INDEX` が公式英語版の `Host’s Rating` に対応する可能性が高いが、
+  該当ページ（p.220-222）はプレビューで削除されているため確定できない。
+  英語版刊行後に再判定する。`server` は Actor のドキュメント型キーでもあるため、
+  ラベルを変える場合もキーは変更しない。
 - NPC ジェネレーターの技能・専門化名 … 上記で仮固定。Compendium の
   アイテム名を日本語化する場合、そちらと不一致にならないよう再確認する。
 
@@ -81,6 +90,54 @@ chummer-web の日本語データは chummer5a/chummer5a（**GPL-3.0**）の派�
 `shadowrun5eja`（LICENSE なし）に対して採った方針（一致／相違マーカーのみを
 記録し、訳語本体は収録しない）と同じ立場。
 
+### 確定した語（プレビュー英語版で判定したもの）
+
+キックスターター版プレビュー（英語）の記述に基づき、SR5 用語集との突き合わせを
+待たずに確定したもの。**出典 PDF は本リポジトリに含めない**（手元参照のみ）。
+**いずれも SR5 日本語版の訳語は参照していない**（ライセンス
+上の注意を参照）。SRA2 自身の定義文だけを根拠にしている。
+
+#### Threshold → 閾値（31 キー）
+
+プレビューには用法が 2 つある。どちらも「超えるべき数値」であり、同一の訳語で
+問題ない。
+
+- **判定の目標値**: `comparing those to the threshold set by the game master.`
+  `When hits match or exceed the threshold, it is a success`。難易度段階
+  （Easy〜Extreme）に対応する閾値の表もある（数値は転記しない）。
+  該当キー: `SRA2.ROLL_DIALOG.THRESHOLD`、`SRA2.NPC.THRESHOLD`、
+  `SRA2.ICE.ATTRIBUTES.THRESHOLD`、`SRA2.COMBAT.USE_THRESHOLD` ほか。
+- **負傷段階の境界値**: 作例に `physical wound thresholds are 6/9/12` という
+  記述がある（強度と防具から算出）。該当キー: `SRA2.ARMOR_THRESHOLDS.*`、
+  `SRA2.VEHICLE.DAMAGE_THRESHOLDS.*`、`SRA2.FEATS.BONUS_*_THRESHOLD` ほか。
+
+> 旧記述の「4 箇所」は誤り。実際は 31 キー。
+
+#### Speed / Handling → 速度 / ハンドリング
+
+SRA2 の定義がプレビューに入っている（車両の能力値解説）。
+
+- `Handling: The vehicle’s ability to handle fast and sharp curves. Used during chases.`
+- `Speed: Combines speed and acceleration of the vehicle.`
+
+**SRA2 の `Speed` は速度と加速を1つにまとめた能力値**で、SR5 の `Speed` とは
+指すものが違う。したがってこれは用語の相違ではなく**文脈の相違**であり、
+突き合わせの対象にならない。現行訳を維持する。
+
+#### Firewall → ファイアウォール（略号 `FW` は 2 キー）
+
+地の文での `firewall` は比喩表現が1件のみで、能力値としての定義は
+プレビューに含まれない。ただし本フォークの扱いは原文から説明できる。
+
+- `SRA2.COMBAT.APPLY_FIREWALL_REDUCTION` … **原文自身が略号**
+  （en: `Apply FW reduction` / fr: `Appliquer réduction FW`）。ja の `FW低下を適用`
+  は原文に忠実。
+- `SRA2.FEATS.CYBERDECK.FIREWALL_SHORT` … 原文は `Firewall` だがキー名が
+  `_SHORT` で、サイバーデッキの固定幅テーブル用。ここだけ `FW` にする。
+
+残る 9 キーはすべて `ファイアウォール`。旧記述の「本フォークのみ略号」は
+片方が原文由来なので不正確。
+
 ### 突き合わせで見つかった主な相違
 
 現時点で **相違 82 / 一致 107 / 原文維持 18**。相手側の訳語は上記の理由で
@@ -95,14 +152,14 @@ chummer-web の日本語データは chummer5a/chummer5a（**GPL-3.0**）の派�
 | --- | --- | --- |
 | Armor / Armor Value | 防具 / 防具値 | SR5 側は別語。SRA2 は防具アイテムを指し、SR5 側は数値を指すので文脈が違う可能性 |
 | Contact | コネ | SR 日本語版寄りの訳。SR5 側はカナ表記で割れている |
-| Threshold | 閾値 | 4 箇所。SR5 側と別語。ルール用語として要確認 |
+| Threshold | 閾値 | **確定・維持**（31 キー / 2 用法。下記「確定した語」参照） |
 | Description | 説明 | 9 箇所。UI 語彙の文体差のみ |
 | Damage | ダメージ | SR5 側は略号併記。SRA2 に DV の概念はない |
 | Magic | 魔法 | 3 箇所。能力値名か分野名かで SR5 側と分かれる |
 | Sorcery | 呪術 | NPC ジェネレーターの技能名。SR5 側と別語。上記の表と要整合 |
 | Vehicle | 車両 | 本フォークは漢字、SR5 側はカナ |
-| Speed / Handling | 速度 / ハンドリング | 車両ステータス。SR5 側は別語。SRA2 の定義を要確認 |
-| Firewall | FW | 本フォークのみ略号。固定幅 UI の都合か要確認 |
+| Speed / Handling | 速度 / ハンドリング | **確定・維持**（SRA2 の Speed は SR5 の別能力値。下記参照） |
+| Firewall | ファイアウォール | **確定**。略号 `FW` は 2 キーのみ（下記参照） |
 | Complex Form | コンプレックス・フォーム | 3 箇所。SR5 側は訳語化している |
 | Emerged | 覚醒（テクノマンサー） | SR5 側は別語。括弧の補足が必要か要検討 |
 
