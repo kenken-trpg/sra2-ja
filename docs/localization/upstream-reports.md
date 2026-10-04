@@ -34,6 +34,7 @@
 | 15 | NPC の格納フォルダ名 `Generated` が名前で検索されている | 翻訳するとフォルダが分裂する | 軽微（本フォークで回避） |
 | 16 | 生成チャットの能力値略号が全言語でフランス語（`FOR` / `VOL`） | 英語環境で略号だけ仏語 | Bug（本フォークで修正） |
 | 17 | 生成チャットの `Armes :` が全言語でフランス語 | 同上 | Bug（本フォークで修正） |
+| 18 | 生成チャットの武器・サイバーウェア名がテンプレートのフランス語名 | 英語環境でも装備名が仏語 | Bug |
 
 ---
 
@@ -327,3 +328,27 @@ en は `Weapons`、fr は `Armes` にした。`Chrome` と `Cash` は英仏で�
 あわせて金額の桁区切りが `toLocaleString(isEn ? "en-US" : "fr-FR")` と
 二択だったため、`game.i18n.lang` を渡すようにしている（日本語は `en-US` と
 同じ区切りなので表示は変わらない）。
+
+## 18. 生成チャットの装備名がテンプレートのフランス語名
+
+生成結果のチャット要約が、作成したアイテムではなく**テンプレートをそのまま**
+読んでいる。`FeatTemplate.name` はフランス語名なので、英語環境でも
+`Armes : Tonfas Meridian Guardian, Bolas Meridian Tangle` と出る。
+
+```ts
+const weaponNames = featResult.feats
+  .filter((f) => f.featType === "weapon")
+  .map((f) => f.name)        // ← テンプレートの仏名
+  .join(", ") || "—";
+```
+
+表示名を言語に合わせて解決しているのは `buildFeatItem()` の方
+（`isEn && template.nameEn ? template.nameEn : template.name`）で、
+チャットはその結果を使っていない。サイバーウェア（`cyberNames`）も同じ。
+
+シート上の装備名は正しい言語で出るため、**同じ NPC の装備がシートとチャットで
+違う名前になる**。
+
+直すなら、テンプレートではなく作成済みアイテム（`items` / `actor.items`）の
+`name` を読むだけでよい。本フォークではまだ直していない。日本語化の観点では
+`npc-generator-data-ja.ts` の訳もチャットには届いていない。
