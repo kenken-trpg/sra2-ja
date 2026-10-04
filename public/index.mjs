@@ -16570,6 +16570,16 @@ function localized(group, key, fr, en) {
   if (translated && translated !== path) return translated;
   return generatorLang() === "fr" ? fr : en;
 }
+function needsLocaleText() {
+  const lang = game.i18n?.lang;
+  return lang !== "fr" && lang !== "en";
+}
+function tableText(fr, en, override) {
+  return generatorLang() === "fr" ? fr : en;
+}
+function localeText(text, override) {
+  return override && needsLocaleText() ? override : text;
+}
 function compendiumNameOverride(group, key) {
   if (game.i18n?.lang === generatorLang()) return null;
   const path = `SRA2.NPC_GEN.${group}.${key}`;
@@ -18544,6 +18554,191 @@ const FEAT_NAMES_JA = {
 };
 function featNameJa(featType, name) {
   return FEAT_NAMES_JA[featType]?.[name];
+}
+const KEYWORDS_JA = {
+  metatype_status: {
+    "Street troll": "ストリートのトロール",
+    "Fallen corpo elf": "落ちぶれた企業エルフ",
+    "Ork laborer": "オークの労働者",
+    "Suburban dwarf": "郊外のドワーフ",
+    "Average human": "平凡なヒューマン",
+    "Aristocrat elf on the run": "逃亡中の貴族エルフ",
+    "Barrens ork": "バレンズのオーク",
+    "Circus troll": "サーカスのトロール",
+    "Mountain dwarf": "山岳のドワーフ",
+    "Discriminated metahuman": "差別されるメタヒューマン",
+    "Street kid": "ストリートの子供",
+    "Gang veteran": "ギャングの古参",
+    "Ex-convict": "元服役囚",
+    "Shadow orphan": "シャドウの孤児",
+    "Corporate refugee": "企業からの逃亡者",
+    "Political exile": "政治亡命者"
+  },
+  origin: {
+    "Seattle Barrens": "シアトル・バレンズ",
+    "Corporate district": "企業区",
+    Nomad: "ノマド",
+    "Hong Kong Plex": "香港プレックス",
+    "Free Berlin": "自由ベルリン",
+    "São Paulo Favelas": "サンパウロのファヴェーラ",
+    "Neo-Tokyo corpo tower": "ネオ東京の企業タワー",
+    "Tír na nÓg": "ティル・ナ・ノーグ",
+    "Ork Underground": "オーク・アンダーグラウンド",
+    "Free Caribbean": "自由カリブ",
+    "Inner Paris": "パリ市内",
+    "Frozen Moscow": "凍てつくモスクワ",
+    "Overcrowded Lagos": "過密のラゴス",
+    "Chicago Plex": "シカゴ・プレックス",
+    "Pueblo Corporate Council": "プエブロ企業評議会",
+    "Hamburg docks": "ハンブルクの港湾"
+  },
+  role: {
+    "Chromed samurai": "クローム漬けのサムライ",
+    "Urban shaman": "都市のシャーマン",
+    "Freelance decker": "フリーのデッカー",
+    "Hardened mercenary": "歴戦の傭兵",
+    "Discreet infiltrator": "物静かなインフィルトレイター",
+    "Manipulative face": "人を操るフェイス",
+    "Drone rigger": "ドローン・リガー",
+    "Mystic adept": "ミスティック・アデプト",
+    "Lab rat": "実験体",
+    "Data thief": "データ泥棒",
+    Bodyguard: "ボディガード",
+    "Shadow courier": "シャドウの運び屋",
+    "Junior fixer": "駆け出しのフィクサー",
+    "Street doctor": "ストリート・ドクター",
+    "Ex-corpo agent": "元企業エージェント",
+    Smuggler: "密輸業者"
+  },
+  lifestyle: {
+    Squatter: "スクウォッター",
+    Low: "低い生活水準",
+    Medium: "並の生活水準",
+    Comfortable: "快適な生活水準",
+    Luxury: "贅沢な生活水準",
+    "On the run": "逃亡中",
+    Nomad: "ノマド",
+    Roommate: "ルームシェア",
+    "In hiding": "潜伏中",
+    "High-tech homeless": "ハイテク・ホームレス",
+    "Lives in a van": "バン暮らし",
+    "Illegal subtenant": "違法な又借り",
+    "Seedy hotel": "うらぶれたホテル",
+    "Coffin motel": "棺桶モーテル",
+    "Converted warehouse": "改装した倉庫",
+    "Collective squat": "共同スクワット"
+  },
+  free: {
+    "Former military": "軍隊上がり",
+    "Obsessive collector": "偏執的なコレクター",
+    "Chronic paranoid": "慢性的な被害妄想",
+    "Soykaf addict": "ソイカフ中毒",
+    "20th century movie buff": "20世紀映画のマニア",
+    "Drone fighting fan": "ドローン闘技のファン",
+    "Frustrated artist": "くすぶった芸術家",
+    "Compulsive gambler": "ギャンブル依存",
+    "BTL addict": "BTL 中毒",
+    "Amateur cook": "素人料理人",
+    "Passionate mechanic": "無類のメカ好き",
+    "Tarot reader": "タロット占い",
+    "Weekend athlete": "週末アスリート",
+    "Ethical hacker": "ホワイトハッカー",
+    "Conspiracy theorist": "陰謀論者",
+    "Cat lover": "猫好き"
+  }
+};
+const BEHAVIORS_JA = {
+  "Protects innocents even when it compromises the mission": "任務を危うくしてでも民間人を守る",
+  "Always loyal to the team, never leaves anyone behind": "チームに忠実で、仲間を置き去りにしない",
+  "Meticulously plans every step before acting": "動く前に手順を細かく計画する",
+  "Keeps cool under all circumstances": "どんな状況でも冷静さを失わない",
+  "Always splits the pay fairly": "報酬は必ず公平に分ける",
+  "Refuses to kill non-combatants": "非戦闘員は殺さない",
+  "Always keeps their word, even to an enemy": "敵が相手でも約束は守る",
+  "Takes time to analyze the situation before drawing": "銃を抜く前に状況を見極める",
+  "Helps other runners in trouble, even without compensation": "困っているランナーを、報酬が無くても助ける",
+  "Always checks emergency exits when entering a place": "建物に入ったら必ず非常口を確認する",
+  "Distrusts corpos but stays professional with Johnsons": "企業は信用しないが、ジョンソン氏には職業的に接する",
+  "Trusts their gut, and they are rarely wrong": "直感を信じる。そしてたいてい当たる",
+  "Defuses group tensions with humor": "場の緊張をユーモアでほぐす",
+  "Keeps their gear in perfect condition": "装備を完璧な状態に保っている",
+  "Knows everyone in the neighborhood, and everyone knows them": "街の人間を全員知っていて、向こうも彼らを知っている",
+  "Refuses to fight before having their morning soykaf": "朝のソイカフを飲むまでは戦わない",
+  "Cannot resist a bet, even a stupid one": "くだらない賭けでも断れない",
+  "Becomes violent when insulted or when their metatype is insulted": "自分やメタタイプを侮辱されると暴力に訴える",
+  "Talks too much and sometimes reveals sensitive info": "喋りすぎて、たまに機密を漏らす",
+  "Spends all their money on useless gadgets": "役に立たないガジェットに金を使い果たす",
+  "Has a soft spot for lost causes": "勝ち目のない話に肩入れしてしまう",
+  "Refuses to use technology when magic can do the job": "魔術で足りる場面では技術を使わない",
+  "Brags about exploits at the worst moment": "最悪のタイミングで武勇伝を語る",
+  "Is incapable of lying convincingly": "嘘が下手で、すぐ見抜かれる",
+  "Panics when the plan changes mid-action": "作戦が途中で変わると取り乱す",
+  "Trusts strangers too easily": "初対面の相手をすぐ信用する",
+  "Argues with the spirits/AIs/drones they control": "使役する精霊／AI／ドローンと口論する",
+  "Kleptomaniac — steals things without realizing it": "盗癖がある — 無意識に物を持ち去る",
+  "Obsessed with a rival they want to surpass": "追い抜きたいライバルに執着している",
+  "Sleeps very badly and compensates with stimulants": "ひどい不眠を興奮剤でごまかしている",
+  "Quotes obscure proverbs in the middle of combat": "戦闘の最中に無名の格言を引用する",
+  "Names all their weapons and talks to them": "武器すべてに名前を付けて話しかける",
+  "Collects trophies from their runs": "ランから戦利品を持ち帰って集めている",
+  "Listens to classical music during firefights": "銃撃戦の最中にクラシックを聴く",
+  "Draws sketches of people they meet": "出会った人物のスケッチを描く",
+  "Keeps an encrypted diary of all their runs": "全てのランを暗号化した日記に残している",
+  "Meditates 10 minutes before each run, even if the team gets impatient": "チームが苛立っても、ランの前に10分瞑想する",
+  "Gives everyone ridiculous nicknames": "誰にでもふざけたあだ名を付ける",
+  "Lucky charm: has a fetish object they never leave behind": "験担ぎ：肌身離さない愛着品がある",
+  "Cooks for the team before every mission": "任務の前には必ずチームに料理を作る"
+};
+const CATCHPHRASES_JA = {
+  "It's not personal. Well, maybe a little.": "私怨じゃない。……まあ、少しはあるかもな。",
+  "They told me it would be easy. They lied.": "簡単な仕事だと言われた。嘘だったが。",
+  "If you can't pay 'em, you can't kill 'em.": "金を払えない相手は、殺せない相手だ。",
+  "I have a plan. It's not a good plan, but it's a plan.": "作戦はある。いい作戦じゃないが、作戦だ。",
+  "No problem a good old gun can't solve.": "銃で片付かない問題はない。",
+  "Every scar has a story. That one's a long story.": "傷にはそれぞれ物語がある。そいつは長い話だ。",
+  "We're all gonna die someday. Today's not your day... probably.": "誰だっていつかは死ぬ。今日のあんたじゃない……たぶんな。",
+  "Welcome to the Shadows, omae. Try not to stay.": "シャドウへようこそ、オマエ。長居はするな。",
+  "The plan was perfect. Reality screwed up.": "作戦は完璧だった。現実の方がしくじった。",
+  "I never said it was a good idea. I said it was MY idea.": "いい案だとは言ってない。俺の案だと言ったんだ。",
+  "When magic blows up in your face, all you can do is run.": "魔術が顔の前で暴発したら、走るしかない。",
+  "Two rules: no kids, and I get paid upfront.": "ルールは二つ。子供は巻き込まない、報酬は前払い。",
+  "What's the worst that could happen? No, don't answer that.": "最悪で何が起きる？ いや、答えなくていい。",
+  "I'm not expensive. Then again, I'm not reliable either.": "高くはない。その代わり当てにもならない。",
+  "In the Shadows, paranoia is just common sense.": "シャドウでは、疑り深さはただの常識だ。",
+  "Chummer, you look like someone who's gonna cause me trouble.": "チャマー、あんた面倒を持ち込む顔をしてる。",
+  "You want professional or cheap? You can't have both.": "プロが欲しいのか、安さが欲しいのか。両方は無理だ。",
+  "If you can't hear my footsteps, you're already dead.": "足音が聞こえないなら、あんたはもう死んでいる。",
+  "The Matrix is like real life. Only more dangerous.": "マトリックスは現実と同じだ。もっと危ないだけで。",
+  "Spirits like me. People are the problem.": "精霊には好かれる。問題は人間の方だ。",
+  "Omae, when I say it's handled, it's handled. Mostly.": "オマエ、片付いたと言ったら片付いてる。だいたいは。",
+  "Careful, the last person who underestimated me is... unavailable.": "気をつけな。前に俺を甘く見た奴は……今は出てこられない。",
+  "Magic is beautiful. Until it fries your brain.": "魔術は美しい。脳を焼かれるまではな。",
+  "They don't call me that for nothing. Well, kinda for nothing.": "その呼び名には理由がある。まあ、ほとんど無いが。",
+  "I'm a professional. I miss my targets in a very organized way.": "俺はプロだ。外すときも実に整然と外す。",
+  "Stealth is my thing. BOOM. Uh... forget that.": "隠密は得意だ。ドカン。……今のは忘れろ。",
+  "I've seen worse. No, actually, I haven't.": "もっとひどいのを見てきた。いや、見てないな。",
+  "You smell that? That's the smell of nuyen.": "この匂いが分かるか。新円の匂いだ。",
+  "One day I'll retire. But not today.": "いつかは足を洗う。今日じゃないが。",
+  "The streets of Seattle taught me everything. Especially how to run fast.": "シアトルの路上で全部覚えた。特に、速く逃げる方法を。",
+  "Hey, nobody told me there would be a dragon.": "おい、ドラゴンが出るとは聞いてないぞ。",
+  "Trust me, I'm almost a professional.": "任せろ、ほぼプロだ。",
+  "I don't work for free. Unless it's personal.": "ただ働きはしない。私怨が絡まない限りはな。",
+  "They say chrome makes you cold. Not true, I just have built-in AC.": "クロームは体を冷やすと言うが、違う。冷房が内蔵されてるだけだ。",
+  "Three seconds. That's all I need.": "三秒。それだけあればいい。",
+  "The Sixth World is rotten. But it's home.": "第六世界は腐ってる。それでも故郷だ。",
+  "If I'm giving you a deal, it's because you have something I want.": "俺が値引きするときは、あんたが欲しい物を持ってるときだ。",
+  "Johnsons lie. It's in their contract.": "ジョンソン氏は嘘をつく。契約に書いてある。",
+  "A day without a shootout is a wasted day.": "撃ち合いのない日は、無駄な一日だ。",
+  "My implants are worth more than your apartment. And they're more reliable.": "俺のインプラントはあんたの部屋より高い。そのうえ信頼できる。"
+};
+function keywordJa(category, en) {
+  return KEYWORDS_JA[category]?.[en];
+}
+function behaviorJa(en) {
+  return BEHAVIORS_JA[en];
+}
+function catchphraseJa(en) {
+  return CATCHPHRASES_JA[en];
 }
 const FEAT_DESCS_JA = {
   armor: {
@@ -23004,13 +23199,13 @@ function generateFeats(archetype, _powerLevel, budget) {
   return { feats, cost, essenceSpent };
 }
 function generateFlavor() {
-  const isEn = getLang() === "en";
+  const label = (key) => game.i18n.localize(`SRA2.NPC_GEN.FLAVOR.${key}`);
   const allPools = [
-    { label: isEn ? "Appearance" : "Apparence", data: PHYSICAL_TRAITS },
-    { label: isEn ? "Quirk" : "Manie", data: QUIRKS },
-    { label: isEn ? "Origin" : "Origine", data: BACKSTORIES },
-    { label: isEn ? "Relationship" : "Relation", data: RELATIONSHIPS },
-    { label: isEn ? "Iconic item" : "Objet fétiche", data: FETISH_OBJECTS }
+    { label: label("APPEARANCE"), data: PHYSICAL_TRAITS },
+    { label: label("QUIRK"), data: QUIRKS },
+    { label: label("ORIGIN"), data: BACKSTORIES },
+    { label: label("RELATIONSHIP"), data: RELATIONSHIPS },
+    { label: label("ICONIC_ITEM"), data: FETISH_OBJECTS }
   ].filter((p) => p.data.length > 0);
   if (allPools.length < 2) {
     return { backgroundHtml: "", gmDescriptionHtml: "" };
@@ -23018,7 +23213,7 @@ function generateFlavor() {
   const selected = pickRandom(allPools, 2);
   const entries = selected.map((pool) => {
     const entry = pickOne(pool.data);
-    const text = isEn ? entry.en : entry.fr;
+    const text = tableText(entry.fr, entry.en);
     return `<p><strong>${pool.label} :</strong> ${text}</p>`;
   });
   return {
@@ -23034,17 +23229,24 @@ function generatePersonality(metatypeKey, archetypeKey, gender) {
   const categories = Object.keys(keywordsTable);
   const keywords = [];
   for (const cat of categories) {
-    keywords.push(pickOne(keywordsTable[cat]));
+    const picked = pickOne(keywordsTable[cat]);
+    keywords.push(localeText(picked, keywordJa(cat, picked)));
   }
   const metatypeName2 = metatypeNameOf(metatype);
-  const genderLabel = isEn ? gender === "female" ? "Woman" : "Man" : gender === "female" ? "Femme" : "Homme";
+  const genderLabel = game.i18n.localize(
+    gender === "female" ? "SRA2.NPC_GEN.GENDER.WOMAN" : "SRA2.NPC_GEN.GENDER.MAN"
+  );
   if (metatype) {
     keywords[0] = `${metatypeName2} — ${genderLabel}`;
   }
   const archetypeLabel2 = archetypeLabelOf(archetype);
   keywords[2] = archetypeLabel2;
-  const behaviors = pickRandom(isEn ? BEHAVIORS_EN : BEHAVIORS, 4);
-  const catchphrases = pickRandom(isEn ? CATCHPHRASES_EN : CATCHPHRASES, 4);
+  const behaviors = pickRandom(isEn ? BEHAVIORS_EN : BEHAVIORS, 4).map(
+    (b) => localeText(b, behaviorJa(b))
+  );
+  const catchphrases = pickRandom(isEn ? CATCHPHRASES_EN : CATCHPHRASES, 4).map(
+    (c) => localeText(c, catchphraseJa(c))
+  );
   return { keywords, behaviors, catchphrases };
 }
 const METATYPE_VISUALS$1 = {
@@ -23129,6 +23331,9 @@ function generateImagePrompt(metatypeKey, archetypeKey, gender, flavorBg, items,
 let compendiumCache = {};
 function getLang() {
   return game.i18n?.lang === "fr" ? "fr" : "en";
+}
+function nuyen(amount) {
+  return amount.toLocaleString(game.i18n?.lang || "en");
 }
 async function getCompendiumItems() {
   const lang = getLang();
@@ -23411,7 +23616,7 @@ function buildFeatItem(template, sortIndex, compendiumItems) {
     sort: (sortIndex + 200) * 100
   };
 }
-async function createRiggerDrones(actor, isEn, folder) {
+async function createRiggerDrones(actor, folder) {
   let droneNames;
   try {
     const d = await import("./npc-drone-data-D9VyEE6s.mjs");
@@ -23424,7 +23629,7 @@ async function createRiggerDrones(actor, isEn, folder) {
   const useLarge = Math.random() < 0.3;
   const secondDrone = useLarge ? pickOne(droneNames.large) : pickOne(droneNames.medium);
   for (const drone of [smallDrone, secondDrone]) {
-    const droneName = isEn ? drone.en : drone.fr;
+    const droneName = tableText(drone.fr, drone.en);
     const droneActor = await Actor.create({
       name: droneName,
       type: "vehicle",
@@ -23455,7 +23660,6 @@ async function generateSingleNPC(options) {
     return;
   }
   const compendiumItems = await getCompendiumItems();
-  const isEn = getLang() === "en";
   const mtName = metatypeNameOf(metatype);
   const archLabel = archetypeLabelOf(archetype);
   const plLabel = powerLevelLabelOf(powerLevel);
@@ -23858,7 +24062,7 @@ async function generateSingleNPC(options) {
       const effects = sys.narrativeEffects || [];
       if (effects.length < 3) {
         const idx = Math.floor(Math.random() * narrativeEffectsFr.length);
-        const effectText = isEn ? narrativeEffectsEn[idx] : narrativeEffectsFr[idx];
+        const effectText = tableText(narrativeEffectsFr[idx], narrativeEffectsEn[idx]);
         const newEffects = [...effects, { text: effectText, isNegative: false, value: 1 }];
         const newRating = computeFeatLevel(sys.featType, { ...sys, narrativeEffects: newEffects }).level;
         const newCost = computeFeatCost(sys.featType, { ...sys, rating: newRating });
@@ -23953,7 +24157,7 @@ async function generateSingleNPC(options) {
   const usedContactNames = new Set(
     items.filter((it) => it.system?.featType === "contact").map((it) => it.name)
   );
-  const contactPrefix = isEn ? "Contact:" : "Contact :";
+  const contactPrefix = game.i18n.localize("SRA2.NPC_GEN.CONTACT.PREFIX");
   while (surplus >= 15e3 && addedContacts < 4) {
     const availableNames = contactNames.filter(
       (n) => !usedContactNames.has(`${contactPrefix} ${n}`)
@@ -23966,7 +24170,7 @@ async function generateSingleNPC(options) {
       featType: "contact",
       cost: "free-equipment",
       nuyenCost: 0,
-      description: isEn ? "<p>Useful contact in the Shadows.</p>" : "<p>Contact utile dans les Ombres.</p>",
+      description: game.i18n.localize("SRA2.NPC_GEN.CONTACT.DESCRIPTION"),
       rrList: [{ ...cRR, rrValue: 1 }]
     });
     const builtItem = buildFeatItem(contactTemplate, items.length + 300, compendiumItems);
@@ -24086,9 +24290,10 @@ async function generateSingleNPC(options) {
           const imgPrompt = generateImagePrompt(metatypeKey, archetypeKey, options.gender, flavor.backgroundHtml, items, personality.keywords, personality.behaviors, skillResult.skills);
           console.log("%c=== IMAGE PROMPT ===", "color: magenta; font-weight: bold;");
           console.log(imgPrompt);
-          return `<p><strong>${isEn ? "Image Prompt" : "Prompt Image"} :</strong></p><p><em>${imgPrompt}</em></p>`;
+          const promptLabel = game.i18n.localize("SRA2.NPC_GEN.IMAGE_PROMPT");
+          return `<p><strong>${promptLabel} :</strong></p><p><em>${imgPrompt}</em></p>`;
         })(),
-        gmDescription: `<p>${isEn ? "<strong>Archetype:</strong>" : "<strong>Archétype :</strong>"} ${archLabel}<br/>${isEn ? "<strong>Level:</strong>" : "<strong>Niveau :</strong>"} ${plLabel}<br/>${isEn ? "<strong>Budget spent:</strong>" : "<strong>Budget dépensé :</strong>"} ${totalSpent.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥ / ${powerLevel.budget.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</p>`
+        gmDescription: `<p><strong>${game.i18n.localize("SRA2.NPC_GEN.GM.ARCHETYPE")}</strong> ${archLabel}<br/><strong>${game.i18n.localize("SRA2.NPC_GEN.GM.LEVEL")}</strong> ${plLabel}<br/><strong>${game.i18n.localize("SRA2.NPC_GEN.GM.BUDGET_SPENT")}</strong> ${nuyen(totalSpent)} ¥ / ${nuyen(powerLevel.budget)} ¥</p>`
       },
       keywords: {
         keyword1: personality.keywords[0] ?? "",
@@ -24110,7 +24315,7 @@ async function generateSingleNPC(options) {
         catchphrase4: personality.catchphrases[3] ?? ""
       },
       linkedVehicles: [],
-      reference: `${isEn ? "Generated Runner" : "PNJ Généré"} — ${archLabel} ${mtName}`,
+      reference: `${game.i18n.localize("SRA2.NPC_GEN.REFERENCE")} — ${archLabel} ${mtName}`,
       damageGaugeType: "physical"
     }
   };
@@ -24132,17 +24337,18 @@ async function generateSingleNPC(options) {
   if (!actor) return;
   await actor.createEmbeddedDocuments("Item", items);
   if (archetypeKey === "rigger") {
-    await createRiggerDrones(actor, isEn, folder);
+    await createRiggerDrones(actor, folder);
   }
   const topSkills = skillResult.skills.sort((a, b) => b.rating - a.rating).slice(0, 5).map((s) => {
     return `<span style="color:var(--sr-ui-color-active,#0ff);">${skillName(s.slug)}</span> <strong>${s.rating}</strong>`;
   }).join(" · ");
+  const short = (attr) => game.i18n.localize(`SRA2.ATTRIBUTES.${attr}_SHORT`);
   const attrLabels = {
-    strength: "FOR",
-    agility: "AGI",
-    willpower: "VOL",
-    logic: "LOG",
-    charisma: "CHA"
+    strength: short("STRENGTH"),
+    agility: short("AGILITY"),
+    willpower: short("WILLPOWER"),
+    logic: short("LOGIC"),
+    charisma: short("CHARISMA")
   };
   const attrSummary = Object.entries(attrResult.attributes).map(([k, v]) => {
     const isMax = v === metatype.maxes[k];
@@ -24167,12 +24373,12 @@ async function generateSingleNPC(options) {
   </div>
   <div style="margin:6px 0;">${attrSummary} · <span style="opacity:0.7;">ESS ${essenceRemaining}</span></div>
   <div style="margin:6px 0;">${topSkills}</div>
-  ${cyberNames ? `<div style="margin:4px 0;font-size:0.85em;opacity:0.8;">Chrome : ${cyberNames}</div>` : ""}
-  <div style="margin:4px 0;font-size:0.85em;opacity:0.8;">Armes : ${weaponNames}</div>
+  ${cyberNames ? `<div style="margin:4px 0;font-size:0.85em;opacity:0.8;">${game.i18n.localize("SRA2.NPC_GEN.CHAT.CHROME")} : ${cyberNames}</div>` : ""}
+  <div style="margin:4px 0;font-size:0.85em;opacity:0.8;">${game.i18n.localize("SRA2.NPC_GEN.CHAT.WEAPONS")} : ${weaponNames}</div>
   <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.85em;">
-    <span style="color:var(--sr-ui-color-active,#0ff);">${totalSpent.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</span>
-    <span style="opacity:0.5;"> / ${powerLevel.budget.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</span>
-    <span style="float:right;">Cash : <strong>${remainingYens.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</strong></span>
+    <span style="color:var(--sr-ui-color-active,#0ff);">${nuyen(totalSpent)} ¥</span>
+    <span style="opacity:0.5;"> / ${nuyen(powerLevel.budget)} ¥</span>
+    <span style="float:right;">${game.i18n.localize("SRA2.NPC_GEN.CHAT.CASH")} : <strong>${nuyen(remainingYens)} ¥</strong></span>
   </div>
 </div>`;
   try {
@@ -24184,7 +24390,7 @@ async function generateSingleNPC(options) {
     await ChatMessage.create({
       content: chatContent,
       whisper: userId ? [userId] : [],
-      speaker: { alias: isEn ? "Runner Generator" : "Générateur de Runner" }
+      speaker: { alias: game.i18n.localize("SRA2.NPC_GEN.CHAT.SPEAKER") }
     });
   } catch (err) {
     console.warn("Runner Generator: failed to send chat message", err);
