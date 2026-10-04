@@ -367,11 +367,15 @@
         "ATTRIBUTES": {
             "LABEL": "能力値",
             "STRENGTH": "筋力",
+            "STRENGTH_SHORT": "筋力",
             "AGILITY": "敏捷力",
+            "AGILITY_SHORT": "敏捷",
             "WILLPOWER": "意志力",
             "WILLPOWER_SHORT": "意志",
             "LOGIC": "論理力",
+            "LOGIC_SHORT": "論理",
             "CHARISMA": "魅力",
+            "CHARISMA_SHORT": "魅力",
             "TOTAL_DICE_POOL": "合計ダイス・プール（能力値＋技能＋専門化）",
             "TOTAL_RR": "合計リスク軽減",
             "ROLL": "能力値ロール",
@@ -1360,7 +1364,35 @@
                 "face": "フェイス",
                 "technomancer": "テクノマンサー",
                 "infiltrator": "インフィルトレイター"
-            }
+            },
+            "FLAVOR": {
+                "APPEARANCE": "外見",
+                "QUIRK": "癖",
+                "ORIGIN": "出自",
+                "RELATIONSHIP": "人間関係",
+                "ICONIC_ITEM": "愛着品"
+            },
+            "GENDER": {
+                "MAN": "男性",
+                "WOMAN": "女性"
+            },
+            "CONTACT": {
+                "PREFIX": "コネ:",
+                "DESCRIPTION": "<p>シャドウで役に立つコネ。</p>"
+            },
+            "GM": {
+                "ARCHETYPE": "アーキタイプ：",
+                "LEVEL": "パワーレベル：",
+                "BUDGET_SPENT": "使用予算："
+            },
+            "CHAT": {
+                "SPEAKER": "ランナー・ジェネレーター",
+                "CHROME": "クローム",
+                "WEAPONS": "武器",
+                "CASH": "残金"
+            },
+            "IMAGE_PROMPT": "画像プロンプト",
+            "REFERENCE": "生成ランナー"
         },
         "NPC_GENERATOR": {
             "TITLE": "ランナー・ジェネレーター",

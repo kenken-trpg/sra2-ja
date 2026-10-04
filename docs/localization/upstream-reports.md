@@ -32,6 +32,8 @@
 | 13 | `Bâteau pneumatique semi-rigide` の綴り（原書は `Bateau`） | 表記 | 軽微 |
 | 14 | `spec_la-rue` の英語が `Spec: La rue`（フランス語のまま） | 英語環境で 1 件だけ仏語 | Bug |
 | 15 | NPC の格納フォルダ名 `Generated` が名前で検索されている | 翻訳するとフォルダが分裂する | 軽微（本フォークで回避） |
+| 16 | 生成チャットの能力値略号が全言語でフランス語（`FOR` / `VOL`） | 英語環境で略号だけ仏語 | Bug（本フォークで修正） |
+| 17 | 生成チャットの `Armes :` が全言語でフランス語 | 同上 | Bug（本フォークで修正） |
 
 ---
 
@@ -293,3 +295,35 @@ if (!folder) folder = await Folder.create({ name: "Generated", … });
 本来はフォルダ側に flag を立てて ID で引くのが正しいが、既存ワールドの
 フォルダには flag が無いため、移行を伴わずに直せる範囲ではない。上流で直すなら
 flag 方式を薦める。
+
+## 16. 生成チャットの能力値略号が全言語でフランス語
+
+`npc-generator.ts` の生成結果チャットが、能力値の略号を直書きしていた。
+
+```ts
+const attrLabels: Record<string, string> = {
+  strength: "FOR", agility: "AGI", willpower: "VOL", logic: "LOG", charisma: "CHA",
+};
+```
+
+`FOR`（Force）と `VOL`（Volonté）はフランス語の略号で、**英語環境でもそのまま
+出る**。同じファイルの他の表示は `isEn` で切り替えているので、ここだけ漏れている。
+
+**本フォークでは修正した。** `SRA2.ATTRIBUTES.*_SHORT` から取るようにし、
+`WILLPOWER_SHORT` だけ既に存在していた並びに `STRENGTH_SHORT` / `AGILITY_SHORT` /
+`LOGIC_SHORT` / `CHARISMA_SHORT` を追加した（en は `STR` / `AGI` / `LOG` / `CHA`、
+fr は従来の `FOR` / `AGI` / `LOG` / `CHA`）。**英語環境の表示が `FOR`→`STR`、
+`VOL`→`WIL` と変わる**が、これは誤りを直した結果。
+
+## 17. 生成チャットの `Armes :` が全言語でフランス語
+
+同じチャットの装備行が `Armes : ...`（および `Chrome : ...` / `Cash : ...`）と
+直書きされており、英語環境でも `Armes` と出る。
+
+**本フォークでは修正した。** `SRA2.NPC_GEN.CHAT.{CHROME,WEAPONS,CASH}` を追加し、
+en は `Weapons`、fr は `Armes` にした。`Chrome` と `Cash` は英仏で同じ語なので
+表示は変わらない。
+
+あわせて金額の桁区切りが `toLocaleString(isEn ? "en-US" : "fr-FR")` と
+二択だったため、`game.i18n.lang` を渡すようにしている（日本語は `en-US` と
+同じ区切りなので表示は変わらない）。

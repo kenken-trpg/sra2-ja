@@ -7,12 +7,19 @@ import {
   skillName,
   specName,
   compendiumNameOverride,
+  tableText,
+  localeText,
   metatypeName,
   metatypeNameOf,
   archetypeLabelOf,
   powerLevelLabelOf,
 } from "../config/npc-generator-i18n.js";
 import { featNameJa } from "../config/npc-generator-data-ja.js";
+import {
+  keywordJa,
+  behaviorJa,
+  catchphraseJa,
+} from "../config/npc-generator-flavor-ja.js";
 import { featDescJa } from "../config/npc-generator-descs-ja.js";
 import {
   WEAPON_TYPES,
@@ -660,14 +667,14 @@ interface FlavorResult {
 }
 
 function generateFlavor(): FlavorResult {
-  const isEn = getLang() === 'en';
+  const label = (key: string) => game.i18n!.localize(`SRA2.NPC_GEN.FLAVOR.${key}`);
 
   const allPools = [
-    { label: isEn ? 'Appearance' : 'Apparence', data: PHYSICAL_TRAITS },
-    { label: isEn ? 'Quirk' : 'Manie', data: QUIRKS },
-    { label: isEn ? 'Origin' : 'Origine', data: BACKSTORIES },
-    { label: isEn ? 'Relationship' : 'Relation', data: RELATIONSHIPS },
-    { label: isEn ? 'Iconic item' : 'Objet fétiche', data: FETISH_OBJECTS },
+    { label: label('APPEARANCE'), data: PHYSICAL_TRAITS },
+    { label: label('QUIRK'), data: QUIRKS },
+    { label: label('ORIGIN'), data: BACKSTORIES },
+    { label: label('RELATIONSHIP'), data: RELATIONSHIPS },
+    { label: label('ICONIC_ITEM'), data: FETISH_OBJECTS },
   ].filter(p => p.data.length > 0);
 
   if (allPools.length < 2) {
@@ -677,7 +684,9 @@ function generateFlavor(): FlavorResult {
   const selected = pickRandom(allPools, 2);
   const entries = selected.map(pool => {
     const entry = pickOne(pool.data);
-    const text = isEn ? entry.en : entry.fr;
+    // No Japanese side for these 2,011 entries yet; tableText keeps the
+    // English fallback and is where that translation would plug in.
+    const text = tableText(entry.fr, entry.en);
     return `<p><strong>${pool.label} :</strong> ${text}</p>`;
   });
 
@@ -711,14 +720,15 @@ function generatePersonality(
   const categories = Object.keys(keywordsTable);
   const keywords: string[] = [];
   for (const cat of categories) {
-    keywords.push(pickOne(keywordsTable[cat]));
+    const picked = pickOne(keywordsTable[cat]);
+    keywords.push(localeText(picked, keywordJa(cat, picked)));
   }
 
   // Replace keywords to match the actual metatype + gender
   const metatypeName = metatypeNameOf(metatype);
-  const genderLabel = isEn
-    ? (gender === 'female' ? 'Woman' : 'Man')
-    : (gender === 'female' ? 'Femme' : 'Homme');
+  const genderLabel = game.i18n!.localize(
+    gender === 'female' ? 'SRA2.NPC_GEN.GENDER.WOMAN' : 'SRA2.NPC_GEN.GENDER.MAN',
+  );
   if (metatype) {
     keywords[0] = `${metatypeName} — ${genderLabel}`;
   }
@@ -726,8 +736,12 @@ function generatePersonality(
   const archetypeLabel = archetypeLabelOf(archetype);
   keywords[2] = archetypeLabel;
 
-  const behaviors = pickRandom(isEn ? BEHAVIORS_EN : BEHAVIORS, 4);
-  const catchphrases = pickRandom(isEn ? CATCHPHRASES_EN : CATCHPHRASES, 4);
+  const behaviors = pickRandom(isEn ? BEHAVIORS_EN : BEHAVIORS, 4).map((b) =>
+    localeText(b, behaviorJa(b)),
+  );
+  const catchphrases = pickRandom(isEn ? CATCHPHRASES_EN : CATCHPHRASES, 4).map(
+    (c) => localeText(c, catchphraseJa(c)),
+  );
 
   return { keywords, behaviors, catchphrases };
 }
@@ -866,6 +880,11 @@ let compendiumCache: Record<string, any[]> = {};
 /** Get the active language ('fr' or 'en') */
 function getLang(): 'fr' | 'en' {
   return (game.i18n?.lang === 'fr') ? 'fr' : 'en';
+}
+
+/** Thousands separators for the player's own language, not the table's. */
+function nuyen(amount: number): string {
+  return amount.toLocaleString(game.i18n?.lang || 'en');
 }
 
 async function getCompendiumItems(): Promise<any[]> {
@@ -1215,7 +1234,7 @@ function buildFeatItem(template: FeatTemplate, sortIndex: number, compendiumItem
 // DRONE CREATION (for Riggers)
 // ═══════════════════════════════════════════════════════════════
 
-async function createRiggerDrones(actor: any, isEn: boolean, folder: any): Promise<void> {
+async function createRiggerDrones(actor: any, folder: any): Promise<void> {
   let droneNames: { small: any[]; medium: any[]; large: any[] };
   try {
     const d = await import('../config/npc-drone-data.js');
@@ -1232,7 +1251,7 @@ async function createRiggerDrones(actor: any, isEn: boolean, folder: any): Promi
   const secondDrone = useLarge ? pickOne(droneNames.large) : pickOne(droneNames.medium);
 
   for (const drone of [smallDrone, secondDrone]) {
-    const droneName = isEn ? drone.en : drone.fr;
+    const droneName = tableText(drone.fr, drone.en);
     const droneActor = await (Actor as any).create({
       name: droneName,
       type: 'vehicle',
@@ -1281,7 +1300,6 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
 
   // 2. Load compendium items + resolve language
   const compendiumItems = await getCompendiumItems();
-  const isEn = getLang() === 'en';
   const mtName = metatypeNameOf(metatype);
   const archLabel = archetypeLabelOf(archetype);
   const plLabel = powerLevelLabelOf(powerLevel);
@@ -1619,7 +1637,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
       const effects = sys.narrativeEffects || [];
       if (effects.length < 3) {
         const idx = Math.floor(Math.random() * narrativeEffectsFr.length);
-        const effectText = isEn ? narrativeEffectsEn[idx] : narrativeEffectsFr[idx];
+        const effectText = tableText(narrativeEffectsFr[idx]!, narrativeEffectsEn[idx]!);
         const newEffects = [...effects, { text: effectText, isNegative: false, value: 1 }];
         const newRating = computeFeatLevel(sys.featType, { ...sys, narrativeEffects: newEffects }).level;
         const newCost = computeFeatCost(sys.featType, { ...sys, rating: newRating });
@@ -1734,7 +1752,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
       .filter((it: any) => it.system?.featType === "contact")
       .map((it: any) => it.name),
   );
-  const contactPrefix = isEn ? 'Contact:' : 'Contact :';
+  const contactPrefix = game.i18n!.localize('SRA2.NPC_GEN.CONTACT.PREFIX');
   while (surplus >= 15000 && addedContacts < 4) {
     const availableNames = contactNames.filter(
       (n) => !usedContactNames.has(`${contactPrefix} ${n}`),
@@ -1747,7 +1765,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
       featType: "contact",
       cost: "free-equipment",
       nuyenCost: 0,
-      description: isEn ? '<p>Useful contact in the Shadows.</p>' : '<p>Contact utile dans les Ombres.</p>',
+      description: game.i18n!.localize('SRA2.NPC_GEN.CONTACT.DESCRIPTION'),
       rrList: [{ ...cRR, rrValue: 1 }],
     });
     const builtItem = buildFeatItem(contactTemplate, items.length + 300, compendiumItems);
@@ -1876,9 +1894,10 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
           const imgPrompt = generateImagePrompt(metatypeKey, archetypeKey, options.gender, flavor.backgroundHtml, items, personality.keywords, personality.behaviors, skillResult.skills);
           console.log('%c=== IMAGE PROMPT ===', 'color: magenta; font-weight: bold;');
           console.log(imgPrompt);
-          return `<p><strong>${isEn ? 'Image Prompt' : 'Prompt Image'} :</strong></p><p><em>${imgPrompt}</em></p>`;
+          const promptLabel = game.i18n!.localize('SRA2.NPC_GEN.IMAGE_PROMPT');
+          return `<p><strong>${promptLabel} :</strong></p><p><em>${imgPrompt}</em></p>`;
         })(),
-        gmDescription: `<p>${isEn ? "<strong>Archetype:</strong>" : "<strong>Archétype :</strong>"} ${archLabel}<br/>${isEn ? "<strong>Level:</strong>" : "<strong>Niveau :</strong>"} ${plLabel}<br/>${isEn ? "<strong>Budget spent:</strong>" : "<strong>Budget dépensé :</strong>"} ${totalSpent.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥ / ${powerLevel.budget.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</p>`,
+        gmDescription: `<p><strong>${game.i18n!.localize("SRA2.NPC_GEN.GM.ARCHETYPE")}</strong> ${archLabel}<br/><strong>${game.i18n!.localize("SRA2.NPC_GEN.GM.LEVEL")}</strong> ${plLabel}<br/><strong>${game.i18n!.localize("SRA2.NPC_GEN.GM.BUDGET_SPENT")}</strong> ${nuyen(totalSpent)} ¥ / ${nuyen(powerLevel.budget)} ¥</p>`,
       },
       keywords: {
         keyword1: personality.keywords[0] ?? "",
@@ -1900,7 +1919,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
         catchphrase4: personality.catchphrases[3] ?? "",
       },
       linkedVehicles: [],
-      reference: `${isEn ? "Generated Runner" : "PNJ Généré"} — ${archLabel} ${mtName}`,
+      reference: `${game.i18n!.localize("SRA2.NPC_GEN.REFERENCE")} — ${archLabel} ${mtName}`,
       damageGaugeType: "physical",
     },
   };
@@ -1934,7 +1953,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
 
   // 12b. Create drones for Rigger archetype and link them
   if (archetypeKey === 'rigger') {
-    await createRiggerDrones(actor, isEn, folder);
+    await createRiggerDrones(actor, folder);
   }
 
   // 13. Send summary whisper to the generating user
@@ -1946,12 +1965,16 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     })
     .join(" · ");
 
+  // Upstream hard-codes the French abbreviations here, so an English table
+  // read FOR/VOL as well. They are the sheet's own labels, so take them from
+  // the locale instead.
+  const short = (attr: string) => game.i18n!.localize(`SRA2.ATTRIBUTES.${attr}_SHORT`);
   const attrLabels: Record<string, string> = {
-    strength: "FOR",
-    agility: "AGI",
-    willpower: "VOL",
-    logic: "LOG",
-    charisma: "CHA",
+    strength: short("STRENGTH"),
+    agility: short("AGILITY"),
+    willpower: short("WILLPOWER"),
+    logic: short("LOGIC"),
+    charisma: short("CHARISMA"),
   };
   const attrSummary = Object.entries(attrResult.attributes)
     .map(([k, v]) => {
@@ -1991,12 +2014,12 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
   </div>
   <div style="margin:6px 0;">${attrSummary} · <span style="opacity:0.7;">ESS ${essenceRemaining}</span></div>
   <div style="margin:6px 0;">${topSkills}</div>
-  ${cyberNames ? `<div style="margin:4px 0;font-size:0.85em;opacity:0.8;">Chrome : ${cyberNames}</div>` : ""}
-  <div style="margin:4px 0;font-size:0.85em;opacity:0.8;">Armes : ${weaponNames}</div>
+  ${cyberNames ? `<div style="margin:4px 0;font-size:0.85em;opacity:0.8;">${game.i18n!.localize("SRA2.NPC_GEN.CHAT.CHROME")} : ${cyberNames}</div>` : ""}
+  <div style="margin:4px 0;font-size:0.85em;opacity:0.8;">${game.i18n!.localize("SRA2.NPC_GEN.CHAT.WEAPONS")} : ${weaponNames}</div>
   <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1);font-size:0.85em;">
-    <span style="color:var(--sr-ui-color-active,#0ff);">${totalSpent.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</span>
-    <span style="opacity:0.5;"> / ${powerLevel.budget.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</span>
-    <span style="float:right;">Cash : <strong>${remainingYens.toLocaleString(isEn ? "en-US" : "fr-FR")} ¥</strong></span>
+    <span style="color:var(--sr-ui-color-active,#0ff);">${nuyen(totalSpent)} ¥</span>
+    <span style="opacity:0.5;"> / ${nuyen(powerLevel.budget)} ¥</span>
+    <span style="float:right;">${game.i18n!.localize("SRA2.NPC_GEN.CHAT.CASH")} : <strong>${nuyen(remainingYens)} ¥</strong></span>
   </div>
 </div>`;
 
@@ -2009,7 +2032,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     await (ChatMessage as any).create({
       content: chatContent,
       whisper: userId ? [userId] : [],
-      speaker: { alias: isEn ? "Runner Generator" : "Générateur de Runner" },
+      speaker: { alias: game.i18n!.localize("SRA2.NPC_GEN.CHAT.SPEAKER") },
     });
   } catch (err) {
     console.warn('Runner Generator: failed to send chat message', err);

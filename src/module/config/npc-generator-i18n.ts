@@ -35,6 +35,36 @@ function localized(group: string, key: string, fr: string, en: string): string {
 }
 
 /**
+ * Whether the generator's tables are being read in a language the player did
+ * not ask for. The tables ship French and English only, so this is true for
+ * every other language, and it is the signal to put the locale's own text on
+ * top of whatever the table gave.
+ */
+export function needsLocaleText(): boolean {
+  const lang = game.i18n?.lang;
+  return lang !== 'fr' && lang !== 'en';
+}
+
+/**
+ * One entry of a table that carries both bundled languages. `override` is
+ * this locale's own text when there is one, and it wins only where the player
+ * is not reading one of the two languages the table is written in.
+ */
+export function tableText(fr: string, en: string, override?: string): string {
+  if (override && needsLocaleText()) return override;
+  return generatorLang() === 'fr' ? fr : en;
+}
+
+/**
+ * The locale's own text for a string already taken from a table, or that
+ * string unchanged. For tables picked from before they can be translated,
+ * where the pick itself is the key into the locale's side.
+ */
+export function localeText(text: string, override?: string): string {
+  return override && needsLocaleText() ? override : text;
+}
+
+/**
  * The name this locale gives a compendium item, or null when it says nothing
  * about it.
  *

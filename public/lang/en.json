@@ -367,11 +367,15 @@
         "ATTRIBUTES": {
             "LABEL": "Attributes",
             "STRENGTH": "Strength",
+            "STRENGTH_SHORT": "STR",
             "AGILITY": "Agility",
+            "AGILITY_SHORT": "AGI",
             "WILLPOWER": "Willpower",
             "WILLPOWER_SHORT": "WIL",
             "LOGIC": "Logic",
+            "LOGIC_SHORT": "LOG",
             "CHARISMA": "Charisma",
+            "CHARISMA_SHORT": "CHA",
             "TOTAL_DICE_POOL": "Total dice pool (attribute + skill + spec)",
             "TOTAL_RR": "Total Risk Reduction",
             "ROLL": "Roll attribute",
@@ -1360,7 +1364,35 @@
                 "face": "Face",
                 "technomancer": "Technomancer",
                 "infiltrator": "Infiltrator"
-            }
+            },
+            "FLAVOR": {
+                "APPEARANCE": "Appearance",
+                "QUIRK": "Quirk",
+                "ORIGIN": "Origin",
+                "RELATIONSHIP": "Relationship",
+                "ICONIC_ITEM": "Iconic item"
+            },
+            "GENDER": {
+                "MAN": "Man",
+                "WOMAN": "Woman"
+            },
+            "CONTACT": {
+                "PREFIX": "Contact:",
+                "DESCRIPTION": "<p>Useful contact in the Shadows.</p>"
+            },
+            "GM": {
+                "ARCHETYPE": "Archetype:",
+                "LEVEL": "Level:",
+                "BUDGET_SPENT": "Budget spent:"
+            },
+            "CHAT": {
+                "SPEAKER": "Runner Generator",
+                "CHROME": "Chrome",
+                "WEAPONS": "Weapons",
+                "CASH": "Cash"
+            },
+            "IMAGE_PROMPT": "Image Prompt",
+            "REFERENCE": "Generated Runner"
         },
         "NPC_GENERATOR": {
             "TITLE": "Runner Generator",

@@ -257,11 +257,15 @@
         "ATTRIBUTES": {
             "LABEL": "Attributs",
             "STRENGTH": "Force",
+            "STRENGTH_SHORT": "FOR",
             "AGILITY": "Agilité",
+            "AGILITY_SHORT": "AGI",
             "WILLPOWER": "Volonté",
             "WILLPOWER_SHORT": "VOL",
             "LOGIC": "Logique",
+            "LOGIC_SHORT": "LOG",
             "CHARISMA": "Charisme",
+            "CHARISMA_SHORT": "CHA",
             "TOTAL_DICE_POOL": "Réserve de dés totale (attribut + compétence + spé)",
             "TOTAL_RR": "Réduction de Risque totale",
             "ROLL": "Lancer un jet d'attribut",
@@ -1360,7 +1364,35 @@
                 "face": "Face",
                 "technomancer": "Technomancien",
                 "infiltrator": "Infiltrateur"
-            }
+            },
+            "FLAVOR": {
+                "APPEARANCE": "Apparence",
+                "QUIRK": "Manie",
+                "ORIGIN": "Origine",
+                "RELATIONSHIP": "Relation",
+                "ICONIC_ITEM": "Objet fétiche"
+            },
+            "GENDER": {
+                "MAN": "Homme",
+                "WOMAN": "Femme"
+            },
+            "CONTACT": {
+                "PREFIX": "Contact :",
+                "DESCRIPTION": "<p>Contact utile dans les Ombres.</p>"
+            },
+            "GM": {
+                "ARCHETYPE": "Archétype :",
+                "LEVEL": "Niveau :",
+                "BUDGET_SPENT": "Budget dépensé :"
+            },
+            "CHAT": {
+                "SPEAKER": "Générateur de Runner",
+                "CHROME": "Chrome",
+                "WEAPONS": "Armes",
+                "CASH": "Cash"
+            },
+            "IMAGE_PROMPT": "Prompt Image",
+            "REFERENCE": "PNJ Généré"
         },
         "NPC_GENERATOR": {
             "TITLE": "Générateur de Runner",

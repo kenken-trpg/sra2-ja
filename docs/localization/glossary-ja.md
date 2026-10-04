@@ -34,6 +34,25 @@
 | Physical Adept | フィジカル・アデプト | |
 | Elite Runner | エリート・ランナー | |
 
+## NPC ジェネレーターのフレーバー（`npc-generator-flavor-ja.ts`）
+
+ロケールキーではなく、上流の英語文字列をキーにした辞書で訳している
+（キーワード 80・行動 40・キャッチフレーズ 40）。シートに直接出る語なので、
+用語の決めだけここに残す。
+
+| English | 日本語 | 備考 |
+| --- | --- | --- |
+| Contact | コネ | `SRA2.NPC_GEN.CONTACT.PREFIX` は `コネ:`。接頭辞の後にコード側が半角空白を入れるので、全角コロンにすると間延びする |
+| Squatter | スクウォッター | 生活水準。SR 日本語版のカタカナ表記に合わせる |
+| Low / Medium / Comfortable / Luxury | 低い／並の／快適な／贅沢な生活水準 | キーワード欄に単独で出るため、`Lifestyle`＝生活水準を語に含める |
+| Appearance / Quirk / Origin / Relationship / Iconic item | 外見／癖／出自／人間関係／愛着品 | 背景欄の見出し（`SRA2.NPC_GEN.FLAVOR.*`） |
+| Chrome | クローム | チャット要約。サイバーウェアの俗称なので訳さない |
+| nuyen | 新円 | キャッチフレーズ中。記号は `¥` のまま |
+| chummer / omae | チャマー／オマエ | 原語のスラング。カタカナで残す |
+
+能力値の略号（`SRA2.ATTRIBUTES.*_SHORT`）は既存の `WILLPOWER_SHORT` に倣い
+**筋力／敏捷／意志／論理／魅力**。英語は `STR / AGI / WIL / LOG / CHA`。
+
 ## 未決定
 
 - `Complication` … 「コンプリケーション」で仮固定。訳語化する場合は要再検討。
