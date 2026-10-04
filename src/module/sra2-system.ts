@@ -18,6 +18,7 @@ import * as SheetHelpers from "./helpers/sheet-helpers.ts";
 import * as DiceRoller from "./helpers/dice-roller.ts";
 import { WEAPON_TYPES } from "./models/item-feat.ts";
 import { registerDiceSoNice, buildNormalAppearance, buildRiskAppearance } from "./helpers/dice-so-nice.ts";
+import { compendiumNameOverride } from "./config/npc-generator-i18n.ts";
 import { loadCombatantFromFlags, resolveDefenderForDefend, resolveDefenseSkillData } from "./helpers/actor-uuid-resolver.ts";
 // @ts-ignore - JavaScript module without type declarations
 import { Migrations } from "./migration/migration.mjs";
@@ -2025,6 +2026,21 @@ export class SRA2System {
       } catch (e) {
         // Skip packs that fail to load
       }
+    }
+
+    // The packs ship in English and French only, so in any other language the
+    // names collected above are a fallback. Where this locale names the skill
+    // or specialization itself, that is the name to show. World items keep
+    // priority: those are the GM's own text, not a fallback.
+    for (const slug of Object.keys(cache)) {
+      if (worldSlugs.has(slug)) continue;
+      const localName = compendiumNameOverride(
+        slug.startsWith('spec_') ? 'SPECS' : 'SKILLS',
+        slug,
+      );
+      if (!localName) continue;
+      cache[slug] = localName;
+      nameToSlugCache[normalize(localName)] = slug;
     }
 
     // Store globally for synchronous access

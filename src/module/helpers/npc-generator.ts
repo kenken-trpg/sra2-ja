@@ -6,6 +6,7 @@
 import {
   skillName,
   specName,
+  compendiumNameOverride,
   metatypeName,
   metatypeNameOf,
   archetypeLabelOf,
@@ -998,6 +999,10 @@ function buildSkillItem(
     item.system.rating = rating;
     item.system.bookmarked = sortIndex === 0;
     item.sort = (sortIndex + 1) * 100;
+    // The pack is English or French, so in any other language the clone needs
+    // this locale's own name.
+    const localName = compendiumNameOverride('SKILLS', slug);
+    if (localName) item.name = localName;
     // Remove compendium source flags
     delete item._stats;
     delete item.ownership;
@@ -1041,6 +1046,8 @@ function buildSpecItem(
     const item = JSON.parse(JSON.stringify(compItem));
     item._id = generateItemId();
     item.sort = (sortIndex + 100) * 100;
+    const localName = compendiumNameOverride('SPECS', specSlug);
+    if (localName) item.name = localName;
     delete item._stats;
     delete item.ownership;
     delete item._key;

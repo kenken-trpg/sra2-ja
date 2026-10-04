@@ -16570,6 +16570,12 @@ function localized(group, key, fr, en) {
   if (translated && translated !== path) return translated;
   return generatorLang() === "fr" ? fr : en;
 }
+function compendiumNameOverride(group, key) {
+  if (game.i18n?.lang === generatorLang()) return null;
+  const path = `SRA2.NPC_GEN.${group}.${key}`;
+  const translated = game.i18n?.localize(path);
+  return translated && translated !== path ? translated : null;
+}
 const humanizeSlug = (slug) => slug.replace(/^spec_/, "").replace(/-/g, " ");
 function skillName(slug) {
   const def = SKILL_DEFINITIONS[slug];
@@ -23221,6 +23227,8 @@ function buildSkillItem(compendiumItems, slug, rating, sortIndex) {
     item.system.rating = rating;
     item.system.bookmarked = sortIndex === 0;
     item.sort = (sortIndex + 1) * 100;
+    const localName = compendiumNameOverride("SKILLS", slug);
+    if (localName) item.name = localName;
     delete item._stats;
     delete item.ownership;
     delete item._key;
@@ -23257,6 +23265,8 @@ function buildSpecItem(compendiumItems, specSlug, sortIndex) {
     const item = JSON.parse(JSON.stringify(compItem));
     item._id = generateItemId();
     item.sort = (sortIndex + 100) * 100;
+    const localName = compendiumNameOverride("SPECS", specSlug);
+    if (localName) item.name = localName;
     delete item._stats;
     delete item.ownership;
     delete item._key;
@@ -28832,6 +28842,16 @@ class SRA2System {
         }
       } catch (e) {
       }
+    }
+    for (const slug of Object.keys(cache)) {
+      if (worldSlugs.has(slug)) continue;
+      const localName = compendiumNameOverride(
+        slug.startsWith("spec_") ? "SPECS" : "SKILLS",
+        slug
+      );
+      if (!localName) continue;
+      cache[slug] = localName;
+      nameToSlugCache[normalize(localName)] = slug;
     }
     globalThis.SRA2_SKILL_SLUG_CACHE = cache;
     globalThis.SRA2_SLUG_METADATA_CACHE = metadataCache;

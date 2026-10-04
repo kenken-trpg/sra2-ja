@@ -34,6 +34,31 @@ function localized(group: string, key: string, fr: string, en: string): string {
   return generatorLang() === 'fr' ? fr : en;
 }
 
+/**
+ * The name this locale gives a compendium item, or null when it says nothing
+ * about it.
+ *
+ * The generator clones its skills and specializations out of the compendium,
+ * which ships in English and French only, so in any other language the clone
+ * arrives with a name from whichever of the two was used as the fallback.
+ * Putting the locale's own name back on top is the only way those items read
+ * in the player's language without a translated pack.
+ *
+ * It answers null for en and fr: there the pack IS the player's language, and
+ * its names are the ones to keep. The two differ in places (`Spé : C&R
+ * drones` in the pack against `Spé : C/R drones` here), and the pack is the
+ * side the rest of the system shows.
+ */
+export function compendiumNameOverride(
+  group: 'SKILLS' | 'SPECS',
+  key: string,
+): string | null {
+  if (game.i18n?.lang === generatorLang()) return null;
+  const path = `SRA2.NPC_GEN.${group}.${key}`;
+  const translated = game.i18n?.localize(path);
+  return translated && translated !== path ? translated : null;
+}
+
 /** Human-readable fallback for a slug with no definition at all. */
 const humanizeSlug = (slug: string): string =>
   slug.replace(/^spec_/, '').replace(/-/g, ' ');
