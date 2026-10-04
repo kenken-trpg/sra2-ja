@@ -1989,15 +1989,18 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
   const essenceUsed = featResult.essenceSpent;
   const essenceRemaining = 6 - essenceUsed;
 
-  const weaponNames =
-    featResult.feats
-      .filter((f) => f.featType === "weapon")
-      .map((f) => f.name)
-      .join(", ") || "—";
+  // Read the created items rather than the templates behind them: a template's
+  // `name` is the French one, so the summary used to print French gear in
+  // every language, and disagree with the sheet it links to.
+  const gearNames = (featType: string) =>
+    (actor.items as any)
+      .filter((i: any) => i.system?.featType === featType)
+      .map((i: any) => i.name);
 
-  const cyberNames = featResult.feats
-    .filter((f) => f.featType === "cyberware")
-    .map((f) => f.name.split(" ").slice(0, 2).join(" "))
+  const weaponNames = gearNames("weapon").join(", ") || "—";
+
+  const cyberNames = gearNames("cyberware")
+    .map((n: string) => n.split(" ").slice(0, 2).join(" "))
     .join(", ");
 
   const chatContent = `

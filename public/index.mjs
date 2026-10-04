@@ -24357,8 +24357,9 @@ async function generateSingleNPC(options) {
   }).join(" · ");
   const essenceUsed = featResult.essenceSpent;
   const essenceRemaining = 6 - essenceUsed;
-  const weaponNames = featResult.feats.filter((f) => f.featType === "weapon").map((f) => f.name).join(", ") || "—";
-  const cyberNames = featResult.feats.filter((f) => f.featType === "cyberware").map((f) => f.name.split(" ").slice(0, 2).join(" ")).join(", ");
+  const gearNames = (featType) => actor.items.filter((i) => i.system?.featType === featType).map((i) => i.name);
+  const weaponNames = gearNames("weapon").join(", ") || "—";
+  const cyberNames = gearNames("cyberware").map((n) => n.split(" ").slice(0, 2).join(" ")).join(", ");
   const chatContent = `
 <div style="background:rgba(0,0,0,0.3);border:1px solid var(--sr-ui-border-color,#333);border-radius:6px;padding:10px;font-size:0.9em;">
   <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
