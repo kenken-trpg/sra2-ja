@@ -17,10 +17,15 @@ export const SRA2_RISK_COLORSET   = 'sra2-risk';
 export function registerDiceSoNice(dice3d: any): void {
   dice3d.addSystem({ id: SYSTEM_NAME, name: SYSTEM_DESCRIPTION }, 'preferred');
 
+  // Dice So Nice shows these in its colorset picker, so they are display
+  // text. The hook runs after i18n is ready, so localizing here is safe.
+  const normalDescription = game.i18n!.localize('SRA2.DICE_SO_NICE.NORMAL');
+  const riskDescription = game.i18n!.localize('SRA2.DICE_SO_NICE.RISK');
+
   // Normal dice: dark purple
   dice3d.addColorset({
     name: SRA2_NORMAL_COLORSET,
-    description: 'SRA2 - Normal dice',
+    description: normalDescription,
     category: SYSTEM_DESCRIPTION,
     foreground: '#faecd1',
     background: '#2a0a3a',
@@ -33,7 +38,7 @@ export function registerDiceSoNice(dice3d: any): void {
   // Risk dice: black/fire
   dice3d.addColorset({
     name: SRA2_RISK_COLORSET,
-    description: 'SRA2 - Risk dice',
+    description: riskDescription,
     category: SYSTEM_DESCRIPTION,
     foreground: '#faecd1',
     background: '#040101',

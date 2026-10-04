@@ -1384,7 +1384,12 @@
             "GENERATING_TOKEN": "Generating token headshot...",
             "TOKEN_GENERATED": "Token headshot generated!",
             "GEMINI_NO_KEY": "Gemini API key not configured. Set it in the system settings.",
-            "IMAGE_FAILED": "Image generation failed: {error}"
+            "IMAGE_FAILED": "Image generation failed: {error}",
+            "FOLDER": "Generated"
+        },
+        "DICE_SO_NICE": {
+            "NORMAL": "SRA2 - Normal dice",
+            "RISK": "SRA2 - Risk dice"
         }
     }
 }

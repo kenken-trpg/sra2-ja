@@ -1384,7 +1384,12 @@
             "GENERATING_TOKEN": "トークン画像を生成中...",
             "TOKEN_GENERATED": "トークン画像を生成しました！",
             "GEMINI_NO_KEY": "Gemini API キーが設定されていません。システム設定で設定してください。",
-            "IMAGE_FAILED": "画像の生成に失敗しました: {error}"
+            "IMAGE_FAILED": "画像の生成に失敗しました: {error}",
+            "FOLDER": "生成済み"
+        },
+        "DICE_SO_NICE": {
+            "NORMAL": "SRA2 - 通常ダイス",
+            "RISK": "SRA2 - リスクダイス"
         }
     }
 }

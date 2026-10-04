@@ -1384,7 +1384,12 @@
             "GENERATING_TOKEN": "Génération du portrait du pion en cours...",
             "TOKEN_GENERATED": "Portrait du pion généré !",
             "GEMINI_NO_KEY": "Clé API Gemini non configurée. Renseignez-la dans les réglages du système.",
-            "IMAGE_FAILED": "Échec de la génération de l'image : {error}"
+            "IMAGE_FAILED": "Échec de la génération de l'image : {error}",
+            "FOLDER": "Généré"
+        },
+        "DICE_SO_NICE": {
+            "NORMAL": "SRA2 - Dés normaux",
+            "RISK": "SRA2 - Dés de risque"
         }
     }
 }

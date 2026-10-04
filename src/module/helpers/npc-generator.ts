@@ -1454,10 +1454,12 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     }
 
     // Phase 2: Add cyberdeck programs (each +1 level = +5000¥)
+    // Only `field` is read: the program names the sheet shows come from the
+    // cyberdeck feat's own locale keys, not from here.
     const programs = [
-      { field: 'cyberdeckBiofeedback', label: 'Biofeedback' },
-      { field: 'cyberdeckBiofeedbackFilter', label: 'Biofeedback Filter' },
-      { field: 'cyberdeckConnectionLock', label: 'Connection Lock' },
+      { field: 'cyberdeckBiofeedback' },
+      { field: 'cyberdeckBiofeedbackFilter' },
+      { field: 'cyberdeckConnectionLock' },
     ];
     // Pick 1-3 programs randomly
     const programCount = randomInt(1, 3);
@@ -1896,13 +1898,20 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     },
   };
 
-  // 11. Find or create "Generated" folder for actors
+  // 11. Find or create the folder the generated actors go in. The name is
+  // localized, but an existing untranslated "Generated" folder still counts
+  // as a match, so translating it does not orphan what is already there.
+  const folderKey = "SRA2.NPC_GENERATOR.FOLDER";
+  const localizedFolder = game.i18n?.localize(folderKey);
+  const folderName =
+    localizedFolder && localizedFolder !== folderKey ? localizedFolder : "Generated";
   let folder = (game.folders as any)?.find(
-    (f: any) => f.type === "Actor" && f.name === "Generated",
+    (f: any) =>
+      f.type === "Actor" && (f.name === folderName || f.name === "Generated"),
   );
   if (!folder) {
     folder = await (Folder as any).create({
-      name: "Generated",
+      name: folderName,
       type: "Actor",
       sorting: "a",
     });

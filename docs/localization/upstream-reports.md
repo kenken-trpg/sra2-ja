@@ -25,12 +25,13 @@
 | 6 | `Bus / Truck` と `Bus / Semi-trailer` の不一致（原書は後者） | 同じ車種が 2 つの名前で出る | 軽微 |
 | 7 | `ICE` の表記（原書の用語集は `IC`、`ice` は口語形） | 用語 | 要相談 |
 | 8 | 登録されていないシート基底クラスが存在しないテンプレートを指す | 実害なし（死んだコード） | 軽微 |
-| 9 | Dice So Nice のカラーセット名がロケールキーを通らない | 設定画面で翻訳できない | Bug |
-| 10 | サイバーデッキ・プログラム表の `label` が未使用 | 実害なし（死んだフィールド） | 軽微 |
+| 9 | Dice So Nice のカラーセット名がロケールキーを通らない | 設定画面で翻訳できない | Bug（本フォークで修正） |
+| 10 | サイバーデッキ・プログラム表の `label` が未使用 | 実害なし（死んだフィールド） | 軽微（本フォークで削除） |
 | 11 | `.gitignore` 済みの LevelDB 残骸が追跡されている | 作業ツリーでパックが開けない | 軽微 |
 | 12 | `Aile planante` と `Aile volante` の不一致（原書は後者） | 同じ機体が 2 つの名前で出る | 軽微 |
 | 13 | `Bâteau pneumatique semi-rigide` の綴り（原書は `Bateau`） | 表記 | 軽微 |
 | 14 | `spec_la-rue` の英語が `Spec: La rue`（フランス語のまま） | 英語環境で 1 件だけ仏語 | Bug |
+| 15 | NPC の格納フォルダ名 `Generated` が名前で検索されている | 翻訳するとフォルダが分裂する | 軽微（本フォークで回避） |
 
 ---
 
@@ -180,8 +181,11 @@ dice3d.addColorset({ name: SRA2_RISK_COLORSET,   description: 'SRA2 - Risk dice'
 **実際に目に見える文字列**。`game.i18n.localize()` を通していないので、
 フランス語でも英語のまま出る。
 
-本フォークでは直せない。直すには `en.json` / `fr.json` に新しいキーを追加する
-必要があり、既存の英語・フランス語翻訳には手を付けない方針のため。
+**本フォークでは修正した。** `SRA2.DICE_SO_NICE.NORMAL` / `.RISK` を
+`en.json` / `fr.json` / `ja.json` に追加し、`registerDiceSoNice()` で
+`game.i18n.localize()` を通している（`diceSoNiceReady` フックは i18n 初期化後に
+走るので、登録時に解決して問題ない）。英語の値は直書きだった文字列と同一なので、
+英語環境の表示は変わらない。上流にもそのまま持ち込める形。
 
 ## 10. サイバーデッキ・プログラム表の `label` が未使用
 
@@ -197,6 +201,10 @@ const programs = [
 
 表示されないので翻訳の対象ではないが、UI 文字列の検査に毎回引っかかる。
 意図して残しているのか、表示するつもりだったのかが外から分からない。
+
+**本フォークでは `label` を削除した**（`field` だけの表にした）。挙動は変わらない。
+表示する意図があったのなら、サイバーデッキの feat 側に既にあるロケールキーを
+使うのが筋なので、この表に英語を置く形には戻らないはず。
 
 ## 11. `.gitignore` 済みの LevelDB 残骸が追跡されている
 
@@ -265,3 +273,23 @@ public/packs/packs.tgz
 - `README.md` の `systems/sra2/sra2.css` — ビルド生成物で、木に無いのは正しい。
 - 本フォーク側の都合（日本語 CSS、`ja.json`、フォーク独自のテストやワークフロー）
   は上流の問題ではないので、ここには書かない。
+
+## 15. NPC の格納フォルダ名 `Generated` が名前で検索されている
+
+`src/module/helpers/npc-generator.ts` は生成した NPC を `Generated` という
+Actor フォルダに入れるが、**同じ文字列がフォルダ名と検索条件の両方**になって
+いるため、名前を翻訳するとすでに作られたフォルダが見つからなくなる。
+
+```ts
+let folder = game.folders?.find((f) => f.type === "Actor" && f.name === "Generated");
+if (!folder) folder = await Folder.create({ name: "Generated", … });
+```
+
+**本フォークでは回避した。** 名前は `SRA2.NPC_GENERATOR.FOLDER` を localize した
+ものを使い、検索条件には**未翻訳の `Generated` も残している**ので、すでに
+`Generated` フォルダがあるワールドはそれを使い続ける。英語の値は `Generated`
+なので英語環境の挙動は変わらない。
+
+本来はフォルダ側に flag を立てて ID で引くのが正しいが、既存ワールドの
+フォルダには flag が無いため、移行を伴わずに直せる範囲ではない。上流で直すなら
+flag 方式を薦める。

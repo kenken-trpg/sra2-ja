@@ -1,8 +1,8 @@
 /**
  * Keeps `npm run i18n:hardcoded` honest. The scan is a heuristic, so its
- * value is entirely in staying small enough to read: every candidate is
- * listed below with why it is not something to translate, and a new one
- * fails this test rather than joining a pile nobody reads.
+ * value is entirely in staying small enough to read: it now reports nothing,
+ * and a new candidate fails this test rather than joining a pile nobody
+ * reads.
  *
  * The pile was real. Before the filters in find-hardcoded.mjs the scan
  * reported 2,125 candidates, of which 1,907 were the NPC generator's data
@@ -19,24 +19,13 @@ interface Hit {
 }
 
 /**
- * Every candidate the scan currently reports, and why it stays. None of
- * these can be fixed inside this fork: the first two need new keys in
- * en.json and fr.json, which is upstream's file, and the rest are not
- * display text at all. Recorded in docs/localization/upstream-reports.md.
+ * Candidates the scan reports that are deliberately not locale keys, with
+ * the reason each one stays. Empty: the last six were resolved by
+ * SRA2.DICE_SO_NICE.{NORMAL,RISK} and SRA2.NPC_GENERATOR.FOLDER, by dropping
+ * the cyberdeck program table's unread `label`, and the folder lookup still
+ * matches an existing untranslated "Generated" folder.
  */
-const ACCOUNTED_FOR: Record<string, string> = {
-  // Shown in Dice So Nice's colorset picker, so genuinely user-facing.
-  'SRA2 - Normal dice': 'upstream: needs a locale key before it can be translated',
-  'SRA2 - Risk dice': 'upstream: needs a locale key before it can be translated',
-  // `label` on the cyberdeck program table is never read; only `field` is.
-  Biofeedback: 'dead field: the generator reads prog.field, never prog.label',
-  'Biofeedback Filter': 'dead field: the generator reads prog.field, never prog.label',
-  'Connection Lock': 'dead field: the generator reads prog.field, never prog.label',
-  // Both the name of the folder created and the predicate that finds it
-  // again, so translating it would orphan the folders already created, in
-  // every language.
-  Generated: 'lookup key as well as a folder name; shared with en and fr',
-};
+const ACCOUNTED_FOR: Record<string, string> = {};
 
 let hits: Hit[];
 
