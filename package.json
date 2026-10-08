@@ -22,7 +22,7 @@
     "compendium:ja": "node ./tools/compendium/generate-ja.mjs"
   },
   "devDependencies": {
-    "@foundryvtt/foundryvtt-cli": "^2.0.0",
+    "@foundryvtt/foundryvtt-cli": "^3.0.4",
     "@league-of-foundry-developers/foundry-vtt-types": "^v13.345.1",
     "@types/node": "^24.10.0",
     "jsdom": "^29.0.1",
