@@ -1116,10 +1116,6 @@
                 "SRA2": "Shadowrun Anarchy 2",
                 "SR6": "Shadowrun 6",
                 "SR5": "Shadowrun 5"
-            },
-            "GEMINI": {
-                "TITLE": "Gemini APIキー",
-                "DESC": "ポートレート画像生成に使用する Google Gemini の APIキー。空欄で無効になります。"
             }
         },
         "ANARCHY_COUNTER": {
@@ -1408,15 +1404,8 @@
             "RANDOM": "ランダム",
             "MALE": "男性",
             "FEMALE": "女性",
-            "GENERATE_PORTRAIT": "AIポートレートを生成",
-            "GENERATING_IMAGE": "ポートレートを生成中...",
-            "IMAGE_GENERATED": "ポートレートを生成しました！",
             "ERROR": "ランナーの生成中にエラーが発生しました",
             "INVALID_SELECTION": "アーキタイプまたはメタタイプが不正です",
-            "GENERATING_TOKEN": "トークン画像を生成中...",
-            "TOKEN_GENERATED": "トークン画像を生成しました！",
-            "GEMINI_NO_KEY": "Gemini API キーが設定されていません。システム設定で設定してください。",
-            "IMAGE_FAILED": "画像の生成に失敗しました: {error}",
             "FOLDER": "生成済み"
         },
         "DICE_SO_NICE": {

@@ -1116,10 +1116,6 @@
                 "SRA2": "Shadowrun Anarchy 2",
                 "SR6": "Shadowrun 6",
                 "SR5": "Shadowrun 5"
-            },
-            "GEMINI": {
-                "TITLE": "Gemini API Key",
-                "DESC": "Google Gemini API key for portrait image generation. Leave empty to disable."
             }
         },
         "ANARCHY_COUNTER": {
@@ -1408,15 +1404,8 @@
             "RANDOM": "Random",
             "MALE": "Male",
             "FEMALE": "Female",
-            "GENERATE_PORTRAIT": "Generate AI Portrait",
-            "GENERATING_IMAGE": "Generating portrait...",
-            "IMAGE_GENERATED": "Portrait generated successfully!",
             "ERROR": "An error occurred while generating the Runner",
             "INVALID_SELECTION": "Invalid archetype or metatype",
-            "GENERATING_TOKEN": "Generating token headshot...",
-            "TOKEN_GENERATED": "Token headshot generated!",
-            "GEMINI_NO_KEY": "Gemini API key not configured. Set it in the system settings.",
-            "IMAGE_FAILED": "Image generation failed: {error}",
             "FOLDER": "Generated"
         },
         "DICE_SO_NICE": {

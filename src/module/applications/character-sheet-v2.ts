@@ -43,14 +43,6 @@ export class CharacterSheetV2 extends CharacterSheet {
     // Add advanced mode flag to context
     context.advancedMode = this._advancedMode;
 
-    // Check if Gemini portrait generation is available
-    try {
-      const { isGeminiConfigured } = await import('../helpers/gemini-image.js');
-      context.geminiAvailable = isGeminiConfigured();
-    } catch {
-      context.geminiAvailable = false;
-    }
-
     return context;
   }
 
@@ -74,29 +66,6 @@ export class CharacterSheetV2 extends CharacterSheet {
         }
       }
     }, { signal });
-
-    // Gemini portrait generation button
-    el.querySelectorAll<HTMLElement>('[data-action="generate-gemini-portrait"]').forEach(btn => {
-      btn.addEventListener('click', async (ev) => {
-        ev.preventDefault();
-        const originalHtml = btn.innerHTML;
-        (btn as HTMLButtonElement).disabled = true;
-        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${game.i18n!.localize('SRA2.NPC_GENERATOR.GENERATING_IMAGE')}`;
-        (this as any)._blockRender = true;
-        try {
-          const { generateActorImage } = await import('../helpers/gemini-image.js');
-          await generateActorImage(this.actor, (status: string) => {
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${status}`;
-          });
-          (this as any)._blockRender = false;
-          this.render(false);
-        } catch {
-          (this as any)._blockRender = false;
-          (btn as HTMLButtonElement).disabled = false;
-          btn.innerHTML = originalHtml;
-        }
-      });
-    });
 
     // Context menu handler
     el.querySelectorAll<HTMLElement>('[data-action="show-context-menu"]').forEach(elem => {
