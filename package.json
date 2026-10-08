@@ -30,7 +30,7 @@
     "sass": "^1.91.0",
     "typescript": "^5.9.3",
     "vite": "^7.1.4",
-    "vitest": "^4.1.0"
+    "vitest": "^5.0.3"
   },
   "dependencies": {
     "rollup-plugin-visualizer": "^5.12.0",
