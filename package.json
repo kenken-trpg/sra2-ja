@@ -33,7 +33,7 @@
     "vitest": "^4.1.0"
   },
   "dependencies": {
-    "rollup-plugin-visualizer": "^5.12.0",
+    "rollup-plugin-visualizer": "^7.1.1",
     "terser": "^5.44.1"
   }
 }
