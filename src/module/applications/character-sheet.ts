@@ -1,5 +1,5 @@
 import * as DiceRoller from '../helpers/dice-roller.js';
-import * as ItemSearch from '../../../item-search.js';
+import * as ItemSearch from '../helpers/item-search.js';
 import * as SheetHelpers from '../helpers/sheet-helpers.js';
 import * as CombatHelpers from '../helpers/combat-helpers.js';
 import { WEAPON_TYPES } from '../models/item-feat.js';
@@ -1092,7 +1092,7 @@ export class CharacterSheet extends ActorSheet {
     const connectionMode = element.dataset.connectionMode;
     if (!connectionMode) return;
 
-    await this.actor.update({ 'system.connectionMode': connectionMode });
+    await this.actor.update({ system: { connectionMode } });
   }
 
   private async _onSetAstralState(event: Event): Promise<void> {
@@ -1101,7 +1101,7 @@ export class CharacterSheet extends ActorSheet {
     const astralState = element.dataset.astralState;
     if (!astralState) return;
 
-    await this.actor.update({ 'system.astralState': astralState });
+    await this.actor.update({ system: { astralState } });
   }
 
   private async _onSetVehicleControlMode(event: Event): Promise<void> {
@@ -1168,8 +1168,8 @@ export class CharacterSheet extends ActorSheet {
 
     const specSystem = specialization.system as any;
     const linkedAttribute = specSystem.linkedAttribute || 'strength';
-    const linkedSkillName = specSystem.linkedSkill;
     const attributeValue = (this.actor.system as any).attributes?.[linkedAttribute] || 0;
+    const linkedSkillName = specSystem.linkedSkill;
     
     // Get the linked skill to get its rating
     const linkedSkill = linkedSkillName ? this.actor.items.find((i: any) => i.type === 'skill' && (i.name === linkedSkillName || i.system?.slug === linkedSkillName)) : null;
@@ -1267,15 +1267,15 @@ export class CharacterSheet extends ActorSheet {
     if (!phantom) return;
 
     const linkedAttribute = phantom.linkedAttribute;
-    const attributeValue = (this.actor.system as any).attributes?.[linkedAttribute] || 0;
 
     // Collect RR: phantom sources + skill/attribute RR if actor has the linked skill
     let rrList = [...phantom.sources];
     let associatedSkill: any = null;
 
-    if (phantom.linkedSkillOnActor && phantom.linkedSkillName) {
+    const linkedSkillName = phantom.linkedSkillName;
+    if (phantom.linkedSkillOnActor && linkedSkillName) {
       associatedSkill = this.actor.items.find((i: any) =>
-        i.type === 'skill' && (i.system?.slug === phantom.linkedSkillName || ItemSearch.normalizeSearchText(i.name) === ItemSearch.normalizeSearchText(phantom.linkedSkillName))
+        i.type === 'skill' && (i.system?.slug === linkedSkillName || ItemSearch.normalizeSearchText(i.name) === ItemSearch.normalizeSearchText(linkedSkillName))
       );
     }
 
@@ -2699,7 +2699,7 @@ export class CharacterSheet extends ActorSheet {
     DiceRoller.handleRollRequest({
       itemType: 'cyberdeck-attack',
       itemName: cyberdeck.name || '',
-      itemId: cyberdeck.id,
+      itemId: cyberdeck.id ?? undefined,
       itemRating: cyberdeckSystem.rating || 0,
       itemActive: cyberdeckSystem.active,
 
@@ -3239,4 +3239,3 @@ export class CharacterSheet extends ActorSheet {
     }, DELAYS.SHEET_RENDER);
   }
 }
-

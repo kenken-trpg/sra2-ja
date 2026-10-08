@@ -1,6 +1,6 @@
 import { CharacterSheet } from './character-sheet.js';
 import * as SheetHelpers from '../helpers/sheet-helpers.js';
-import * as ItemSearch from '../../../item-search.js';
+import * as ItemSearch from '../helpers/item-search.js';
 import { DELAYS } from '../config/constants.js';
 import { debounceSearchInput, handleSearchFocus, handleSearchBlur } from '../helpers/search-utils.js';
 

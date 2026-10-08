@@ -1,7 +1,7 @@
 import * as SheetHelpers from '../helpers/sheet-helpers.js';
 import * as CombatHelpers from '../helpers/combat-helpers.js';
 import * as DiceRoller from '../helpers/dice-roller.js';
-import * as ItemSearch from '../../../item-search.js';
+import * as ItemSearch from '../helpers/item-search.js';
 import { VEHICLE_TYPES, WEAPON_TYPES } from '../models/item-feat.js';
 import { NARRATIVE_SAVE_DEBOUNCE, DELAYS } from '../config/constants.js';
 

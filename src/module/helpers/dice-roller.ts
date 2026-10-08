@@ -9,7 +9,7 @@ declare const renderTemplate: any;
 declare const ChatMessage: any;
 
 // Import ItemSearch for text normalization
-import * as ItemSearch from '../../../item-search.js';
+import * as ItemSearch from './item-search.js';
 import * as SheetHelpers from './sheet-helpers.js';
 import { RR_MAX, SUCCESS_THRESHOLDS, RISK_DICE_SUCCESS_MULTIPLIER, SKILL_SLUGS } from '../config/constants.js';
 import { resolveTokenUuid, resolveActorUuid } from './actor-uuid-resolver.js';

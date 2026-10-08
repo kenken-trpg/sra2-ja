@@ -2,13 +2,14 @@
 
 ## 0. スコープ
 
-本タスクは **SRA2 という Foundry VTT システムの日本語 UI 化** である。
+本タスクは **SRA2 という Foundry VTT システムの日本語 UI 化と、上流独自の NPC 生成文の日本語化** である。
 Shadowrun Anarchy のルールブック由来のゲームデータを翻訳・再配布することは
 対象外とする。
 
 | 対象 | 本タスク |
 | --- | --- |
 | `public/lang/en.json` 相当の UI 文字列 | 実施する |
+| 上流作者が独自に用意した NPC 生成表の文章 | 別辞書で翻訳する（ルールブック本文は使わない） |
 | `system.json` の言語登録 | 実施する |
 | 日本語表示のための CSS 調整 | 必要最小限で実施する |
 | Babele 用 Compendium 翻訳（`public/lang/<lang>/*.json`） | **実施しない**（別タスク） |
@@ -21,7 +22,8 @@ Compendium・ルール本文の日本語化に着手する場合は、権利関�
 
 ## 1. 権利・ライセンスの現状（未確定・人間の判断が必要）
 
-リポジトリのライセンス表記は **不整合のまま** である。独自に確定させない。
+上流のライセンス表記は **不整合のまま** である。独自に確定させない。
+以下は上流調査時の記録で、本フォークには現在ルートの `LICENSE.md` も存在する。
 
 - `public/LICENSE.md` の見出し: `CC BY-SA 4.0`
 - 同ファイル本文のリンク・バッジ: `CC BY 4.0`
@@ -107,9 +109,8 @@ Compendium・ルール本文の日本語化に着手する場合は、権利関�
   （`// Deactivated`）。Compendium 翻訳は現状ランタイムに適用されない。
 - `public/lang/en/sra2.anarchy-objets.json` に重複 `id` が 6 件ある。Babele は
   id 一致で引くため重複分は到達不能。本家に報告する価値がある。
-- `src/module/config/npc-generator-data.ts` などに、locale キーを通らない
-  表示文字列が多数ある（`npm run i18n:hardcoded`）。日本語 UI を完全にするには
-  本体コード側の i18n 化が必要で、これは翻訳ではなく実装変更。別タスク。
+- NPC 生成表の文章は `npc-generator-*-ja.ts` の辞書で扱い、UI の
+  ハードコード検査からは除外する。辞書の抜けと古いキーは専用テストで検査する。
 
 ## 8. 武器・車両の種別ラベル（41件）
 
@@ -302,13 +303,10 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 | `console.warn` | — | 開発者向けログ。`Failed to …` の行はすべてこれ |
 | SCREAMING_CASE の識別子 | 1 | `name: 'SRA2_BOOKMARKS'` は内部 ID。表示されるのは隣の `title` |
 
-残った 6 件は `hardcoded-strings.test.ts` に**理由付きで列挙**してある。
-新しい候補が出たらテストが落ちるので、読まれない山に埋もれない。
-
-6 件のうち本当に直すべきものは **Dice So Nice のカラーセット名 2 件**で、
-これは `en.json` / `fr.json` に新キーが必要なため上流案件
-（[upstream-reports.md](upstream-reports.md) §9）。残り 4 件は表示されない
-（未使用フィールド 3 件、フォルダ検索キー 1 件）。
+当時残った 6 件は解消済み。Dice So Nice と生成先フォルダはロケールを使い、
+未使用の `label` は削除した。現在の許容リストは空で、新しい候補が出ると
+`hardcoded-strings.test.ts` が失敗する。NPC の翻訳辞書は文章をキーにも持ち、
+その英文中の `name: 'Anchor'` などを UI フィールドと誤認しないよう除外する。
 
 ## 11. フランス語版原書との用語突き合わせ（2026-10-01）
 

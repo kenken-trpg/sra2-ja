@@ -2,7 +2,7 @@
   "scripts": {
     "build": "npx vite build",
     "build:public": "npx vite build --outDir public --emptyOutDir false",
-    "build:release": "npm run build && npm run pack:compendiums",
+    "build:release": "npm run build && node ./tools/release/create-archive.mjs",
     "dev": "npx vite build --outDir public --emptyOutDir false --watch",
     "dev:server": "npx vite serve",
     "typecheck": "tsc --noEmit",

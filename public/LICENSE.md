@@ -4,30 +4,34 @@
 Anarchy 2** system for Foundry VTT by Vincent Vandemeulebrouck, Cyril ALFARO
 and contributors (<https://github.com/VincentVk9373/sra2>).
 
-## This fork
+## License scope
 
-Everything added by this fork — the Japanese locale
-(`public/lang/ja.json`), the localization tooling under `tools/i18n/`, the
-documentation under `docs/localization/` and the fork's own code changes —
-is released under the
-**[Creative Commons Attribution-ShareAlike 4.0 International License
-(CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)**.
+This repository contains material from different sources. This notice
+separates the independently authored contributions from material inherited
+from the upstream project. It does not change the license of upstream or
+third-party material.
 
-This choice is deliberately the stricter of the two licenses the upstream
-project names (see below). Complying with CC BY-SA 4.0 also satisfies
-CC BY 4.0, so this stance is valid whichever the upstream project turns out
-to mean. It is **not** a determination of the upstream license.
+### Independently authored contributions in this fork
 
-## Upstream license notice
+The original documentation under `docs/localization/`, the localization
+tooling under `tools/i18n/`, and this fork's `ATTRIBUTION.md` are licensed
+under the **[Creative Commons Attribution-ShareAlike 4.0 International
+License (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/)**.
+This grant applies only to those independent contributions and does not
+relicense upstream code, assets, or translated/adapted upstream material.
 
-The upstream project states its license inconsistently: its
-`public/LICENSE.md` is headed *Attribution-ShareAlike 4.0* while the badge
-and URI in the same file name *Attribution 4.0*, and the file also ends with
-MIT warranty boilerplate. The `README.md` License section repeats the same
-split. An inquiry about this is open; until it is resolved this fork
-proceeds under CC BY-SA 4.0 as described above.
+### Upstream material and adaptations
 
-The upstream notice is reproduced verbatim below.
+The system is derived from the unofficial **Shadowrun Anarchy 2** Foundry VTT
+system by Vincent Vandemeulebrouck, Cyril ALFARO and contributors
+(<https://github.com/VincentVk9373/sra2>). Upstream-originated code and assets,
+including changes and translations based on them, retain the applicable
+upstream terms. The upstream repository's notices conflict: its license file
+names CC BY-SA 4.0 in the heading but links to CC BY 4.0, and includes MIT
+warranty text; its README also links to CC BY 4.0 while describing BY-SA.
+The upstream has not clarified which license applies. Therefore this fork
+does not declare upstream material to be exclusively BY or BY-SA. The original
+upstream notice is reproduced below for attribution and reference.
 
 ---
 

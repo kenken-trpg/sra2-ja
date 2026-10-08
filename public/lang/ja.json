@@ -1422,6 +1422,13 @@
         "DICE_SO_NICE": {
             "NORMAL": "SRA2 - 通常ダイス",
             "RISK": "SRA2 - リスクダイス"
+        },
+        "ITEM_SEARCH": {
+            "ADD": "追加",
+            "ITEM_NOT_FOUND": "アイテムが見つかりません",
+            "ALREADY_EXISTS": "{name} はこのキャラクターに既に存在します",
+            "ADDED": "{name} を追加しました",
+            "ERROR_ADDING": "アイテムを追加できませんでした"
         }
     }
 }

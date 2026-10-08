@@ -3,7 +3,7 @@
  * Common functions used by CharacterSheet
  */
 
-import * as ItemSearch from '../../../item-search.js';
+import * as ItemSearch from './item-search.js';
 import { RR_MAX, SKILL_SLUGS } from '../config/constants.js';
 
 /**

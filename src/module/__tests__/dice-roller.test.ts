@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
 // Mock ItemSearch since it has no Foundry dependencies but uses a .js extension
-vi.mock('../../../item-search.js', () => ({
+vi.mock('../helpers/item-search.js', () => ({
   normalizeSearchText: (text: string) => text?.toLowerCase() ?? '',
 }));
 

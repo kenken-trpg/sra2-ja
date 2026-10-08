@@ -1422,6 +1422,13 @@
         "DICE_SO_NICE": {
             "NORMAL": "SRA2 - Normal dice",
             "RISK": "SRA2 - Risk dice"
+        },
+        "ITEM_SEARCH": {
+            "ADD": "Add",
+            "ITEM_NOT_FOUND": "Item not found",
+            "ALREADY_EXISTS": "{name} is already on this character",
+            "ADDED": "{name} has been added",
+            "ERROR_ADDING": "Could not add the item"
         }
     }
 }

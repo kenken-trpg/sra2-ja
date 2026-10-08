@@ -141,7 +141,7 @@ export const METATYPES: Record<string, MetatypeProfile> = {
 // POWER LEVELS
 // ═══════════════════════════════════════════════════════════════
 
-export const POWER_LEVELS: Record<string, PowerLevelProfile> = {
+export const POWER_LEVELS: Record<string, PowerLevelProfile> & Record<'ganger' | 'runner' | 'elite', PowerLevelProfile> = {
   ganger: { budget: 300000, maxedAttributes: 0, skillMax: 4, labelFr: 'Ganger', labelEn: 'Ganger' },
   runner: { budget: 375000, maxedAttributes: 1, skillMax: 5, labelFr: 'Runner', labelEn: 'Runner' },
   elite: { budget: 450000, maxedAttributes: 2, skillMax: 6, labelFr: "Runner d'élite", labelEn: 'Elite Runner' },
@@ -151,7 +151,7 @@ export const POWER_LEVELS: Record<string, PowerLevelProfile> = {
 // NAME TABLES
 // ═══════════════════════════════════════════════════════════════
 
-export const FIRST_NAMES: Record<string, Record<string, string[]>> = {
+export const FIRST_NAMES: Record<'male' | 'female' | 'neutral', Record<string, string[]> & { anglo: string[] }> = {
   male: {
     anglo: ['Jack', 'Marcus', 'Dante', 'Zeke', 'Raven', 'Nate', 'Colt', 'Dean', 'Wade', 'Blake', 'Troy', 'Reed', 'Knox', 'Finn', 'Axel', 'Brock', 'Wyatt', 'Shane', 'Garrett', 'Hawk', 'Slate', 'Pierce', 'Grant', 'Miles', 'Vance', 'Cliff', 'Jett', 'Logan', 'Cole', 'Rex'],
     japanese: ['Goro', 'Kenji', 'Ryu', 'Takeshi', 'Daichi', 'Shin', 'Hiro', 'Yuto', 'Kaito', 'Ren', 'Sora', 'Akira', 'Koji', 'Tetsu', 'Masa', 'Taro', 'Hayato', 'Ichiro', 'Naoki', 'Shoji', 'Kazuki', 'Ryoma', 'Isamu', 'Jiro', 'Kengo', 'Saburo', 'Yoshi', 'Noboru', 'Hiroki', 'Genki'],
@@ -181,7 +181,7 @@ export const FIRST_NAMES: Record<string, Record<string, string[]>> = {
   },
 };
 
-export const LAST_NAMES: Record<string, string[]> = {
+export const LAST_NAMES: Record<string, string[]> & { anglo: string[] } = {
   anglo: ['Smith', 'Voss', 'Cross', 'Kane', 'Black', 'Stone', 'Drake', 'Wolfe', 'Steel', 'Hart', 'Price', 'Frost', 'Blake', 'Ward', 'Cole', 'Marsh', 'Thorn', 'Rush', 'Graves', 'Locke', 'Hale', 'Sharpe', 'Crowe', 'Storm', 'Pike', 'Flint', 'Wynn', 'Rowe', 'Steele', 'Briggs', 'Mercer', 'Cade', 'Knox', 'Holden', 'Ashby', 'Sinclair'],
   japanese: ['Tetsuhashi', 'Nakamura', 'Tanaka', 'Ishikawa', 'Watanabe', 'Kurosawa', 'Hasegawa', 'Okamura', 'Fujimoto', 'Hayashi', 'Kimura', 'Mori', 'Sakai', 'Ito', 'Ogawa', 'Kato', 'Ueda', 'Nishida', 'Yamamoto', 'Suzuki', 'Takahashi', 'Kobayashi', 'Matsumoto', 'Inoue', 'Shimizu', 'Yamaguchi', 'Sasaki', 'Aoki', 'Maeda', 'Ono', 'Kaneko', 'Fukuda', 'Nishimura', 'Miura', 'Hoshino', 'Tsukamoto'],
   french: ['Dupont', 'Moreau', 'Lefèvre', 'Laurent', 'Girard', 'Mercier', 'Deschamps', 'Bertrand', 'Rousseau', 'Chevalier', 'Gauthier', 'Faure', 'Leroy', 'Perrin', 'Blanc', 'Renard', 'Delacroix', 'Marchand', 'Beaumont', 'Caron', 'Dubois', 'Fontaine', 'Garnier', 'Lacroix', 'Lambert', 'Morel', 'Pelletier', 'Roche', 'Simon', 'Vasseur', 'Barbier', 'Colbert', 'Dumas', 'Fournier', 'Picard', 'Vaillant'],
@@ -191,7 +191,7 @@ export const LAST_NAMES: Record<string, string[]> = {
   mixed: ['Chrome', 'Null', 'Vector', 'Crash', 'Static', 'Synth', 'Flux', 'Grid', 'Link', 'Node', 'Parse', 'Shard', 'Trace', 'Wire', 'Byte', 'Forge', 'Nexus', 'Vex', 'Cipher', 'Pulse', 'Core', 'Torrent', 'Daemon', 'Axiom', 'Volt', 'Matrix', 'Prism', 'Recoil', 'Rift', 'Strafe', 'Surge', 'Vertex', 'Zephyr', 'Conduit', 'Fracture', 'Helix'],
 };
 
-export const STREET_NAMES: Record<string, string[]> = {
+export const STREET_NAMES: Record<string, string[]> & { general: string[] } = {
   combat: [
     'Razor', 'Bullet', 'Shrapnel', 'Havoc', 'Frag', 'Slash', 'Trigger', 'Impact',
     'Blitz', 'Carnage', 'Hammer', 'Brawl', 'Gash', 'Gore', 'Skull', 'Viper',
@@ -2896,7 +2896,7 @@ export const CYBERDECK_TEMPLATES: FeatTemplate[] = [
 ];
 
 // --- Awakened feat (required for mages/shamans/adepts) ---
-export const AWAKENED_TEMPLATES: FeatTemplate[] = [
+export const AWAKENED_TEMPLATES: [FeatTemplate, FeatTemplate, FeatTemplate, FeatTemplate] = [
   // [0] Mage : perception astrale + sorcellerie
   feat({
     name: 'Éveillé — Perception et Sorcellerie', nameEn: 'Awakened — Perception and Sorcery', featType: 'awakened', cost: 'free-equipment', nuyenCost: 0,
@@ -2928,7 +2928,7 @@ export const AWAKENED_TEMPLATES: FeatTemplate[] = [
 ];
 
 // --- Emerged feat (required for technomancers) ---
-export const EMERGED_TEMPLATES: FeatTemplate[] = [
+export const EMERGED_TEMPLATES: [FeatTemplate] = [
   feat({
     name: 'Émergé — Persona vivante', nameEn: 'Emerged — Living Persona', featType: 'emerged', cost: 'free-equipment', nuyenCost: 0,
     description: '<p>Le personnage est un Émergé : il accède à la Matrice par la pensée et tisse des formes complexes.</p>',

@@ -1422,6 +1422,13 @@
         "DICE_SO_NICE": {
             "NORMAL": "SRA2 - Dés normaux",
             "RISK": "SRA2 - Dés de risque"
+        },
+        "ITEM_SEARCH": {
+            "ADD": "Ajouter",
+            "ITEM_NOT_FOUND": "Objet introuvable",
+            "ALREADY_EXISTS": "{name} est déjà sur ce personnage",
+            "ADDED": "{name} a été ajouté",
+            "ERROR_ADDING": "Impossible d’ajouter l’objet"
         }
     }
 }

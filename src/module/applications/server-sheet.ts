@@ -20,8 +20,8 @@ export class ServerSheet extends ActorSheet {
     });
   }
 
-  override async _renderOuter(...args: any[]): Promise<JQuery> {
-    const html = await super._renderOuter(...args);
+  override async _renderOuter(): Promise<JQuery> {
+    const html = await super._renderOuter();
     ServerSheet.openSheets.set(this.actor.id!, this);
     return html;
   }

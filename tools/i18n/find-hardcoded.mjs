@@ -36,6 +36,8 @@ const CONTENT_TABLES = [
   'module/config/npc-generator-data.ts',
   'module/config/npc-flavor-data.ts',
   'module/config/npc-flavor-data-2.ts',
+  'module/config/npc-generator-background-ja.ts',
+  'module/config/npc-generator-extra-ja.ts',
 ];
 
 /** Matched on the tail of the path, so the root may be relative or absolute. */

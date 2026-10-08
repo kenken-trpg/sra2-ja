@@ -12,9 +12,12 @@ on:
       - 'public/icons/nav/**'
       - 'src/**'
       - 'tools/i18n/**'
+      - 'tools/release/**'
       - 'package.json'
       - 'package-lock.json'
       - 'vitest.config.ts'
+      - 'vite.config.ts'
+      - 'tsconfig.json'
       - '.github/workflows/i18n.yml'
   pull_request:
     paths:
@@ -25,9 +28,12 @@ on:
       - 'public/icons/nav/**'
       - 'src/**'
       - 'tools/i18n/**'
+      - 'tools/release/**'
       - 'package.json'
       - 'package-lock.json'
       - 'vitest.config.ts'
+      - 'vite.config.ts'
+      - 'tsconfig.json'
       - '.github/workflows/i18n.yml'
   workflow_dispatch:
 
@@ -67,18 +73,7 @@ jobs:
       # vitest needs the dev dependencies, unlike the locale checks above.
       - name: Install
         run: npm ci
-      - name: Type-check the localization tests
-        # Upstream's own type errors are out of scope for this fork, so the
-        # gate is narrowed to the files it added rather than to a clean run.
-        run: |
-          npx tsc --noEmit > tsc.log 2>&1 || true
-          if ! [ -s tsc.log ] && ! npx tsc --noEmit > /dev/null 2>&1; then
-            echo "::error::tsc produced no output and did not succeed."
-            exit 1
-          fi
-          if grep -E '__tests__|tools/i18n|npc-generator-(data|descs)-ja' tsc.log; then
-            echo "::error::A localization test, tool or data file no longer type-checks."
-            exit 1
-          fi
+      - name: Type-check the project
+        run: npm run typecheck
       - name: Unit tests
         run: npm test

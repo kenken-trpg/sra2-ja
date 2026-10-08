@@ -4,6 +4,7 @@
 /dist
 /public/packs
 /stats.html
+/foundry-sra2-ja-*.zip
 .vscode
 /*.bat
 pregens

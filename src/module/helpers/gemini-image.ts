@@ -3,6 +3,8 @@
  * Calls the Gemini API to generate character portraits from text prompts.
  */
 
+import { pickOne } from './random.js';
+
 const GEMINI_SETTING = 'geminiApiKey';
 
 /**
@@ -35,6 +37,17 @@ export function registerGeminiSetting(): void {
     config: true,
     type: String,
     default: '',
+  });
+
+  Hooks.on('renderSettingsConfig' as any, (_app: any, html: any) => {
+    const root = html instanceof HTMLElement ? html : html?.[0];
+    const input = root?.querySelector(
+      `input[name="${SYSTEM.id}.${GEMINI_SETTING}"]`,
+    ) as HTMLInputElement | null | undefined;
+    if (input) {
+      input.type = 'password';
+      input.autocomplete = 'new-password';
+    }
   });
 }
 
@@ -277,10 +290,6 @@ const STYLE_SUFFIXES = [
   'Shadowrun aesthetic, where elves carry assault rifles and trolls hack the Matrix, neon-drenched dystopia where magic returned to a broken world',
 ];
 
-function pickOneStyle<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
-
 /**
  * Infer the archetype of a character from their items and skills
  */
@@ -477,7 +486,7 @@ function buildPromptFromActor(actor: any): string {
   }
 
   // (7. Suffixes de style variés)
-  parts.push(pickOneStyle(STYLE_SUFFIXES));
+  parts.push(pickOne(STYLE_SUFFIXES));
 
   // (8. Directive qualité)
   parts.push('Highly detailed character illustration, sharp focus on face and equipment, dramatic pose, professional RPG character art quality. IMPORTANT: Do NOT include any text, writing, letters, words, labels, captions, watermarks or inscriptions in the image');

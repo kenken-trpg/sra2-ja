@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // item-search is imported transitively by sheet-helpers. Mirror the real
 // normalizeSearchText behaviour we rely on (lowercase, strip parenthesised text).
-vi.mock('../../../item-search.js', () => ({
+vi.mock('../helpers/item-search.js', () => ({
   normalizeSearchText: (t: string) =>
     (t ?? '').toLowerCase().replace(/ ?\(.*\)/g, ''),
 }));

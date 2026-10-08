@@ -283,7 +283,7 @@ function buildSingleResultHtml(result: SearchResult, typeLabel: string, isExactM
   if (result.alreadyExists) {
     html += `
       <span class="already-exists-label">
-        ${game.i18n!.localize('SRA2.SKILLS.ALREADY_EXISTS')}
+        ${game.i18n!.format('SRA2.ITEM_SEARCH.ALREADY_EXISTS', { name: result.name })}
       </span>
     `;
   } else {
@@ -291,7 +291,7 @@ function buildSingleResultHtml(result: SearchResult, typeLabel: string, isExactM
       <button class="add-item-btn" 
               data-item-name="${result.name}" 
               data-item-uuid="${result.uuid}">
-        ${game.i18n!.localize('SRA2.SKILLS.ADD')}
+        ${game.i18n!.localize('SRA2.ITEM_SEARCH.ADD')}
       </button>
     `;
   }
@@ -350,25 +350,24 @@ export async function addItemToActorFromUuid(actor: any, itemUuid: string): Prom
   try {
     const item = await fromUuid(itemUuid as any);
     if (!item) {
-      ui.notifications?.error(game.i18n!.localize('SRA2.SKILLS.ITEM_NOT_FOUND'));
+      ui.notifications?.error(game.i18n!.localize('SRA2.ITEM_SEARCH.ITEM_NOT_FOUND'));
       return false;
     }
     
     // Check if item already exists
     if (itemExistsOnActor(actor, (item as any).type, (item as any).name)) {
-      ui.notifications?.warn(game.i18n!.format('SRA2.ALREADY_EXISTS', { name: (item as any).name }));
+      ui.notifications?.warn(game.i18n!.format('SRA2.ITEM_SEARCH.ALREADY_EXISTS', { name: (item as any).name }));
       return false;
     }
     
     // Add the item to the actor
     await actor.createEmbeddedDocuments('Item', [(item as any).toObject()]);
-    ui.notifications?.info(game.i18n!.format('SRA2.SKILLS.ADDED', { name: (item as any).name }));
+    ui.notifications?.info(game.i18n!.format('SRA2.ITEM_SEARCH.ADDED', { name: (item as any).name }));
     
     return true;
   } catch (error) {
     console.error('SRA2 | Error adding item to actor:', error);
-    ui.notifications?.error(game.i18n!.localize('SRA2.SKILLS.ERROR_ADDING'));
+    ui.notifications?.error(game.i18n!.localize('SRA2.ITEM_SEARCH.ERROR_ADDING'));
     return false;
   }
 }
-

@@ -13,7 +13,7 @@ vi.mock('../models/item-feat.js', () => ({
 }));
 
 // Mock item-search (imported transitively by sheet-helpers)
-vi.mock('../../../item-search.js', () => ({
+vi.mock('../helpers/item-search.js', () => ({
   normalizeSearchText: (t: string) => t?.toLowerCase() ?? '',
 }));
 

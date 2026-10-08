@@ -1,7 +1,7 @@
-import type { UserConfig } from 'vite';
+import type { ViteUserConfig } from 'vitest/config';
 import { visualizer } from 'rollup-plugin-visualizer';
 
-const config: UserConfig = {
+const config: ViteUserConfig = {
     publicDir: 'public',
     base: '/systems/sra2-ja/',
     root: '.',

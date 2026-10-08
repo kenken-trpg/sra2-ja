@@ -1,7 +1,7 @@
 import { RollRequestData } from '../helpers/dice-roller.js';
 import * as DiceRoller from '../helpers/dice-roller.js';
 import * as SheetHelpers from '../helpers/sheet-helpers.js';
-import * as ItemSearch from '../../../item-search.js';
+import * as ItemSearch from '../helpers/item-search.js';
 import { WEAPON_TYPES } from '../models/item-feat.js';
 import shadowAmpProbabilities from '../config/shadow-amp-probabilities.json';
 import { ACTOR_ATTRIBUTES, SKILL_SLUGS, SPEC_SLUGS } from '../config/constants.js';

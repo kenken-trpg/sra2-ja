@@ -14,12 +14,18 @@ import {
   archetypeLabelOf,
   powerLevelLabelOf,
 } from "../config/npc-generator-i18n.js";
+import { BACKGROUND_TEXT_JA } from "../config/npc-generator-background-ja.js";
+import { generatedNPCFolder } from "./npc-folder.js";
+import { pickOne } from "./random.js";
+import { ACTOR_ATTRIBUTES, type ActorAttribute } from "../config/constants.js";
 import { featNameJa } from "../config/npc-generator-data-ja.js";
 import {
   keywordJa,
   behaviorJa,
   catchphraseJa,
 } from "../config/npc-generator-flavor-ja.js";
+import { DRONE_NAMES_JA, NARRATIVE_EFFECTS_JA } from "../config/npc-generator-extra-ja.js";
+import { NARRATIVE_EFFECTS_FR, NARRATIVE_EFFECTS_EN } from "../config/npc-weapon-effects.js";
 import { featDescJa } from "../config/npc-generator-descs-ja.js";
 import {
   WEAPON_TYPES,
@@ -76,15 +82,18 @@ const CONJURATION_SPEC_SLUGS = [
 const MAGIC_SPEC_SLUGS = [...SORCERY_SPEC_SLUGS, ...CONJURATION_SPEC_SLUGS, 'spec_astral-combat'];
 
 function isMagicFocus(template: FeatTemplate): boolean {
-  return template.rrList.length > 0 && MAGIC_SPEC_SLUGS.includes(template.rrList[0]?.rrTarget);
+  const target = template.rrList[0]?.rrTarget;
+  return target !== undefined && MAGIC_SPEC_SLUGS.includes(target);
 }
 
 function isSorceryFocus(template: FeatTemplate): boolean {
-  return template.rrList.length > 0 && SORCERY_SPEC_SLUGS.includes(template.rrList[0]?.rrTarget);
+  const target = template.rrList[0]?.rrTarget;
+  return target !== undefined && SORCERY_SPEC_SLUGS.includes(target);
 }
 
 function isConjurationFocus(template: FeatTemplate): boolean {
-  return template.rrList.length > 0 && CONJURATION_SPEC_SLUGS.includes(template.rrList[0]?.rrTarget);
+  const target = template.rrList[0]?.rrTarget;
+  return target !== undefined && CONJURATION_SPEC_SLUGS.includes(target);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -124,10 +133,6 @@ function pickRandom<T>(array: T[], count: number = 1): T[] {
   return shuffled.slice(0, Math.min(count, array.length));
 }
 
-function pickOne<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)];
-}
-
 function generateItemId(): string {
   return (foundry as any).utils.randomID(16);
 }
@@ -153,7 +158,7 @@ function generateName(
   const genderKey =
     gender === "female" ? "female" : gender === "neutral" ? "neutral" : "male";
   const firstNamePool =
-    FIRST_NAMES[genderKey]?.[origin1] ?? FIRST_NAMES.male[origin1];
+    FIRST_NAMES[genderKey][origin1] ?? FIRST_NAMES.male[origin1] ?? FIRST_NAMES.male.anglo;
   const lastNamePool = LAST_NAMES[origin2] ?? LAST_NAMES.anglo;
 
   const firstName = pickOne(firstNamePool);
@@ -177,7 +182,7 @@ function generateName(
 // ═══════════════════════════════════════════════════════════════
 
 interface AttributeResult {
-  attributes: Record<string, number>;
+  attributes: Record<ActorAttribute, number>;
   cost: number;
 }
 
@@ -186,7 +191,7 @@ function distributeAttributes(
   metatype: MetatypeProfile,
   powerLevel: PowerLevelProfile,
 ): AttributeResult {
-  const attrs: Record<string, number> = {
+  const attrs: Record<ActorAttribute, number> = {
     strength: 1,
     agility: 1,
     willpower: 1,
@@ -197,8 +202,8 @@ function distributeAttributes(
   const priority = archetype.primaryAttributes;
 
   // Max out the top N attributes based on power level
-  for (let i = 0; i < powerLevel.maxedAttributes && i < priority.length; i++) {
-    attrs[priority[i]] = maxes[priority[i]];
+  for (const attr of priority.slice(0, powerLevel.maxedAttributes)) {
+    attrs[attr] = maxes[attr];
   }
 
   // Distribute remaining points with priority weighting
@@ -213,14 +218,14 @@ function distributeAttributes(
   const totalWeight = weights.reduce((s, w) => s + w, 0);
 
   for (let pass = 0; pass < 3 && remaining > 0; pass++) {
-    for (let i = 0; i < priority.length && remaining > 0; i++) {
-      const attr = priority[i];
+    for (const [i, attr] of priority.entries()) {
+      if (remaining <= 0) break;
       const max = maxes[attr];
       if (attrs[attr] >= max) continue;
 
       const share = Math.max(
         1,
-        Math.round((weights[i] / totalWeight) * remaining),
+        Math.round(((weights[i] ?? 1) / totalWeight) * remaining),
       );
       const canAdd = Math.min(share, max - attrs[attr], remaining);
       attrs[attr] += canAdd;
@@ -240,7 +245,7 @@ function distributeAttributes(
   }
 
   // Enforce minimum 2 for all attributes (no runner has 1 without RP justification)
-  for (const attr of Object.keys(attrs)) {
+  for (const attr of ACTOR_ATTRIBUTES) {
     if (attrs[attr] < 2) attrs[attr] = 2;
   }
 
@@ -260,9 +265,9 @@ function distributeAttributes(
   // Calculate cost — same formula as CharacterDataModel.calculateAttributeCost
   // Every level costs 10000, except the last (max) which costs 20000
   let cost = 0;
-  for (const attr of Object.keys(attrs)) {
+  for (const attr of ACTOR_ATTRIBUTES) {
     const val = attrs[attr];
-    const max = maxes[attr as keyof typeof maxes];
+    const max = maxes[attr];
     for (let i = 1; i <= val; i++) {
       cost += i === max ? 20000 : 10000;
     }
@@ -321,15 +326,14 @@ function distributeSkills(
     rating = Math.max(1, Math.min(rating, skillMax));
 
     // Enforce minimum for base runner skills
-    if (slug in BASE_SKILLS && rating < BASE_SKILLS[slug]) {
-      rating = BASE_SKILLS[slug];
-    }
+    const minRating = BASE_SKILLS[slug] ?? 1;
+    rating = Math.max(rating, minRating);
 
     // Apply noise
     if (Math.random() < 0.3) {
       rating += Math.random() < 0.5 ? 1 : -1;
       rating = Math.max(
-        slug in BASE_SKILLS ? BASE_SKILLS[slug] : 1,
+        minRating,
         Math.min(rating, skillMax),
       );
     }
@@ -347,7 +351,6 @@ function distributeSkills(
     } else {
       // Reduce rating to fit (but not below base minimum)
       let reducedRating = rating;
-      const minRating = slug in BASE_SKILLS ? BASE_SKILLS[slug] : 1;
       while (reducedRating >= minRating) {
         let reducedCost = 0;
         for (let i = 1; i <= reducedRating; i++) {
@@ -563,8 +566,9 @@ function generateFeats(
       Math.abs(b.armorValue - targetArmor) -
       Math.abs(a.armorValue - targetArmor),
   );
-  if (armorOptions.length > 0) {
-    addFeat(armorOptions[armorOptions.length - 1]);
+  const closestArmor = armorOptions.at(-1);
+  if (closestArmor) {
+    addFeat(closestArmor);
   }
 
   // 8. Weapons — at least 1 primary, try for 2
@@ -684,9 +688,7 @@ function generateFlavor(): FlavorResult {
   const selected = pickRandom(allPools, 2);
   const entries = selected.map(pool => {
     const entry = pickOne(pool.data);
-    // No Japanese side for these 2,011 entries yet; tableText keeps the
-    // English fallback and is where that translation would plug in.
-    const text = tableText(entry.fr, entry.en);
+    const text = tableText(entry.fr, entry.en, BACKGROUND_TEXT_JA[entry.en]);
     return `<p><strong>${pool.label} :</strong> ${text}</p>`;
   });
 
@@ -717,10 +719,9 @@ function generatePersonality(
 
   // Keywords: 1 from each category (use language-specific tables)
   const keywordsTable = isEn ? KEYWORDS_BY_CATEGORY_EN : KEYWORDS_BY_CATEGORY;
-  const categories = Object.keys(keywordsTable);
   const keywords: string[] = [];
-  for (const cat of categories) {
-    const picked = pickOne(keywordsTable[cat]);
+  for (const [cat, pool] of Object.entries(keywordsTable)) {
+    const picked = pickOne(pool);
     keywords.push(localeText(picked, keywordJa(cat, picked)));
   }
 
@@ -816,7 +817,7 @@ function generateImagePrompt(
   // Extract ALL flavor traits from bio
   const traitMatches = flavorBg.matchAll(/<strong>[^<]*:<\/strong>\s*([^<]+)/g);
   for (const match of traitMatches) {
-    parts.push(match[1].trim());
+    if (match[1]) parts.push(match[1].trim());
   }
 
   // Behaviors — pick the most visually evocative ones
@@ -1251,7 +1252,7 @@ async function createRiggerDrones(actor: any, folder: any): Promise<void> {
   const secondDrone = useLarge ? pickOne(droneNames.large) : pickOne(droneNames.medium);
 
   for (const drone of [smallDrone, secondDrone]) {
-    const droneName = tableText(drone.fr, drone.en);
+    const droneName = tableText(drone.fr, drone.en, DRONE_NAMES_JA[drone.en]);
     const droneActor = await (Actor as any).create({
       name: droneName,
       type: 'vehicle',
@@ -1374,6 +1375,19 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     items.push(buildFeatItem(template, i, compendiumItems));
   });
 
+  // The primary weapon can add a specialization outside the archetype's skills.
+  // Include its parent before budgeting, rather than relying on the createItem
+  // hook to find a template in a compendium which may not be installed.
+  for (const specialization of items.filter((item) => item.type === 'specialization')) {
+    const slug: string = specialization.system.linkedSkill;
+    if (items.some((item) => item.type === 'skill' && item.system.slug === slug)) continue;
+    const skill = buildSkillItem(compendiumItems, slug, 1, skillResult.skills.length);
+    if (skill) {
+      items.push(skill);
+      skillResult.skills.push({ slug, rating: 1 });
+    }
+  }
+
   // 9. Spend surplus: upgrade skills, add specs/equipment until < 10k ¥ remaining
   // Reserve budget for rigger drones (2 drones × 5000¥ base cost each)
   const droneReserve = archetypeKey === 'rigger' ? 10000 : 0;
@@ -1407,6 +1421,7 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     if (upgradeable.length === 0) break;
     upgradeable.sort((a, b) => b.rating - a.rating);
     const skill = upgradeable[0];
+    if (!skill) break;
     const upgradeCost = skill.rating < 5 ? 2500 : 5000;
     if (upgradeCost > surplus) break;
     skill.rating += 1;
@@ -1421,8 +1436,8 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
 
   // 9b. Upgrade 1-2 attributes (+1 each, max 2 points total)
   // Count how many are already at max
-  const currentMaxed = Object.keys(attrResult.attributes).filter(
-    a => attrResult.attributes[a] === metatype.maxes[a as keyof typeof metatype.maxes]
+  const currentMaxed = ACTOR_ATTRIBUTES.filter(
+    a => attrResult.attributes[a] === metatype.maxes[a]
   ).length;
   let attrUpgrades = 0;
   while (surplus >= 20000 && attrUpgrades < 2) {
@@ -1438,13 +1453,14 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     });
     if (upgradeable.length === 0) break;
     const attr = upgradeable[0];
+    if (!attr) break;
     attrResult.attributes[attr] += 1;
     attrUpgrades++;
     // Recompute attribute cost AFTER the change
     attrResult.cost = 0;
-    for (const a of Object.keys(attrResult.attributes)) {
+    for (const a of ACTOR_ATTRIBUTES) {
       const val = attrResult.attributes[a];
-      const max = metatype.maxes[a as keyof typeof metatype.maxes];
+      const max = metatype.maxes[a];
       for (let i = 1; i <= val; i++) {
         attrResult.cost += i === max ? 20000 : 10000;
       }
@@ -1503,76 +1519,6 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
   // Determine how many weapon upgrades based on archetype
   const combatArchetypes = ['street-samurai', 'adept', 'infiltrator'];
   const maxWeaponUpgrades = combatArchetypes.includes(archetypeKey) ? 3 : 1;
-  const narrativeEffectsFr = [
-    'Silencieux intégré', 'Chargeur étendu', 'Visée laser', 'Canon renforcé',
-    'Poignée ergonomique', 'Gravure personnalisée', 'Lame dentelée', 'Contrepoids parfait',
-    'Détecteur de mouvement', 'Système anti-recul', 'Revêtement antireflet', 'Lame vibrante',
-    'Mécanisme de rechargement rapide', 'Canon long précision', 'Fibre optique de visée',
-    'Crosse pliable', 'Munitions perforantes', 'Chargeur rotatif', 'Système de visée intelligente',
-    'Compensateur de recul magnétique', 'Rail Picatinny modifié', 'Canon flottant stabilisé',
-    'Système de tir sélectif amélioré', 'Poignée chauffante', 'Garde-main ventilé',
-    'Lunette thermique compacte', 'Embout de canon fileté', 'Ressort de détente allégé',
-    'Détente progressive', 'Système de sûreté biométrique', 'Canon traité antifriction',
-    'Chargeur translucide', 'Sangle tactique trois points', 'Lampe stroboscopique',
-    'Pointeur infrarouge', 'Bipied rétractable', 'Cache-flamme', 'Canon lourd précision',
-    'Système de refroidissement intégré', 'Munitions traçantes', 'Lame empoisonnable',
-    'Garde en fibre de carbone', 'Pommeau lesté', 'Tranchant monofilament partiel',
-    'Fourreau magnétique', 'Système de dégainage rapide', 'Renfort anti-vibration',
-    'Poignée en peau de dragon synthétique', 'Lame à plasma basse énergie',
-    'Système de retour tactile', 'Amortisseur de choc intégré', 'Mécanisme anti-désarmement',
-    'Revêtement camouflage actif', 'Système de comptage de munitions', 'Extracteur de douilles amélioré',
-    'Canon interchangeable', 'Poignée à mémoire de forme', 'Système de nettoyage auto',
-    'Alliage ultra-léger', 'Renfort structurel titane', 'Système de verrouillage rapide',
-    'Marquage holographique', 'Revêtement phosphorescent', 'Détecteur de cible ami/ennemi',
-    'Système de guidage assisté', 'Correcteur de trajectoire', 'Amplificateur de force',
-    'Mécanisme silencieux', 'Lame rétractable secondaire', 'Garde électrifiée',
-    'Système de fixation magnétique', 'Revêtement anti-empreintes', 'Canon court tactique',
-    'Chargeur drum haute capacité', 'Détente à deux temps', 'Compensateur vertical',
-    'Rail latéral accessoire', 'Dispositif de brouillage balistique', 'Lance-fumigène intégré',
-    'Lunette à amplification de lumière', 'Système de recul zéro', 'Canon ventilé céramique',
-    'Poignée antidérapante nano', 'Système de mise à feu électronique',
-    'Module de tir en rafale contrôlée', 'Viseur à point rouge', 'Canon renforcé carbone',
-    'Système de verrouillage de culasse', 'Extracteur de chaleur', 'Lame auto-aiguisante',
-    'Tranchant dentelé inversé', 'Renfort de pommeau tactique', 'Système de lancer assisté',
-    'Grip magnétique palmaire', 'Système de neutralisation non-létale', 'Fil monofilament rétractable',
-    'Capteur de pression de détente', 'Revêtement auto-réparant', 'Micro-gyroscope stabilisateur',
-    'Module de tir furtif',
-  ];
-  const narrativeEffectsEn = [
-    'Integrated silencer', 'Extended magazine', 'Laser sight', 'Reinforced barrel',
-    'Ergonomic grip', 'Custom engraving', 'Serrated blade', 'Perfect counterweight',
-    'Motion detector', 'Anti-recoil system', 'Anti-glare coating', 'Vibrating blade',
-    'Quick reload mechanism', 'Long precision barrel', 'Fiber optic sight',
-    'Folding stock', 'Armor-piercing ammo', 'Rotary magazine', 'Smart targeting system',
-    'Magnetic recoil compensator', 'Modified Picatinny rail', 'Free-floating stabilized barrel',
-    'Enhanced selective fire system', 'Heated grip', 'Ventilated handguard',
-    'Compact thermal scope', 'Threaded barrel tip', 'Lightened trigger spring',
-    'Progressive trigger', 'Biometric safety system', 'Friction-treated barrel',
-    'Translucent magazine', 'Three-point tactical sling', 'Strobe flashlight',
-    'Infrared pointer', 'Retractable bipod', 'Flash hider', 'Heavy precision barrel',
-    'Integrated cooling system', 'Tracer rounds', 'Poisonable blade',
-    'Carbon fiber guard', 'Weighted pommel', 'Partial monofilament edge',
-    'Magnetic scabbard', 'Quick-draw system', 'Anti-vibration reinforcement',
-    'Synthetic dragon skin grip', 'Low-energy plasma blade',
-    'Tactile feedback system', 'Integrated shock absorber', 'Anti-disarm mechanism',
-    'Active camo coating', 'Ammo counter system', 'Enhanced shell extractor',
-    'Interchangeable barrel', 'Shape-memory grip', 'Self-cleaning system',
-    'Ultra-light alloy', 'Titanium structural reinforcement', 'Quick-lock system',
-    'Holographic marking', 'Phosphorescent coating', 'Friend/foe target detector',
-    'Assisted guidance system', 'Trajectory corrector', 'Force amplifier',
-    'Silent mechanism', 'Secondary retractable blade', 'Electrified guard',
-    'Magnetic attachment system', 'Anti-fingerprint coating', 'Tactical short barrel',
-    'High-capacity drum magazine', 'Two-stage trigger', 'Vertical compensator',
-    'Side accessory rail', 'Ballistic jamming device', 'Integrated smoke launcher',
-    'Light amplification scope', 'Zero-recoil system', 'Ceramic vented barrel',
-    'Nano non-slip grip', 'Electronic firing system',
-    'Controlled burst module', 'Red dot sight', 'Carbon-reinforced barrel',
-    'Bolt lock system', 'Heat extractor', 'Self-sharpening blade',
-    'Reverse serrated edge', 'Tactical pommel reinforcement', 'Assisted throwing system',
-    'Palm magnetic grip', 'Non-lethal neutralization system', 'Retractable monofilament wire',
-    'Trigger pressure sensor', 'Self-repairing coating', 'Micro-gyroscope stabilizer',
-    'Stealth fire module',
-  ];
 
   let weaponUpgradesDone = 0;
   // Get all weapon items from the items array
@@ -1636,8 +1582,9 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     if (!upgraded) {
       const effects = sys.narrativeEffects || [];
       if (effects.length < 3) {
-        const idx = Math.floor(Math.random() * narrativeEffectsFr.length);
-        const effectText = tableText(narrativeEffectsFr[idx]!, narrativeEffectsEn[idx]!);
+        const idx = Math.floor(Math.random() * NARRATIVE_EFFECTS_FR.length);
+        const english = NARRATIVE_EFFECTS_EN[idx]!;
+        const effectText = tableText(NARRATIVE_EFFECTS_FR[idx]!, english, NARRATIVE_EFFECTS_JA[english]);
         const newEffects = [...effects, { text: effectText, isNegative: false, value: 1 }];
         const newRating = computeFeatLevel(sys.featType, { ...sys, narrativeEffects: newEffects }).level;
         const newCost = computeFeatCost(sys.featType, { ...sys, rating: newRating });
@@ -1924,24 +1871,8 @@ async function generateSingleNPC(options: NPCGeneratorOptions): Promise<void> {
     },
   };
 
-  // 11. Find or create the folder the generated actors go in. The name is
-  // localized, but an existing untranslated "Generated" folder still counts
-  // as a match, so translating it does not orphan what is already there.
-  const folderKey = "SRA2.NPC_GENERATOR.FOLDER";
-  const localizedFolder = game.i18n?.localize(folderKey);
-  const folderName =
-    localizedFolder && localizedFolder !== folderKey ? localizedFolder : "Generated";
-  let folder = (game.folders as any)?.find(
-    (f: any) =>
-      f.type === "Actor" && (f.name === folderName || f.name === "Generated"),
-  );
-  if (!folder) {
-    folder = await (Folder as any).create({
-      name: folderName,
-      type: "Actor",
-      sorting: "a",
-    });
-  }
+  // 11. Reuse the generated folder across name and language changes.
+  const folder = await generatedNPCFolder();
   (actorData as any).folder = folder?.id ?? null;
 
   // 12. Create actor without items first

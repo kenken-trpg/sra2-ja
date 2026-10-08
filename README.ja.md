@@ -118,9 +118,10 @@ npm run unpack:compendiums   # public/packs/ → src/packs/（JSON に戻す）
 | --- | --- |
 | システム UI（シート、設定、ダイアログ、ダイス、エラー） | 日本語化済み |
 | 日本語表示のためのフォント・レイアウト調整 | 実施済み（最小限） |
+| 上流独自の NPC 生成文（背景・ドローン名・武器効果） | 日本語化済み。新しく生成する NPC に適用 |
 | Compendium / ルールブック本文 | **対象外**（同梱なし。[Compendium の追加](#compendium-の追加)参照） |
 
-ルールブックの文章は転載していません。UI の文言のみを翻訳しています。
+翻訳対象は UI の文言と上流独自の NPC 生成文です。ルールブックの文章は転載していません。
 Compendium の日本語化は権利関係の確認が必要な別課題として切り離しており、
 作業用ブランチ `localization/ja-compendium` に分離しています。
 
@@ -137,6 +138,7 @@ npm install
 npm run setup:hooks    # push ガードレールを有効化（clone ごとに1回）
 npm run build          # dist/ にビルド
 npm run build:public   # public/ の同梱ビルド成果物を更新
+npm run build:release  # dist/ を再ビルドし、Compendium なしの配布 zip を生成
 npm run i18n:scan      # 翻訳の進捗を表示
 npm run check:i18n     # en.json とのキー整合・構文破損を検査
 npm run check:layout   # 日本語ラベルがレイアウトに収まるかの推定レポート
@@ -216,26 +218,32 @@ gh api -X PUT repos/kenken-trpg/sra2-ja/rulesets/24299481 -f enforcement=active
 CI（`.github/workflows/i18n.yml`）は 2 ジョブ構成です。**Locale checks** が
 `i18n:scan` / `check:i18n` / `check:layout` と `en.json` からのずれを検査し
 （依存なしで動くので `npm ci` 不要）、**Test suite** が `npm ci` の後に
-`npm test`（201 件）と、本フォークが追加したテスト・ツールの型検査を実行
-します。上流由来の型エラーは対象外です。
+`npm run typecheck` によるリポジトリ全体の型検査と `npm test` を実行
+します。型エラーがある場合は CI が失敗します。
 
-### 既知の問題（上流由来）
+### 型検査と実行環境
 
-以下は本フォークの変更ではなく、上流 `master` でも同じ結果になります。
+上流から残っていた型エラー 80 件は本フォークで修正済みです。
+`strict` と `noUncheckedIndexedAccess` を維持し、NPC 生成表の必須キー、
+空配列の扱い、Foundry のデータモデル登録型、フック・移行処理の型宣言を
+修正しました。`npm run build:check` で型検査とビルドを続けて確認できます。
 
-- `npm run typecheck` が 80 件のエラーを出す（本フォークが追加したファイルは
-  CI で個別に型検査しており、そちらは通る）
+実行対象は Foundry VTT v14、依存する Foundry の型定義は v13.345.1 です。
+この型定義内に残る旧パッケージ名の参照は `tsconfig.json` の `paths` で
+解決しています。型検査と自動テストに加え、Foundry 実画面での確認も必要です。
 
-> かつてここに挙げていた `dice-roller.test.ts` の
-> `ReferenceError: foundry is not defined` は解消済みで、`npm test` は
-> 201 件すべて成功します（`src/module/__tests__/setup-foundry.ts`）。
+Foundry VTT 14.365 での実画面確認と、そこで発見・修正した問題は
+[2026-10-08 の検証記録](docs/validation/foundry-ui-2026-10-08.md)にまとめています。
 
 ## ライセンス
 
-本フォークは **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)**
-で配布します。上流のライセンス表記は BY と BY-SA が混在しており未確定のため、
-制約の強い BY-SA 側に寄せています（BY-SA を守れば BY の条件も満たすため）。
-詳細と上流表記の原文は [LICENSE.md](LICENSE.md) を参照してください。
+本リポジトリには上流由来のコード・素材と、フォーク独自の成果物が含まれます。
+独自に作成した `docs/localization/`、`tools/i18n/`、`ATTRIBUTION.md` は
+**[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)** で公開します。
+上流由来のコード・素材およびそれを翻訳・改変した部分には、上流で適用される条件が
+引き継がれます。上流の表記は BY と BY-SA が混在しており、どちらが適用されるか
+未確定です。本フォークは上流部分のライセンスを一方に決めつけません。
+範囲と上流表記の原文は [LICENSE.md](LICENSE.md) を参照してください。
 
 Shadowrun Anarchy は © 2016 The Topps Company, Inc.
 Shadowrun および Matrix は The Topps Company, Inc. の登録商標です。

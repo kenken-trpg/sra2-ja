@@ -5,6 +5,11 @@
     "module": "ESNext",
     "lib": ["ES2022", "DOM"],
     "moduleResolution": "bundler",
+    // v13.345.1 declarations still import their former package name internally.
+    "paths": {
+      "fvtt-types/configuration": ["./node_modules/@league-of-foundry-developers/foundry-vtt-types/src/configuration/index.d.mts"],
+      "fvtt-types/utils": ["./node_modules/@league-of-foundry-developers/foundry-vtt-types/src/utils/index.d.mts"]
+    },
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
@@ -45,11 +50,10 @@
   "include": [
     "src/**/*",
     "vite.config.ts"
-, "item-search.ts"  ],
+  ],
   "exclude": [
     "node_modules",
     "dist",
     "public"
   ]
 }
-

@@ -11,7 +11,8 @@
 >
 > 日本語の案内は **[README.ja.md](README.ja.md)**、翻訳方針は
 > **[docs/localization/](docs/localization/)** を参照してください。
-> ライセンスは [LICENSE.md](LICENSE.md)（本フォークは CC BY-SA 4.0）。
+> ライセンスの対象範囲と上流表記の未確定事項は
+> [LICENSE.md](LICENSE.md) を参照してください。
 
 The original upstream README follows.
 
@@ -206,11 +207,13 @@ Feats can provide RR bonuses to:
 
 ## License
 
-This fork is released under
+The independently authored localization documentation, tooling, and
+`ATTRIBUTION.md` in this fork are licensed under
 [Creative Commons Attribution-ShareAlike 4.0 International](https://creativecommons.org/licenses/by-sa/4.0/)
-(CC BY-SA 4.0). See [LICENSE.md](LICENSE.md) for the details, including the
-upstream notice and why BY-SA was chosen while upstream's own statement is
-being clarified.
+(CC BY-SA 4.0). Upstream-originated code and assets, including adaptations of
+them, retain the applicable upstream terms; those terms remain unclear because
+the upstream notices conflict. See [LICENSE.md](LICENSE.md) for the scope and
+the reproduced upstream notice.
 
 <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
 
@@ -253,28 +256,19 @@ This section contains technical information for developers who want to contribut
 
 ## Project Structure
 
-This is a Foundry VTT v13 system built with TypeScript, Vite, and SCSS.
+This fork targets Foundry VTT v14 and is a system built with TypeScript, Vite, and SCSS.
 
 **🎯 Key Technologies:**
 - **TypeScript** for type safety and better developer experience
 - **Vite** for fast development and optimized production builds
 - **SCSS/SASS** for advanced styling capabilities
-- **Foundry VTT v13** APIs and type definitions
+- **Foundry VTT v14** runtime APIs (the current type definitions are still for v13)
 
 ## Prerequisites
 
 ### Node.js
 
-The project requires **Node.js v18** or higher. It is recommended to manage your Node.js versions using [NVM (Node Version Manager)](https://github.com/nvm-sh/nvm).
-
-To install NVM and Node.js:
-
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
-# Restart your terminal and then:
-nvm install 18
-nvm use 18
-```
+Use **Node.js 24**, matching the CI and release workflows.
 
 ## Installation
 
@@ -290,17 +284,17 @@ This command will fetch and install all necessary packages required for the proj
 
 ### Foundry Configuration
 
-1. Ensure Foundry VTT v13 is running locally on port 30000
-2. Link `<foundrydata>/systems/sra2` to the `public` directory of your repository
+1. Ensure Foundry VTT v14 is running locally on port 30000
+2. Link `<foundrydata>/systems/sra2-ja` to the `public` directory of your repository
 
 ```bash
-# Start Foundry v13 command (Example)
+# Start Foundry v14 command (Example)
 node main.js --dataPath=<path_to_foundry_data>/foundrydata --port=30000
 ```
 
-When Foundry starts in the backend (Node.js), it will detect the necessary files in the public directory of the repository (these files are `systems/sra2-ja/index.mjs` and `systems/sra2-ja/sra2.css`).
+When Foundry starts in the backend (Node.js), it will detect the necessary files in the public directory of the repository (these files are `systems/sra2-ja/index.mjs` and `systems/sra2-ja/style/sra2.css`).
 
-When you connect to Foundry from a browser (frontend), Vite will intercept all requests and redirect them to Foundry, except for requests to `systems/sra2`. These files will be served by the Vite project.
+When you connect to Foundry from a browser (frontend), Vite will intercept all requests and redirect them to Foundry, except for requests to `systems/sra2-ja`. These files will be served by the Vite project.
 
 ### Development Mode
 
@@ -310,7 +304,7 @@ To start the project in development mode with hot-reload:
 npm run dev:server
 ```
 
-This will launch a Vite development server that is configured to intercept calls made to **systems/sra2** and proxy them appropriately, while serving all other files directly from Foundry.
+This will launch a Vite development server that is configured to intercept calls made to **systems/sra2-ja** and proxy them appropriately, while serving all other files directly from Foundry.
 
 Alternatively, for building to public directory with watch mode:
 
@@ -338,13 +332,17 @@ To build directly to the `public` directory:
 npm run build:public
 ```
 
-### Release Build with Compendiums
+### Release Archive
 
-To build a complete release with compiled compendiums:
+To build into `dist/` and package the fresh output as `foundry-sra2-ja-v<version>.zip`:
 
 ```bash
 npm run build:release
 ```
+
+The archive excludes compendiums and source maps. It does not package the committed
+`public/` bundle, so forgetting `build:public` cannot ship stale code. The `zip`
+command is required (also available in the CI runner).
 
 ## Type Checking
 
@@ -437,7 +435,7 @@ node ./tools/compendium/extractCompendiumsFromPublic.mjs
 ## Vite Configuration
 
 The Vite server is configured to:
-- Handle specific API calls to **systems/sra2** directly for development efficiency
+- Handle specific API calls to **systems/sra2-ja** directly for development efficiency
 - Forward all other requests to the local Foundry server
 - Provide hot module replacement (HMR) for rapid development
 - Generate optimized production bundles
@@ -448,7 +446,7 @@ The Vite server is configured to:
 |--------|-------------|
 | `npm run build` | Build for production (outputs to `dist/`) |
 | `npm run build:public` | Build to `public/` directory |
-| `npm run build:release` | Build + compile compendiums |
+| `npm run build:release` | Build + create a zip without compendiums |
 | `npm run dev` | Build to public with watch mode |
 | `npm run dev:server` | Start Vite dev server with HMR |
 | `npm run typecheck` | Verify TypeScript types |
@@ -460,7 +458,7 @@ The Vite server is configured to:
 
 When contributing to this project:
 
-1. Ensure all TypeScript code passes type checking (`npm run typecheck`)
+1. Run `npm run build:check`, `npm test`, and the localization checks. CI requires the whole project to type-check successfully.
 2. Follow the existing code structure and conventions
 3. Test your changes with a local Foundry VTT instance
 4. Update documentation as needed
@@ -484,16 +482,16 @@ When contributing to this project:
 ## File Structure
 
 ```
-sra2/
+sra2-ja/
 ├── src/                    # Source files
 │   ├── module/            # TypeScript modules
 │   ├── packs/             # Compendium sources
 │   ├── styles/            # SCSS stylesheets
-│   ├── templates/         # Handlebars templates
 │   └── types/             # TypeScript type definitions
 ├── public/                # Foundry system files
 │   ├── lang/              # Translation files
-│   ├── packs/             # Compiled compendiums
+│   ├── packs/             # Locally compiled compendiums (not tracked or shipped)
+│   ├── templates/         # Handlebars templates
 │   └── system.json        # System manifest
 ├── dist/                  # Production build output
 ├── docs/                  # Documentation and images
@@ -503,4 +501,4 @@ sra2/
 └── package.json           # NPM package configuration
 ```
 
-Version v14 in progress
+The fork declares Foundry v14 compatibility in `public/system.json`.

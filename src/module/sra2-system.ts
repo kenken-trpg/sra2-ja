@@ -19,6 +19,7 @@ import * as DiceRoller from "./helpers/dice-roller.ts";
 import { WEAPON_TYPES } from "./models/item-feat.ts";
 import { registerDiceSoNice, buildNormalAppearance, buildRiskAppearance } from "./helpers/dice-so-nice.ts";
 import { compendiumNameOverride } from "./config/npc-generator-i18n.ts";
+import { addDefaultSkillEntries } from "./helpers/skill-slug-cache.js";
 import { loadCombatantFromFlags, resolveDefenderForDefend, resolveDefenseSkillData } from "./helpers/actor-uuid-resolver.ts";
 // @ts-ignore - JavaScript module without type declarations
 import { Migrations } from "./migration/migration.mjs";
@@ -56,7 +57,7 @@ import { Migration_13_4_0 } from "./migration/migration-13.4.0.mjs";
 // @ts-ignore - JavaScript module without type declarations
 import { Migration_13_4_4 } from "./migration/migration-13.4.4.mjs";
 import { Migration_13_4_5 } from "./migration/migration-13.4.5.mjs";
-import { registerGeminiSetting, isGeminiConfigured, generateActorImage } from "./helpers/gemini-image.js";
+import { registerGeminiSetting } from "./helpers/gemini-image.js";
 // @ts-ignore - JavaScript module without type declarations
 import { HOOKS } from "./hooks.mjs";
 
@@ -1225,7 +1226,7 @@ export class SRA2System {
         let skillLevel: number;
         let specLevel: number | undefined;
         let rrTarget: string;
-        let rrItemType: string;
+        let rrItemType: 'skill' | 'specialization';
         let defLinkedAttribute: string;
 
         if (cyberSpecDef && pirSkillDef) {
@@ -1360,7 +1361,7 @@ export class SRA2System {
         let skillLevel: number;
         let specLevel: number | undefined;
         let caRRTarget: string;
-        let caRRItemType: string;
+        let caRRItemType: 'skill' | 'specialization';
         let caItemType: string;
         let attackValue: number;
         let caLinkedAttribute: string;
@@ -1965,7 +1966,7 @@ export class SRA2System {
   /**
    * Build a global cache mapping skill slugs to localized names.
    * Also builds a metadata cache for specializations (linkedSkill, linkedAttribute).
-   * Loaded from compendiums at startup so slug resolution is synchronous.
+   * Loaded from world items, compendiums and built-in definitions at startup.
    */
   private async buildSkillSlugCache(): Promise<void> {
     const cache: Record<string, string> = {};
@@ -2027,6 +2028,10 @@ export class SRA2System {
         // Skip packs that fail to load
       }
     }
+
+    // Empty/missing packs still need names and metadata for unowned RR targets.
+    // Existing world and compendium entries retain priority over these defaults.
+    addDefaultSkillEntries(cache, metadataCache, nameToSlugCache);
 
     // The packs ship in English and French only, so in any other language the
     // names collected above are a fallback. Where this locale names the skill
@@ -2159,4 +2164,3 @@ export class SRA2System {
     }
   }
 }
-
