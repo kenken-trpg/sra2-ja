@@ -25,7 +25,7 @@
     "@foundryvtt/foundryvtt-cli": "^2.0.0",
     "@league-of-foundry-developers/foundry-vtt-types": "^v13.345.1",
     "@types/node": "^24.10.0",
-    "jsdom": "^29.0.1",
+    "jsdom": "^30.1.2",
     "less": "^4.4.2",
     "sass": "^1.91.0",
     "typescript": "^5.9.3",
