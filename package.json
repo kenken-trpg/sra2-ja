@@ -26,14 +26,14 @@
     "@league-of-foundry-developers/foundry-vtt-types": "^v13.345.1",
     "@types/node": "^24.10.0",
     "jsdom": "^29.0.1",
-    "less": "^4.4.2",
-    "sass": "^1.91.0",
+    "less": "^4.9.1",
+    "sass": "^1.105.1",
     "typescript": "^5.9.3",
     "vite": "^7.1.4",
     "vitest": "^4.1.0"
   },
   "dependencies": {
     "rollup-plugin-visualizer": "^5.12.0",
-    "terser": "^5.44.1"
+    "terser": "^5.51.2"
   }
 }
