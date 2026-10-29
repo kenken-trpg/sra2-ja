@@ -403,7 +403,7 @@ Or add styles to `src/styles/global.scss` which is already imported in the main 
 
 ### Advanced Configuration
 
-The Vite configuration (`vite.config.ts`) includes SCSS preprocessor options. You can add global variables or mixins by uncommenting and modifying the `additionalData` option in the CSS configuration.
+The Vite configuration (`vite.config.mts`) includes SCSS preprocessor options. You can add global variables or mixins by uncommenting and modifying the `additionalData` option in the CSS configuration.
 
 ## Compendiums Management
 
@@ -496,7 +496,7 @@ sra2-ja/
 ├── dist/                  # Production build output
 ├── docs/                  # Documentation and images
 ├── tools/                 # Build and utility scripts
-├── vite.config.ts         # Vite configuration
+├── vite.config.mts        # Vite configuration
 ├── tsconfig.json          # TypeScript configuration
 └── package.json           # NPM package configuration
 ```
