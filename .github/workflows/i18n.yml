@@ -77,3 +77,14 @@ jobs:
         run: npm run typecheck
       - name: Unit tests
         run: npm test
+      - name: Build
+        run: npm run build
+      # system.json loads index.mjs, and Foundry derives sheet ids from the
+      # class names, so both must survive bundling and minification.
+      - name: Check the bundle's entry file and class names
+        run: |
+          test -f dist/index.mjs || { echo "::error::dist/index.mjs was not built"; exit 1; }
+          test -f dist/style/sra2.css || { echo "::error::dist/style/sra2.css was not built"; exit 1; }
+          for name in CharacterSheetV2 VehicleSheet IceSheet ServerSheet FeatSheet SkillSheet SpecializationSheet MetatypeSheet SRA2Actor SRA2Item; do
+            grep -q "class $name[ {]" dist/index.mjs || { echo "::error::class name $name was lost in the bundle"; exit 1; }
+          done

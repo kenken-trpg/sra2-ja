@@ -8,6 +8,29 @@ updates:
       time: "09:00"
       timezone: Asia/Tokyo
     open-pull-requests-limit: 10
+    # Hold major updates for now. vite and typescript are left out on purpose:
+    # their open major PRs (#3, #4) stay open until the blockers are fixed
+    # (vite 8 drops the class names Foundry derives sheet ids from; TS 7 is
+    # outside the foundry-vtt-types peer range).
+    ignore:
+      - dependency-name: "@foundryvtt/foundryvtt-cli"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@league-of-foundry-developers/foundry-vtt-types"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "jsdom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "less"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "sass"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vitest"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "rollup-plugin-visualizer"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "terser"
+        update-types: ["version-update:semver-major"]
     groups:
       npm-minor-and-patch:
         update-types:
