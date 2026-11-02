@@ -4,6 +4,8 @@
 本フォークでは直していない（直すと追従が難しくなる）ものと、フォーク内では
 回避したが上流にも伝えるべきものを、報告できる形まで固めて置いておく。
 
+投稿用の本文（英語）は [upstream-drafts/](upstream-drafts/) にある。
+
 **この一覧は下書きである。** Issue / PR を実際に出すかどうかは人間が決める。
 出す場合も、ライセンス・権利に触れる項目（§7）は本文をそのまま使わず、
 人間が内容を確認してから投稿する。
@@ -30,7 +32,7 @@
 | 11 | `.gitignore` 済みの LevelDB 残骸が追跡されている | 作業ツリーでパックが開けない | 軽微（本フォークで除去） |
 | 12 | `Aile planante` と `Aile volante` の不一致（原書は後者） | 同じ機体が 2 つの名前で出る | 軽微 |
 | 13 | `Bâteau pneumatique semi-rigide` の綴り（原書は `Bateau`） | 表記 | 軽微 |
-| 14 | `spec_la-rue` の英語が `Spec: La rue`（フランス語のまま） | 英語環境で 1 件だけ仏語 | Bug |
+| 14 | `Spé : La rue` の英語訳が `Spec: La rue`（フランス語のまま） | 英語環境で仏語が残る | Bug |
 | 15 | NPC の格納フォルダ名 `Generated` が名前で検索されている | 翻訳するとフォルダが分裂する | 軽微（本フォークで修正） |
 | 16 | 生成チャットの能力値略号が全言語でフランス語（`FOR` / `VOL`） | 英語環境で略号だけ仏語 | Bug（本フォークで修正） |
 | 17 | 生成チャットの `Armes :` が全言語でフランス語 | 同上 | Bug（本フォークで修正） |
@@ -40,7 +42,7 @@
 
 ## 1. ロケールキー 5 件が全言語で未定義
 
-`item-search.ts` が参照する次の 5 キーは `en.json` / `fr.json` の
+リポジトリ直下の `item-search.ts` が参照する次の 5 キーは `en.json` / `fr.json` の
 どちらにも存在しない。Foundry は未定義キーをキー文字列のまま返すので、
 エラーにはならず **UI にそのまま出る**。
 
@@ -54,9 +56,14 @@
 
 ビルド後の `public/index.mjs` に 5 件すべて含まれており、死んだコードではない。
 
+もう 1 件、同じファイルの `:286`（「既に追加済み」ラベル）は既存の
+`SRA2.SKILLS.ALREADY_EXISTS` を使っているが、`{name}` を含む文字列を
+`localize()` で読んでいるため `{name} is already on this character` と
+**プレースホルダがそのまま出る**。
+
 **本フォークでは修正した。** 検索処理を `src/module/helpers/item-search.ts` に移し、
 検査対象へ含めた。追加ボタンと通知を共通の `SRA2.ITEM_SEARCH.*` に揃え、
-必要な 5 キーを en/fr/ja に定義した。技能以外のアイテムにも使える文言にしている。
+必要な 5 キーを en/fr/ja に定義した。`:286` も `format()` に直している。技能以外のアイテムにも使える文言にしている。
 
 ## 2. マニフェストの cover 画像が存在しない
 
@@ -256,9 +263,13 @@ public/packs/packs.tgz
 
 ## 14. `spec_la-rue` の英語がフランス語のまま
 
-`en.json` の `SRA2.NPC_GEN.SPECS.spec_la-rue` が `Spec: La rue`。
-`en.json` 全体を走査して、フランス語が残っている値は**この 1 件だけ**だった
-（§3 の Compendium 翻訳とは別のファイル）。原書の専門化名は `la rue` なので、
+Compendium 翻訳 `public/lang/en/sra2.anarchy-objets.json:2379` で、
+`"Spé : La rue"` の英語が `Spec: La rue` のまま。
+
+本フォークの `en.json` にも `SRA2.NPC_GEN.SPECS.spec_la-rue` = `Spec: La rue` が
+あるが、`NPC_GEN` は本フォークが追加した名前空間で、上流の値を写したもの。
+上流に報告する場所は Compendium 翻訳のほう。本フォークの `en.json` を
+走査してフランス語が残っていた値は、この 1 件だけだった。原書の専門化名は `la rue` なので、
 英語は `Spec: Street` が妥当。
 
 ## 報告しないもの
