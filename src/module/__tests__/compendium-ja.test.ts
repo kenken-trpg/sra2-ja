@@ -16,8 +16,8 @@ const ROOT = path.resolve(__dirname, '../../..');
 interface Tool {
   buildDictionary(): { dict: Map<string, string>; origin: Map<string, string> };
   assertNoProse(docs: unknown[]): void;
-  translatePack(dir?: string): {
-    docs: { _id: string; name: string }[];
+  translatePack(dir?: string, options?: { format?: string }): {
+    docs: { _id: string; _key?: string; type?: string; name: string; system?: Record<string, unknown> }[];
     resolved: number;
     missing: string[];
     used: Map<string, string>;
@@ -80,6 +80,49 @@ describe('Japanese compendium generation', () => {
       .docs.filter((d) => !/[぀-ヿ一-龯]/.test(d.name))
       .map((d) => d.name);
     expect(untranslated).toEqual([]);
+  });
+
+  describe('bilingual names (--names bilingual)', () => {
+    const SOURCE = path.join(ROOT, 'src/packs/anarchy-items-en');
+    const bySlug = (format: string) => {
+      const out = new Map<string, string>();
+      for (const d of tool.translatePack(SOURCE, { format }).docs) {
+        const slug = d.system?.slug as string | undefined;
+        if (slug) out.set(`${d.type}:${slug}:${d.system?.linkedSkill ?? ''}`, d.name);
+      }
+      return out;
+    };
+
+    it('appends the English after the Japanese, without the Spec: prefix', () => {
+      const names = bySlug('bilingual');
+      expect(names.get('skill:conjuration:')).toBe('召喚 / Conjuration');
+      expect(names.get('specialization:spec_academic:networking')).toBe('専門化：学術 / Academic');
+      expect(names.get('specialization:spec_la-rue:networking')).toBe('専門化：ストリート / La rue');
+    });
+
+    it('is the Japanese-only name plus the English, for every item', () => {
+      const ja = tool.translatePack(SOURCE).docs;
+      const bi = tool.translatePack(SOURCE, { format: 'bilingual' }).docs;
+      const mismatched = bi.filter((d, i) => {
+        const base = ja[i]?.name;
+        if (d._key?.startsWith('!folders!')) return d.name !== base;
+        return !base || !d.name.startsWith(`${base} / `) || /Spec\s*:/.test(d.name);
+      });
+      expect(mismatched.map((d) => d.name)).toEqual([]);
+    });
+
+    it('names metatypes bilingually and keeps folders Japanese only', () => {
+      const docs = tool.translatePack(SOURCE, { format: 'bilingual' }).docs;
+      const metatypes = docs.filter((d) => d.type === 'metatype').map((d) => d.name).sort();
+      expect(metatypes).toEqual(['エルフ / Elf', 'オーク / Ork', 'ドワーフ / Dwarf', 'トロール / Troll', '人間 / Human'].sort());
+      const folders = docs.filter((d) => d._key?.startsWith('!folders!')).map((d) => d.name);
+      expect(folders.every((n) => !n.includes(' / '))).toBe(true);
+    });
+
+    it('defaults to Japanese only, and rejects an unknown format', () => {
+      expect(bySlug('ja').get('skill:conjuration:')).toBe('召喚');
+      expect(() => tool.translatePack(SOURCE, { format: 'en' })).toThrow(/--names/);
+    });
   });
 
   describe('the prose guard', () => {

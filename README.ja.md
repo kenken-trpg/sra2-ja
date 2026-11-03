@@ -74,13 +74,27 @@ Foundry を起動すると Compendium タブに現れます。
 を同梱しない」方針を変えないため）。
 
 ```sh
-npm run compendium:ja                            # local/packs/anarchy-items-ja を生成
+npm run compendium:ja                            # local/packs/anarchy-items-ja を生成（日本語のみ）
+npm run compendium:ja:bilingual                  # 同上、名前を「日本語 / English」で併記
 node tools/compendium/generate-ja.mjs --check    # 訳語の抜けだけ確認（書き出さない）
 ```
 
 訳語は `public/lang/{en,ja}.json` から引きます（115 件のうち 88 件）。UI と
 Compendium が食い違わないようにするためで、専用の辞書は持ちません。ロケールに
 対応する文字列がない 25 件だけを `tools/compendium/names-ja.json` が補います。
+
+名前の形式は 2 通りから選べます。英語版ルールブックと突き合わせながら遊ぶ
+卓では併記が便利です。
+
+| 形式 | 技能 | 専門化 | メタタイプ |
+| --- | --- | --- | --- |
+| 日本語のみ（既定） | `召喚` | `専門化：学術` | `人間` |
+| 日本語 / English | `召喚 / Conjuration` | `専門化：学術 / Academic` | `人間 / Human` |
+
+併記の英語側は `Spec: ` を付けません（日本語側に「専門化：」があるため）。
+フォルダ名はどちらの形式でも日本語のみです。どちらもパック名と `_id` は同じ
+なので、切り替えるときはもう一方の形式で生成し直し、同じ場所へ上書きコピー
+するだけです。キャラクターに取り込み済みのアイテム名は変わりません。
 
 設置方法はコマンドの出力が案内します（インストール先へのコピーと、`system.json`
 の `packs` への 1 エントリ追記）。`_id` を含め `name` 以外のフィールドは一切

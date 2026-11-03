@@ -22,7 +22,16 @@
  * The result is written outside the repository tree and is not bundled in the
  * release archive; see README.ja.md for how to install it.
  *
- *   node tools/compendium/generate-ja.mjs [--out <dir>] [--json-only] [--check]
+ * Name format
+ * -----------
+ * `--names ja` (default) gives the Japanese name only: `召喚`, `専門化：学術`.
+ * `--names bilingual` appends the English, for tables that read the English
+ * rulebook alongside: `召喚 / Conjuration`, `専門化：学術 / Academic`. The
+ * English side drops the `Spec: ` prefix, since the Japanese side already
+ * carries `専門化：`. Folders stay Japanese only in both formats; they are
+ * not items and nobody looks them up in a rulebook.
+ *
+ *   node tools/compendium/generate-ja.mjs [--names ja|bilingual] [--out <dir>] [--json-only] [--check]
  */
 import { compilePack } from '@foundryvtt/foundryvtt-cli';
 import fs from 'node:fs';
@@ -37,6 +46,21 @@ const SUPPLEMENT = path.join(ROOT, 'tools', 'compendium', 'names-ja.json');
 /** Git-ignored: the pack is generated locally, never committed or shipped. */
 export const DEFAULT_OUT = path.join(ROOT, 'local', 'packs');
 export const PACK_NAME = 'anarchy-items-ja';
+export const NAME_FORMATS = ['ja', 'bilingual'];
+
+/** The English half of a bilingual name: `Spec: Academic` → `Academic`. */
+const englishLabel = (source) => source.replace(/^Spec\s*:\s*/, '');
+
+/**
+ * Renders one entry's name in the requested format. Only items become
+ * bilingual; a name whose Japanese already equals its English is left alone
+ * so no entry reads `X / X`.
+ */
+export function formatName(source, target, doc, format = 'ja') {
+  if (format === 'ja' || doc?._key?.startsWith('!folders!')) return target;
+  const english = englishLabel(source);
+  return target === english ? target : `${target} / ${english}`;
+}
 
 const flatten = (obj, prefix = '') => {
   const out = {};
@@ -109,7 +133,10 @@ export function assertNoProse(docs) {
  *   Documents with `name` replaced. Ids, keys, folders and every other field
  *   are carried over untouched.
  */
-export function translatePack(sourceDir = SOURCE_PACK) {
+export function translatePack(sourceDir = SOURCE_PACK, { format = 'ja' } = {}) {
+  if (!NAME_FORMATS.includes(format)) {
+    throw new Error(`--names は ${NAME_FORMATS.join(' / ')} のいずれかです（指定: ${format}）`);
+  }
   const { dict, origin } = buildDictionary();
   const files = fs.readdirSync(sourceDir).filter((f) => f.endsWith('.json'));
   const docs = files.map((f) => JSON.parse(fs.readFileSync(path.join(sourceDir, f), 'utf-8')));
@@ -127,7 +154,7 @@ export function translatePack(sourceDir = SOURCE_PACK) {
       missing.push(name);
       continue;
     }
-    doc.name = target;
+    doc.name = formatName(name, target, doc, format);
     used.set(name, origin.get(name));
     resolved++;
   }
@@ -143,9 +170,11 @@ async function main() {
   const jsonDir = path.join(outRoot, `${PACK_NAME}-json`);
   const packDir = path.join(outRoot, PACK_NAME);
 
-  const { docs, files, resolved, missing, used } = translatePack();
+  const format = arg('names', 'ja');
+  const { docs, files, resolved, missing, used } = translatePack(SOURCE_PACK, { format });
 
   console.log('=== 日本語 Compendium の生成 ===');
+  console.log(`  名前の形式: ${format === 'bilingual' ? '日本語 / English（併記）' : '日本語のみ'}`);
   console.log(`  対象: src/packs/anarchy-items-en (${docs.length} 件・説明文 0 件)`);
   console.log(`  訳出: ${resolved} 件`);
   const fromLocale = [...used.values()].filter((o) => o.startsWith('lang:')).length;
@@ -195,7 +224,12 @@ async function main() {
   }
 
   システムを更新すると systems/sra2-ja/ は置き換えられ、この 2 つの変更は
-  失われます。残したい内容はワールド側の Compendium へインポートしてください。`);
+  失われます。残したい内容はワールド側の Compendium へインポートしてください。
+
+  名前の形式を切り替えるときは、もう一方の形式で生成し直して同じ場所へ
+  上書きコピーします（パック名・_id は同じなので、既存の参照は壊れません）。
+    日本語のみ:           npm run compendium:ja
+    日本語 / English:     npm run compendium:ja:bilingual`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

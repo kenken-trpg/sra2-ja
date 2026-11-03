@@ -11,6 +11,7 @@
 | `npm run i18n:sync` | `en.json` から `ja.json` を生成・更新（既訳は保持、新規は `[JA] ` プレースホルダ） |
 | `npm run check:i18n` | キー一致・プレースホルダ・HTML タグの検査（CI ゲート） |
 | `npm run compendium:ja` | 英語パックの名称のみを日本語化した Compendium をローカル生成（同梱しない） |
+| `npm run compendium:ja:bilingual` | 同上、名前を「日本語 / English」で併記（例: `召喚 / Conjuration`） |
 | `npm test` | 単体テスト（ロケールキー参照・NPC 辞書・フォルダ移行・配布 zip ほか・CI ゲート） |
 | `npm run check:layout` | 固定 px 幅・`nowrap` に日本語ラベルが収まるかの推定（Foundry 起動前の優先確認リスト・CI ゲート） |
 | `npm run check:glossary` | SR5 用語集との相違・一致の突き合わせ表を生成（別途 chummer-web の checkout が必要。出力は Git 管理外） |

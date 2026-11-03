@@ -19,7 +19,8 @@
     "check:i18n": "node ./tools/i18n/compare-locales.mjs --target ja",
     "check:layout": "node ./tools/i18n/layout-risk.mjs --target ja",
     "check:glossary": "node ./tools/i18n/glossary-crossref.mjs",
-    "compendium:ja": "node ./tools/compendium/generate-ja.mjs"
+    "compendium:ja": "node ./tools/compendium/generate-ja.mjs",
+    "compendium:ja:bilingual": "node ./tools/compendium/generate-ja.mjs --names bilingual"
   },
   "devDependencies": {
     "@foundryvtt/foundryvtt-cli": "^3.0.5",
