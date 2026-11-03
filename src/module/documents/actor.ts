@@ -1,3 +1,5 @@
+import { rewriteActorSource } from '../helpers/upstream-paths.js';
+
 /**
  * Custom Actor document for SRA2
  */
@@ -15,6 +17,8 @@ export class SRA2Actor<SubType extends Actor.SubType = Actor.SubType> extends Ac
         }
       }
     }
+    // Images of data made under upstream `sra2` point at systems/sra2/.
+    rewriteActorSource(source);
     return super.migrateData(source);
   }
 

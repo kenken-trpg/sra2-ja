@@ -1,3 +1,5 @@
+import { rewriteItemSource } from '../helpers/upstream-paths.js';
+
 /**
  * Custom Item document for SRA2
  */
@@ -11,6 +13,8 @@ export class SRA2Item extends Item {
     if (source.type === 'race') {
       source.type = 'metatype';
     }
+    // Images of data made under upstream `sra2` point at systems/sra2/.
+    rewriteItemSource(source);
     return super.migrateData(source);
   }
 }
