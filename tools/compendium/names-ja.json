@@ -22,15 +22,15 @@
     "Spec: Mounted Weapons": "専門化：搭載武器",
     "Spec: Remote ConTrolled Weapons": "専門化：遠隔操作武器",
 
-    "Spec: Aquatic Drones": "専門化：水中ドローン",
-    "Spec: Aquatic Vehicles": "専門化：水上艇",
-    "Spec: Flying Vehicles": "専門化：飛行車両",
+    "Spec: Aquatic Drones": "専門化：水上ドローン",
+    "Spec: Aquatic Vehicles": "専門化：水上ビークル",
+    "Spec: Flying Vehicles": "専門化：飛行ビークル",
     "Spec: Trucks": "専門化：トラック",
     "Spec: C&R Mechanical Devices": "専門化：機械装置整備",
 
     "Spec: Personal Electronics": "専門化：個人用電子機器",
 
-    "Spec: Kin Spirits": "専門化：同族の精霊",
+    "Spec: Kin Spirits": "専門化：人の精霊",
     "Spec: Plant Spirits": "専門化：植物の精霊"
   },
   "$notes": {

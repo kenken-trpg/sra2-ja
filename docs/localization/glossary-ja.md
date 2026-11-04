@@ -31,6 +31,8 @@
 | Conjuration | 召喚 | |
 | Influence | 影響力 | |
 | Spec: … | 専門化：… | 全角コロン。`Spécialisation` の略に対応 |
+| Spec: Social Perception | 専門化：社交知覚 | ユーザー指定の訳語 |
+| Human | ヒューマン | メタタイプ名 |
 | Physical Adept | フィジカル・アデプト | |
 | Elite Runner | エリート・ランナー | |
 
@@ -203,8 +205,10 @@ SRA2 の定義がプレビューに入っている（車両の能力値解説）
 | `Spec: Engineering` / `Stealth` / `Magic` | 専門化：工学 / 隠密 / 魔法 | 技能名の訳をそのまま使う |
 | `Spec: Astral Stealth` | 専門化：アストラル隠密 | 物理隠密 / マトリックス隠密 |
 | `Spec: C&R Mechanical Devices` | 専門化：機械装置整備 | ドローン整備 / 車両整備（C&R = 整備） |
-| `Spec: Kin Spirits` / `Plant Spirits` | 専門化：同族の精霊 / 植物の精霊 | 大気の精霊 / 大地の精霊 / 火の精霊 |
-| `Spec: Aquatic Drones` | 専門化：水中ドローン | 地上ドローン / 飛行ドローン |
+| `Spec: Kin Spirits` / `Plant Spirits` | 専門化：人の精霊 / 植物の精霊 | 大気の精霊 / 大地の精霊 / 火の精霊 |
+| `Spec: Aquatic Drones` | 専門化：水上ドローン | 地上ドローン / 飛行ドローン |
+| `Spec: Aquatic Vehicles` | 専門化：水上ビークル | ユーザー指定の訳語 |
+| `Spec: Flying Vehicles` | 専門化：飛行ビークル | ユーザー指定の訳語 |
 | `Spec: Personal Electronics` | 専門化：個人用電子機器 | 個人用デバイス（`Personal Devices`）と区別 |
 
 ### 上流由来の気付き

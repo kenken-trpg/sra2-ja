@@ -114,7 +114,7 @@ describe('Japanese compendium generation', () => {
     it('names metatypes bilingually and keeps folders Japanese only', () => {
       const docs = tool.translatePack(SOURCE, { format: 'bilingual' }).docs;
       const metatypes = docs.filter((d) => d.type === 'metatype').map((d) => d.name).sort();
-      expect(metatypes).toEqual(['エルフ / Elf', 'オーク / Ork', 'ドワーフ / Dwarf', 'トロール / Troll', '人間 / Human'].sort());
+      expect(metatypes).toEqual(['エルフ / Elf', 'オーク / Ork', 'ドワーフ / Dwarf', 'トロール / Troll', 'ヒューマン / Human'].sort());
       const folders = docs.filter((d) => d._key?.startsWith('!folders!')).map((d) => d.name);
       expect(folders.every((n) => !n.includes(' / '))).toBe(true);
     });

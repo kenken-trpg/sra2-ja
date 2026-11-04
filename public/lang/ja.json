@@ -1325,7 +1325,7 @@
                 "spec_impersonation": "専門化：なりすまし",
                 "spec_etiquette": "専門化：エチケット",
                 "spec_physical-perception": "専門化：物理知覚",
-                "spec_social-perception": "専門化：社会的知覚",
+                "spec_social-perception": "専門化：社交知覚",
                 "spec_astral-perception": "専門化：アストラル知覚",
                 "spec_composure": "専門化：平静",
                 "spec_wilderness-survival": "専門化：野外サバイバル",
@@ -1339,7 +1339,7 @@
                 "spec_astral-combat": "専門化：アストラル戦闘"
             },
             "METATYPES": {
-                "human": "人間",
+                "human": "ヒューマン",
                 "elf": "エルフ",
                 "dwarf": "ドワーフ",
                 "ork": "オーク",
