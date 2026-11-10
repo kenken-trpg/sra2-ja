@@ -5,11 +5,14 @@
 
 | English | 日本語 | 備考 |
 | --- | --- | --- |
-| Edge | アナーキー | `en.json` の `Edge` は原書の `point d'Anarchy`。SR の `エッジ` ではない（translation-rules.md §11） |
+| Edge | エッジ | 英語版は `Edge`（`Gain Edge` / `Spend Edge`）。仏語原書の `point d'Anarchy` に当たる。2026-11-10 にアナーキーから変更（translation-rules.md §11） |
 | Attribute | 能力値 | SR 既存訳。「属性」は使わない |
 | Dice Pool | ダイス・プール | 中黒あり |
 | Critical Glitch | クリティカル・グリッチ | 幅が広いので固定幅UIに注意 |
-| Anarchy Point | アナーキー・ポイント | SRA 固有 |
+| Anarchy Point | エッジ・ポイント | リソースの正式名。Edge に合わせる |
+| Advantage / Disadvantage | 有利 / 不利 | ロール方式。カタカナ表記はやめた（2026-11-10） |
+| Focus / Weapon Focus | 収束具 / 武器収束具 | 魔法の収束具。「フォーカス」は使わない（2026-11-10） |
+| Spirit | 精霊 | 「スピリット」は使わない。専門化名（大気の精霊ほか）と揃える |
 | Contact | コネ | SR 日本語版の訳に合わせる |
 | Lifestyle | 生活水準 | |
 | Quality | クォリティ | 「質」は避ける |
@@ -27,11 +30,12 @@
 | Close Combat | 近接戦闘 | |
 | Ranged Weapons | 遠隔武器 | |
 | Cracking | クラッキング | 「ハッキング」と訳し分けない |
-| Sorcery | 呪術 | |
+| Sorcery | 呪術 | 技能名。Spell（呪文）と区別する |
 | Conjuration | 召喚 | |
-| Influence | 影響力 | |
+| Influence | 対人 | 2026-11-10 に影響力から変更 |
 | Spec: … | 専門化：… | 全角コロン。`Spécialisation` の略に対応 |
 | Spec: Social Perception | 専門化：社交知覚 | ユーザー指定の訳語 |
+| Spec: Illusion Spells / Illusion spells | 専門化：幻覚呪文 / 幻覚呪文 | 2026-11-10 に幻惑呪文から統一 |
 | Human | ヒューマン | メタタイプ名 |
 | Physical Adept | フィジカル・アデプト | |
 | Elite Runner | エリート・ランナー | |
@@ -177,7 +181,7 @@ SRA2 の定義がプレビューに入っている（車両の能力値解説）
 | Description | 説明 | 9 箇所。UI 語彙の文体差のみ |
 | Damage | ダメージ | SR5 側は略号併記。SRA2 に DV の概念はない |
 | Magic | 魔法 | 3 箇所。能力値名か分野名かで SR5 側と分かれる |
-| Sorcery | 呪術 | NPC ジェネレーターの技能名。SR5 側と別語。上記の表と要整合 |
+| Sorcery | 呪術 | **確定**（2026-11-10）。Spell＝呪文と区別する |
 | Vehicle | 車両 | 本フォークは漢字、SR5 側はカナ |
 | Speed / Handling | 速度 / ハンドリング | **確定・維持**（SRA2 の Speed は SR5 の別能力値。下記参照） |
 | Firewall | ファイアウォール | **確定**。略号 `FW` は 2 キーのみ（下記参照） |
