@@ -418,6 +418,20 @@ Foundry が外側で付けるもの（Dialog の `.sra2.roll-dialog` など）�
 別物なので、将来の作業者が元に戻さないよう `glossary-ja.md` に理由を残した。
 `check:layout` では 17 キーいずれにも警告は出ていない。
 
+### 改訂（2026-11-10）：`エッジ` に戻す
+
+上記の判断は「英語版の表記を確認できていない」ことを前提にしていた。その後、
+英語版（キックスターター版プレビュー）で、このリソースが **`Edge`** と呼ばれて
+いることを確認した（目次の `Edge` / `Gain Edge` / `Spend Edge` /
+`Planning pool or personal Edge?`、本文の `gain an Advantage for one Edge` など）。
+`en.json` の `Edge` は上流の独自置き換えではなく、英語版の公式用語である。
+
+したがって「日本語は英語に従う」の原則に戻し、上表の 17 キーを `エッジ` 系に
+戻した（`エッジ` / `戦闘エッジ` / `グループ・エッジ` / `エッジ・ボーナス` /
+`エッジ・ポイント` ほか）。`terminology.json` も `Edge` → `エッジ`、
+`Anarchy Point` → `エッジ・ポイント` に改めた。仏語版の `point d'Anarchy` と
+同じものを指す点は変わらない。
+
 ### `ICE` / `IC`（§7 の裏付け）
 
 原書の用語集は `glace`（女性名詞）を `contre-mesures d'intrusion` の略語 `CI` と
